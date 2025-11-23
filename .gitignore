@@ -36,6 +36,9 @@ addons/*
 !addons/ipai_*/**
 !addons/tbwa_*/
 !addons/tbwa_*/**
+# But ignore Python cache in tracked addons
+addons/**/__pycache__/
+addons/**/*.pyc
 
 # Docker
 .env
