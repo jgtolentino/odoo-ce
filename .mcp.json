@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ipai-claude-memory": {
+      "command": "python3",
+      "args": ["mcp/claude_memory_server.py"],
+      "env": {
+        "CLAUDE_MEMORY_DB": "./claude_memory.db"
+      }
+    }
+  }
+}
