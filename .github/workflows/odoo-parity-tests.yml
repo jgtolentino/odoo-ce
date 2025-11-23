@@ -91,8 +91,12 @@ jobs:
           PGDATABASE: test_cheqroom
         run: |
           echo "Testing Cheqroom parity (ipai_equipment)..."
-          chmod +x odoo-bin
-          ./odoo-bin -d test_cheqroom \
+          if [ -z "${ODOO_BIN:-}" ]; then
+            echo "❌ ODOO_BIN not set. Install script may have failed."
+            exit 1
+          fi
+          chmod +x "$ODOO_BIN"
+          "$ODOO_BIN" -d test_cheqroom \
             -i ipai_equipment \
             --test-enable \
             --stop-after-init \
@@ -115,7 +119,7 @@ jobs:
           PGDATABASE: test_concur
         run: |
           echo "Testing Concur parity (ipai_expense)..."
-          ./odoo-bin -d test_concur \
+          "$ODOO_BIN" -d test_concur \
             -i ipai_expense \
             --test-enable \
             --stop-after-init \
@@ -138,7 +142,7 @@ jobs:
           PGDATABASE: test_workspace
         run: |
           echo "Testing Workspace parity (ipai_docs)..."
-          ./odoo-bin -d test_workspace \
+          "$ODOO_BIN" -d test_workspace \
             -i ipai_docs \
             --test-enable \
             --stop-after-init \

@@ -1,4 +1,3 @@
-```json
 {
     "name": "IPAI Cash Advance & Liquidation",
     "summary": "Manage cash advances and liquidations (replacing legacy x_cash_advance)",
