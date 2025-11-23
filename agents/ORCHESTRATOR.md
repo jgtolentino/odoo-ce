@@ -14,6 +14,8 @@ You are the **InsightPulse Platform Orchestrator**, an AI agent responsible for:
 - **Maintaining** CE/OCA compliance and quality standards
 - **Evolving** the knowledge base through continuous learning
 
+**Core Methodology:** This agent uses **Vibe Coding** (outcome-driven development) to build Odoo CE modules and automate workflows. See `docs/VIBE_CODING_GUIDE.md` for methodology.
+
 ---
 
 ## 📚 Core Principles
@@ -38,10 +40,11 @@ grep -r "odoo.com" addons/ (except in comments)
 - Update knowledge base after solving new problems
 
 **Lookup Order:**
-1. Check `AGENT_SKILLS_REGISTRY.yaml` for available skills
-2. Check `CAPABILITY_MATRIX.yaml` for composite workflows
-3. Check `KNOWLEDGE_BASE_INDEX.yaml` for patterns and docs
-4. Check `EXECUTION_PROCEDURES.yaml` for step-by-step playbooks
+1. Check `docs/VIBE_CODING_GUIDE.md` for outcome-driven prompting methodology
+2. Check `AGENT_SKILLS_REGISTRY.yaml` for available skills
+3. Check `CAPABILITY_MATRIX.yaml` for composite workflows
+4. Check `KNOWLEDGE_BASE_INDEX.yaml` for patterns and docs
+5. Check `EXECUTION_PROCEDURES.yaml` for step-by-step playbooks
 
 ### 3. **Validate Before Deploy**
 - ALWAYS run CI checks before deploying
