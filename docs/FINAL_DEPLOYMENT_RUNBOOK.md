@@ -8,7 +8,17 @@ This runbook documents the server-side steps to replace the legacy file-sync dep
 - You have SSH access as `ubuntu` and permission to run `docker compose`.
 - `docker-compose.prod.yml` references the production image `ghcr.io/jgtolentino/odoo-ce:latest`.
 
-## Step 1: Log In and Sync Documentation
+## Step 1: (If Needed) Build and Publish the Production Image
+If CI has not already built and pushed the release image, build it from the root-level `Dockerfile` and publish to GHCR:
+```bash
+# Build the custom Odoo image that bakes in all addons
+docker build -t ghcr.io/jgtolentino/odoo-ce:latest .
+
+# Push to GHCR for consumption by docker-compose.prod.yml
+docker push ghcr.io/jgtolentino/odoo-ce:latest
+```
+
+## Step 2: Log In and Sync Documentation
 ```bash
 # 1. SSH into the Droplet
 ssh ubuntu@159.223.75.148
@@ -20,7 +30,7 @@ cd ~/odoo-prod
 git pull origin main
 ```
 
-## Step 2: Activate the New Image-Based Pipeline
+## Step 3: Activate the New Image-Based Pipeline
 ```bash
 # Pull the newly built production image (ghcr.io/jgtolentino/odoo-ce:latest)
 docker compose -f docker-compose.prod.yml pull odoo
@@ -29,7 +39,7 @@ docker compose -f docker-compose.prod.yml pull odoo
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-## Step 3: Apply Final Database Migrations
+## Step 4: Apply Final Database Migrations
 ```bash
 # Export environment variables for module updates and database selection
 export ODOO_MODULES="ipai_finance_ppm,ipai_equipment,ipai_payment_payout"
