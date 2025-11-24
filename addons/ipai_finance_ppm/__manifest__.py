@@ -2,7 +2,7 @@
 {
     "name": "IPAI Finance PPM",
     "summary": "Finance Project Portfolio Management (Notion Parity).",
-    "version": "18.0.1.0.3",
+    "version": "18.0.1.0.4",
     "category": "Accounting/Finance",
     "author": "InsightPulseAI",
     "website": "https://insightpulseai.net",
@@ -17,6 +17,7 @@
         "data/finance_person_directory.xml",
         "views/finance_person_views.xml",
         "views/finance_task_views.xml",
+        "views/finance_project_views.xml",
         "views/bir_schedule_views.xml",
         "views/ppm_dashboard_views.xml",
         "views/menus.xml",
