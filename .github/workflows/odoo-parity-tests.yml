@@ -21,14 +21,25 @@ jobs:
   test-parity:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      DB_NAME: odoo
+      DB_USER: odoo
+      DB_PASSWORD: odoo
+      DB_HOST: localhost
+      DB_PORT: 5432
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: odoo
+      PGPASSWORD: odoo
+      PGDATABASE: odoo
 
     services:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_DB: odoo
-          POSTGRES_USER: odoo
-          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -57,7 +68,8 @@ jobs:
             libldap2-dev \
             libsasl2-dev \
             libjpeg-dev \
-            zlib1g-dev
+            zlib1g-dev \
+            postgresql-client
 
       - name: Install Python dependencies
         env:
@@ -82,37 +94,17 @@ jobs:
 
       - name: Wait for PostgreSQL
         run: |
-          python - << 'PY'
-          import sys
-          import time
-
-          import psycopg2
-
-
-          host = "localhost"
-          port = 5432
-          user = "odoo"
-          dbname = "postgres"
-
-          max_tries = 30
-          for attempt in range(1, max_tries + 1):
-            try:
-              conn = psycopg2.connect(
-                host=host,
-                port=port,
-                user=user,
-                dbname=dbname,
-              )
-              conn.close()
-              print(f"PostgreSQL is ready after {attempt} attempts.")
-              sys.exit(0)
-            except Exception as exc:  # noqa: PERF203
-              print(f"[{attempt}/{max_tries}] Waiting for PostgreSQL... {exc}")
-              time.sleep(2)
-
-          print("PostgreSQL did not become ready in time.")
-          sys.exit(1)
-          PY
+          echo "Waiting for PostgreSQL on $PGHOST:$PGPORT as $PGUSER/$PGDATABASE ..."
+          for i in $(seq 1 30); do
+            if psql -h "$PGHOST" -U "$PGUSER" -d "$PGDATABASE" -c "SELECT 1" >/dev/null 2>&1; then
+              echo "PostgreSQL is up!"
+              exit 0
+            fi
+            echo "[$i/30] Waiting for PostgreSQL..."
+            sleep 2
+          done
+          echo "PostgreSQL did not become ready in time."
+          exit 1
 
       - name: Run module migrations
         run: |
@@ -128,7 +120,7 @@ jobs:
           PGDATABASE: test_cheqroom
         run: |
           echo "Testing Cheqroom parity (ipai_equipment)..."
-          bash ./odoo-bin -d test_cheqroom \
+          python3 ./odoo-bin -d test_cheqroom \
             -i ipai_equipment \
             --test-enable \
             --stop-after-init \
@@ -151,7 +143,7 @@ jobs:
           PGDATABASE: test_concur
         run: |
           echo "Testing Concur parity (ipai_expense)..."
-          bash ./odoo-bin -d test_concur \
+          python3 ./odoo-bin -d test_concur \
             -i ipai_expense \
             --test-enable \
             --stop-after-init \
@@ -174,7 +166,7 @@ jobs:
           PGDATABASE: test_workspace
         run: |
           echo "Testing Workspace parity (ipai_docs)..."
-          bash ./odoo-bin -d test_workspace \
+          python3 ./odoo-bin -d test_workspace \
             -i ipai_docs \
             --test-enable \
             --stop-after-init \
@@ -205,5 +197,4 @@ jobs:
         env:
           N8N_CI_WEBHOOK_URL: ${{ secrets.N8N_CI_WEBHOOK_URL }}
         run: |
-          bash scripts/report_ci_telemetry.sh "${{ job.status }}"
-        shell: bash
+          sh scripts/report_ci_telemetry.sh "${{ job.status }}"
