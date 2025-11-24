@@ -1,8 +1,14 @@
 # Custom Odoo CE image for InsightPulse
-# Base image
-FROM odoo:18.0
+ARG ODOO_VERSION=18.0
+FROM odoo:${ODOO_VERSION}
 
-# Install required system dependencies for custom modules
+LABEL org.opencontainers.image.source="https://github.com/jgtolentino/odoo-ce" \
+      org.opencontainers.image.description="Custom Odoo CE image for InsightPulseAI" \
+      org.opencontainers.image.licenses="AGPL-3.0"
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 USER root
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
