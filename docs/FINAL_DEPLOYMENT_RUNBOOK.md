@@ -6,6 +6,7 @@ This runbook documents the server-side steps to replace the legacy file-sync dep
 - Latest changes (including `docker-compose.prod.yml` and the `Dockerfile`) are merged into `main` and published to the image registry.
 - The droplet has a local clone of the repository at `~/odoo-prod/`.
 - You have SSH access as `ubuntu` and permission to run `docker compose`.
+- `docker-compose.prod.yml` references the production image `ghcr.io/jgtolentino/odoo-ce:latest`.
 
 ## Step 1: Log In and Sync Documentation
 ```bash
@@ -21,19 +22,19 @@ git pull origin main
 
 ## Step 2: Activate the New Image-Based Pipeline
 ```bash
-# Export environment variables for module updates and database selection
-export ODOO_MODULES="ipai_finance_ppm,ipai_equipment,ipai_payment_payout"
-export DB_NAME="odoo"
-
-# Pull the latest Odoo image referenced by docker-compose.prod.yml
+# Pull the newly built production image (ghcr.io/jgtolentino/odoo-ce:latest)
 docker compose -f docker-compose.prod.yml pull odoo
 
-# Restart the service to run with the newly pulled image
-docker compose -f docker-compose.prod.yml up -d --force-recreate odoo
+# Restart Odoo with the freshly pulled image
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ## Step 3: Apply Final Database Migrations
 ```bash
+# Export environment variables for module updates and database selection
+export ODOO_MODULES="ipai_finance_ppm,ipai_equipment,ipai_payment_payout"
+export DB_NAME="odoo"
+
 # Run schema updates inside the refreshed Odoo container
 # (adjust DB_NAME/ODOO_MODULES if your environment differs)
 docker compose -f docker-compose.prod.yml exec odoo odoo-bin -c /etc/odoo.conf \
@@ -41,7 +42,7 @@ docker compose -f docker-compose.prod.yml exec odoo odoo-bin -c /etc/odoo.conf \
 ```
 
 ## Final Verification
-1. **Image Tag**: `docker ps` should show the Odoo container running `ghcr.io/jgtolentino/odoo-ce:latest` (or a `main` commit SHA tag).
+1. **Image Tag**: `docker ps` should show the Odoo container running `ghcr.io/jgtolentino/odoo-ce:latest` (or a `main` commit SHA tag). Use `docker inspect $(docker compose -f docker-compose.prod.yml ps -q odoo) --format '{{.Config.Image}}'` if you need to confirm the exact reference.
 2. **Functional Check**: Log into Odoo and confirm WBS Auto-Numbering still operates correctly after the image swap.
 3. **Ingress/HTTPS**: If routed through Ingress, ensure the public endpoints return HTTP 200 over HTTPS.
 
