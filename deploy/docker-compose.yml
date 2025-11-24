@@ -28,7 +28,7 @@ services:
           memory: 512M
 
   odoo:
-    image: odoo:18.0
+    image: ghcr.io/jgtolentino/odoo-ce:latest
     container_name: odoo-ce
     restart: unless-stopped
     depends_on:
@@ -44,11 +44,7 @@ services:
       # Main config
       - ./odoo.conf:/etc/odoo/odoo.conf:ro
 
-      # Custom CE/OCA addons only – NO Enterprise mounts
-      - ../addons:/mnt/extra-addons
-      - ../oca:/mnt/oca-addons
-
-      # Filestore
+      # Filestore only - addons are baked into the image
       - odoo-filestore:/var/lib/odoo
 
     # Expose only inside the droplet; Nginx on host will proxy 443 → 8069
