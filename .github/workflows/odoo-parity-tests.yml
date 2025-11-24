@@ -81,17 +81,23 @@ jobs:
           scripts/ci/install_odoo_18.sh
 
       - name: Wait for PostgreSQL
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: odoo
+          PGPASSWORD: odoo
         run: |
           python - << 'PY'
           import sys
           import time
+          import os
 
           import psycopg2
 
-
-          host = "localhost"
-          port = 5432
-          user = "odoo"
+          host = os.environ["PGHOST"]
+          port = os.environ["PGPORT"]
+          user = os.environ["PGUSER"]
+          password = os.environ["PGPASSWORD"]
           dbname = "postgres"
 
           max_tries = 30
@@ -101,6 +107,7 @@ jobs:
                 host=host,
                 port=port,
                 user=user,
+                password=password,
                 dbname=dbname,
               )
               conn.close()
@@ -205,5 +212,5 @@ jobs:
         env:
           N8N_CI_WEBHOOK_URL: ${{ secrets.N8N_CI_WEBHOOK_URL }}
         run: |
-          bash scripts/report_ci_telemetry.sh "${{ job.status }}"
-        shell: bash
+          chmod +x scripts/report_ci_telemetry.sh
+          sh scripts/report_ci_telemetry.sh "${{ job.status }}"
