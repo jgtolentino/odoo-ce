@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class IpaiBlock(models.Model):
@@ -15,6 +15,7 @@ class IpaiBlock(models.Model):
     - Embed (images, videos, iframes)
     - Database view (future)
     """
+
     _name = "ipai.block"
     _description = "IPAI Block"
     _order = "page_id, sequence"
@@ -37,32 +38,37 @@ class IpaiBlock(models.Model):
     )
 
     # Block type
-    block_type = fields.Selection([
-        # Text blocks
-        ("paragraph", "Paragraph"),
-        ("heading_1", "Heading 1"),
-        ("heading_2", "Heading 2"),
-        ("heading_3", "Heading 3"),
-        # List blocks
-        ("bulleted_list", "Bulleted List"),
-        ("numbered_list", "Numbered List"),
-        ("todo", "To-do"),
-        # Rich blocks
-        ("quote", "Quote"),
-        ("callout", "Callout"),
-        ("divider", "Divider"),
-        ("code", "Code"),
-        # Media blocks
-        ("image", "Image"),
-        ("video", "Video"),
-        ("embed", "Embed"),
-        ("file", "File"),
-        # Advanced blocks (future)
-        ("database_view", "Database View"),
-        ("table", "Table"),
-        ("toggle", "Toggle"),
-        ("synced_block", "Synced Block"),
-    ], string="Block Type", default="paragraph", required=True)
+    block_type = fields.Selection(
+        [
+            # Text blocks
+            ("paragraph", "Paragraph"),
+            ("heading_1", "Heading 1"),
+            ("heading_2", "Heading 2"),
+            ("heading_3", "Heading 3"),
+            # List blocks
+            ("bulleted_list", "Bulleted List"),
+            ("numbered_list", "Numbered List"),
+            ("todo", "To-do"),
+            # Rich blocks
+            ("quote", "Quote"),
+            ("callout", "Callout"),
+            ("divider", "Divider"),
+            ("code", "Code"),
+            # Media blocks
+            ("image", "Image"),
+            ("video", "Video"),
+            ("embed", "Embed"),
+            ("file", "File"),
+            # Advanced blocks (future)
+            ("database_view", "Database View"),
+            ("table", "Table"),
+            ("toggle", "Toggle"),
+            ("synced_block", "Synced Block"),
+        ],
+        string="Block Type",
+        default="paragraph",
+        required=True,
+    )
 
     sequence = fields.Integer(
         string="Sequence",
@@ -117,31 +123,39 @@ class IpaiBlock(models.Model):
         string="Callout Icon",
         default="💡",
     )
-    callout_color = fields.Selection([
-        ("default", "Default"),
-        ("gray", "Gray"),
-        ("brown", "Brown"),
-        ("orange", "Orange"),
-        ("yellow", "Yellow"),
-        ("green", "Green"),
-        ("blue", "Blue"),
-        ("purple", "Purple"),
-        ("pink", "Pink"),
-        ("red", "Red"),
-    ], string="Callout Color", default="default")
+    callout_color = fields.Selection(
+        [
+            ("default", "Default"),
+            ("gray", "Gray"),
+            ("brown", "Brown"),
+            ("orange", "Orange"),
+            ("yellow", "Yellow"),
+            ("green", "Green"),
+            ("blue", "Blue"),
+            ("purple", "Purple"),
+            ("pink", "Pink"),
+            ("red", "Red"),
+        ],
+        string="Callout Color",
+        default="default",
+    )
 
     # Database view specific (for future ipai_workspace_db)
     database_model_name = fields.Char(
         string="Database Model",
         help="Odoo model name for database_view blocks",
     )
-    database_view_type = fields.Selection([
-        ("list", "List"),
-        ("kanban", "Kanban"),
-        ("calendar", "Calendar"),
-        ("gallery", "Gallery"),
-        ("timeline", "Timeline"),
-    ], string="View Type", default="list")
+    database_view_type = fields.Selection(
+        [
+            ("list", "List"),
+            ("kanban", "Kanban"),
+            ("calendar", "Calendar"),
+            ("gallery", "Gallery"),
+            ("timeline", "Timeline"),
+        ],
+        string="View Type",
+        default="list",
+    )
     database_filter = fields.Text(
         string="Filter (JSON)",
         help="Saved filters for the database view",
@@ -237,11 +251,15 @@ class IpaiBlock(models.Model):
     def action_move_up(self):
         """Move block up in sequence."""
         self.ensure_one()
-        prev_block = self.search([
-            ("page_id", "=", self.page_id.id),
-            ("parent_block_id", "=", self.parent_block_id.id),
-            ("sequence", "<", self.sequence),
-        ], order="sequence desc", limit=1)
+        prev_block = self.search(
+            [
+                ("page_id", "=", self.page_id.id),
+                ("parent_block_id", "=", self.parent_block_id.id),
+                ("sequence", "<", self.sequence),
+            ],
+            order="sequence desc",
+            limit=1,
+        )
         if prev_block:
             prev_seq = prev_block.sequence
             prev_block.sequence = self.sequence
@@ -250,11 +268,15 @@ class IpaiBlock(models.Model):
     def action_move_down(self):
         """Move block down in sequence."""
         self.ensure_one()
-        next_block = self.search([
-            ("page_id", "=", self.page_id.id),
-            ("parent_block_id", "=", self.parent_block_id.id),
-            ("sequence", ">", self.sequence),
-        ], order="sequence asc", limit=1)
+        next_block = self.search(
+            [
+                ("page_id", "=", self.page_id.id),
+                ("parent_block_id", "=", self.parent_block_id.id),
+                ("sequence", ">", self.sequence),
+            ],
+            order="sequence asc",
+            limit=1,
+        )
         if next_block:
             next_seq = next_block.sequence
             next_block.sequence = self.sequence

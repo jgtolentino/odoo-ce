@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class IpaiBacklink(models.Model):
@@ -12,6 +12,7 @@ class IpaiBacklink(models.Model):
     - Navigation between related pages
     - Graph visualization of page relationships
     """
+
     _name = "ipai.backlink"
     _description = "IPAI Page Backlink"
     _order = "create_date desc"
@@ -41,11 +42,15 @@ class IpaiBacklink(models.Model):
         string="Link Text",
         help="The text used in the [[link]]",
     )
-    link_type = fields.Selection([
-        ("mention", "Mention [[Page]]"),
-        ("embed", "Embed /embed"),
-        ("reference", "Reference"),
-    ], string="Link Type", default="mention")
+    link_type = fields.Selection(
+        [
+            ("mention", "Mention [[Page]]"),
+            ("embed", "Embed /embed"),
+            ("reference", "Reference"),
+        ],
+        string="Link Type",
+        default="mention",
+    )
 
     # Context
     workspace_id = fields.Many2one(
@@ -93,13 +98,16 @@ class IpaiBacklink(models.Model):
         :return: list of dicts with source page info
         """
         backlinks = self.search([("target_page_id", "=", page_id)])
-        return [{
-            "id": bl.source_page_id.id,
-            "name": bl.source_page_id.name,
-            "icon": bl.source_page_id.icon,
-            "link_text": bl.link_text,
-            "link_type": bl.link_type,
-        } for bl in backlinks]
+        return [
+            {
+                "id": bl.source_page_id.id,
+                "name": bl.source_page_id.name,
+                "icon": bl.source_page_id.icon,
+                "link_text": bl.link_text,
+                "link_type": bl.link_type,
+            }
+            for bl in backlinks
+        ]
 
     @api.model
     def get_outgoing_links(self, page_id):
@@ -110,13 +118,16 @@ class IpaiBacklink(models.Model):
         :return: list of dicts with target page info
         """
         links = self.search([("source_page_id", "=", page_id)])
-        return [{
-            "id": link.target_page_id.id,
-            "name": link.target_page_id.name,
-            "icon": link.target_page_id.icon,
-            "link_text": link.link_text,
-            "link_type": link.link_type,
-        } for link in links]
+        return [
+            {
+                "id": link.target_page_id.id,
+                "name": link.target_page_id.name,
+                "icon": link.target_page_id.icon,
+                "link_text": link.link_text,
+                "link_type": link.link_type,
+            }
+            for link in links
+        ]
 
     @api.model
     def get_page_graph(self, workspace_id, max_depth=2):
@@ -127,24 +138,34 @@ class IpaiBacklink(models.Model):
         :param max_depth: int - Maximum traversal depth
         :return: dict with nodes and edges for graph visualization
         """
-        pages = self.env["ipai.page"].search([
-            ("workspace_id", "=", workspace_id),
-        ])
-        backlinks = self.search([
-            ("workspace_id", "=", workspace_id),
-        ])
+        pages = self.env["ipai.page"].search(
+            [
+                ("workspace_id", "=", workspace_id),
+            ]
+        )
+        backlinks = self.search(
+            [
+                ("workspace_id", "=", workspace_id),
+            ]
+        )
 
-        nodes = [{
-            "id": page.id,
-            "label": page.name,
-            "icon": page.icon,
-        } for page in pages]
+        nodes = [
+            {
+                "id": page.id,
+                "label": page.name,
+                "icon": page.icon,
+            }
+            for page in pages
+        ]
 
-        edges = [{
-            "source": bl.source_page_id.id,
-            "target": bl.target_page_id.id,
-            "label": bl.link_text,
-        } for bl in backlinks]
+        edges = [
+            {
+                "source": bl.source_page_id.id,
+                "target": bl.target_page_id.id,
+                "label": bl.link_text,
+            }
+            for bl in backlinks
+        ]
 
         return {
             "nodes": nodes,

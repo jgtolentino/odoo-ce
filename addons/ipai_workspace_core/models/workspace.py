@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -12,6 +12,7 @@ class IpaiWorkspace(models.Model):
     - Member management with roles
     - Hierarchical page organization
     """
+
     _name = "ipai.workspace"
     _description = "IPAI Workspace"
     _inherit = ["mail.thread", "mail.activity.mixin"]
@@ -51,11 +52,17 @@ class IpaiWorkspace(models.Model):
     )
 
     # Privacy & Access
-    privacy = fields.Selection([
-        ("private", "Private"),
-        ("shared", "Shared with Members"),
-        ("public", "Public (Read-only)"),
-    ], string="Privacy", default="shared", required=True, tracking=True)
+    privacy = fields.Selection(
+        [
+            ("private", "Private"),
+            ("shared", "Shared with Members"),
+            ("public", "Public (Read-only)"),
+        ],
+        string="Privacy",
+        default="shared",
+        required=True,
+        tracking=True,
+    )
 
     owner_id = fields.Many2one(
         "res.users",
@@ -106,7 +113,7 @@ class IpaiWorkspace(models.Model):
         (
             "name_owner_unique",
             "unique(name, owner_id)",
-            "Workspace name must be unique per owner!"
+            "Workspace name must be unique per owner!",
         ),
     ]
 

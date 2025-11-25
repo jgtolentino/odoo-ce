@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 from odoo import http
 from odoo.http import request
 
@@ -44,11 +43,20 @@ class WorkspaceController(http.Controller):
             "blocks": [block.to_json() for block in page.block_ids.sorted("sequence")],
             "backlinks": request.env["ipai.backlink"].get_backlinks_for_page(page_id),
             "created_by": page.created_by_id.name,
-            "last_edited_by": page.last_edited_by_id.name if page.last_edited_by_id else None,
-            "last_edited_date": page.last_edited_date.isoformat() if page.last_edited_date else None,
+            "last_edited_by": (
+                page.last_edited_by_id.name if page.last_edited_by_id else None
+            ),
+            "last_edited_date": (
+                page.last_edited_date.isoformat() if page.last_edited_date else None
+            ),
         }
 
-    @http.route("/workspace/api/page/<int:page_id>/save", type="json", auth="user", methods=["POST"])
+    @http.route(
+        "/workspace/api/page/<int:page_id>/save",
+        type="json",
+        auth="user",
+        methods=["POST"],
+    )
     def save_page(self, page_id, **kwargs):
         """
         Save page content.
@@ -93,8 +101,12 @@ class WorkspaceController(http.Controller):
     # BLOCK ENDPOINTS
     # -------------------------------------------------------------------------
 
-    @http.route("/workspace/api/block/create", type="json", auth="user", methods=["POST"])
-    def create_block(self, page_id, block_type="paragraph", content=None, sequence=None, **kwargs):
+    @http.route(
+        "/workspace/api/block/create", type="json", auth="user", methods=["POST"]
+    )
+    def create_block(
+        self, page_id, block_type="paragraph", content=None, sequence=None, **kwargs
+    ):
         """
         Create a new block in a page.
 
@@ -122,15 +134,32 @@ class WorkspaceController(http.Controller):
             "content": content,
             "sequence": sequence,
         }
-        vals.update({k: v for k, v in kwargs.items() if k in [
-            "content_html", "is_checked", "code_language", "embed_url",
-            "callout_icon", "callout_color", "properties"
-        ]})
+        vals.update(
+            {
+                k: v
+                for k, v in kwargs.items()
+                if k
+                in [
+                    "content_html",
+                    "is_checked",
+                    "code_language",
+                    "embed_url",
+                    "callout_icon",
+                    "callout_color",
+                    "properties",
+                ]
+            }
+        )
 
         block = request.env["ipai.block"].create(vals)
         return block.to_json()
 
-    @http.route("/workspace/api/block/<int:block_id>", type="json", auth="user", methods=["POST"])
+    @http.route(
+        "/workspace/api/block/<int:block_id>",
+        type="json",
+        auth="user",
+        methods=["POST"],
+    )
     def update_block(self, block_id, **kwargs):
         """
         Update an existing block.
@@ -147,9 +176,16 @@ class WorkspaceController(http.Controller):
             return {"error": "Block not found", "code": 404}
 
         allowed_fields = [
-            "block_type", "content", "content_html", "sequence",
-            "is_checked", "code_language", "embed_url",
-            "callout_icon", "callout_color", "properties"
+            "block_type",
+            "content",
+            "content_html",
+            "sequence",
+            "is_checked",
+            "code_language",
+            "embed_url",
+            "callout_icon",
+            "callout_color",
+            "properties",
         ]
         vals = {k: v for k, v in kwargs.items() if k in allowed_fields}
 
@@ -158,7 +194,12 @@ class WorkspaceController(http.Controller):
 
         return block.to_json()
 
-    @http.route("/workspace/api/block/<int:block_id>/delete", type="json", auth="user", methods=["POST"])
+    @http.route(
+        "/workspace/api/block/<int:block_id>/delete",
+        type="json",
+        auth="user",
+        methods=["POST"],
+    )
     def delete_block(self, block_id):
         """Delete a block."""
         block = request.env["ipai.block"].browse(block_id)
@@ -168,7 +209,12 @@ class WorkspaceController(http.Controller):
         block.unlink()
         return {"success": True}
 
-    @http.route("/workspace/api/block/toggle/<int:block_id>", type="json", auth="user", methods=["POST"])
+    @http.route(
+        "/workspace/api/block/toggle/<int:block_id>",
+        type="json",
+        auth="user",
+        methods=["POST"],
+    )
     def toggle_todo(self, block_id):
         """Toggle a todo block's checked state."""
         block = request.env["ipai.block"].browse(block_id)
@@ -185,7 +231,9 @@ class WorkspaceController(http.Controller):
     # WORKSPACE ENDPOINTS
     # -------------------------------------------------------------------------
 
-    @http.route("/workspace/api/workspace/<int:workspace_id>/pages", type="json", auth="user")
+    @http.route(
+        "/workspace/api/workspace/<int:workspace_id>/pages", type="json", auth="user"
+    )
     def get_workspace_pages(self, workspace_id):
         """
         Get all pages in a workspace as a tree structure.
@@ -205,7 +253,7 @@ class WorkspaceController(http.Controller):
                     "name": page.name,
                     "icon": page.icon,
                     "child_count": page.child_count,
-                    "children": build_tree(page.child_ids) if page.child_ids else []
+                    "children": build_tree(page.child_ids) if page.child_ids else [],
                 }
                 result.append(node)
             return result
@@ -213,7 +261,9 @@ class WorkspaceController(http.Controller):
         root_pages = workspace.root_page_ids.sorted("sequence")
         return build_tree(root_pages)
 
-    @http.route("/workspace/api/workspace/<int:workspace_id>/graph", type="json", auth="user")
+    @http.route(
+        "/workspace/api/workspace/<int:workspace_id>/graph", type="json", auth="user"
+    )
     def get_workspace_graph(self, workspace_id):
         """
         Get page relationship graph for visualization.
@@ -245,14 +295,17 @@ class WorkspaceController(http.Controller):
             domain.append(("workspace_id", "=", workspace_id))
 
         pages = request.env["ipai.page"].search(domain, limit=limit)
-        return [{
-            "id": page.id,
-            "name": page.name,
-            "icon": page.icon,
-            "workspace_id": page.workspace_id.id,
-            "workspace_name": page.workspace_id.name,
-            "path": page.get_tree_path(),
-        } for page in pages]
+        return [
+            {
+                "id": page.id,
+                "name": page.name,
+                "icon": page.icon,
+                "workspace_id": page.workspace_id.id,
+                "workspace_name": page.workspace_id.name,
+                "path": page.get_tree_path(),
+            }
+            for page in pages
+        ]
 
     # -------------------------------------------------------------------------
     # TEMPLATE ENDPOINTS
@@ -283,16 +336,24 @@ class WorkspaceController(http.Controller):
             domain.append(("category", "=", category))
 
         templates = request.env["ipai.page.template"].search(domain)
-        return [{
-            "id": t.id,
-            "name": t.name,
-            "icon": t.icon,
-            "description": t.description,
-            "category": t.category,
-            "is_global": t.is_global,
-        } for t in templates]
+        return [
+            {
+                "id": t.id,
+                "name": t.name,
+                "icon": t.icon,
+                "description": t.description,
+                "category": t.category,
+                "is_global": t.is_global,
+            }
+            for t in templates
+        ]
 
-    @http.route("/workspace/api/template/<int:template_id>/create", type="json", auth="user", methods=["POST"])
+    @http.route(
+        "/workspace/api/template/<int:template_id>/create",
+        type="json",
+        auth="user",
+        methods=["POST"],
+    )
     def create_from_template(self, template_id, workspace_id, parent_id=None):
         """
         Create a new page from a template.

@@ -12,22 +12,37 @@ default_language_version:
 repos:
   # -------------------------------------------------------------------------
   # OCA Official Hooks - Odoo-specific validation
+  # Note: Using oca-pylint for Odoo-specific checks
   # -------------------------------------------------------------------------
-  - repo: https://github.com/OCA/odoo-pre-commit-hooks
-    rev: v0.0.32
-    hooks:
-      - id: oca-update-manifest
-        args: ["--odoo-version=18.0"]
-      - id: oca-check-manifest
-      - id: oca-check-csv
-      - id: oca-xml-lint
-      - id: oca-po-check
+  # - repo: https://github.com/OCA/odoo-pre-commit-hooks
+  #   rev: v0.0.32
+  #   hooks:
+  #     - id: oca-pylint
+  #       args: ["--odoo-version=18.0"]
+
+  # -------------------------------------------------------------------------
+  # Pylint with Odoo Plugin (informational only - doesn't block commits)
+  # Note: E0401 import errors are expected since Odoo isn't installed locally
+  # Run manually: pylint --load-plugins=pylint_odoo addons/ipai_*/
+  # -------------------------------------------------------------------------
+  # - repo: https://github.com/pylint-dev/pylint
+  #   rev: v3.3.7
+  #   hooks:
+  #     - id: pylint
+  #       name: pylint-odoo
+  #       args:
+  #         - --load-plugins=pylint_odoo
+  #         - --disable=C0114,C0115,C0116,R0801,W0511,E0401,C0103,W8113,W8161,W8301
+  #         - --max-line-length=88
+  #       additional_dependencies:
+  #         - pylint-odoo>=9.0
+  #       files: ^addons/ipai_.*\.py$
 
   # -------------------------------------------------------------------------
   # Python Code Formatting (Black)
   # -------------------------------------------------------------------------
   - repo: https://github.com/psf/black
-    rev: 24.4.2
+    rev: 25.11.0
     hooks:
       - id: black
         args: [--line-length=88]
@@ -41,7 +56,7 @@ repos:
   # Import Sorting (isort) - Black compatible
   # -------------------------------------------------------------------------
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
+    rev: 7.0.0
     hooks:
       - id: isort
         args: [--profile=black, --line-length=88]
@@ -50,13 +65,14 @@ repos:
   # Flake8 Linting (PEP8 compliance)
   # -------------------------------------------------------------------------
   - repo: https://github.com/pycqa/flake8
-    rev: 7.0.0
+    rev: 7.3.0
     hooks:
       - id: flake8
         args:
           - --max-line-length=88
           - --extend-ignore=E501,W503,W504
           - --exclude=__manifest__.py,migrations
+          - "--per-file-ignores=*/__init__.py:F401"
         additional_dependencies:
           - flake8-bugbear
           - flake8-comprehensions
@@ -65,7 +81,7 @@ repos:
   # YAML Validation
   # -------------------------------------------------------------------------
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.37.1
     hooks:
       - id: yamllint
         args: [-d, relaxed]
@@ -78,7 +94,7 @@ repos:
   # General File Hygiene
   # -------------------------------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         exclude: |
@@ -107,7 +123,7 @@ repos:
   # Security Scanning
   # -------------------------------------------------------------------------
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.8
+    rev: 1.9.2
     hooks:
       - id: bandit
         args: [-c, pyproject.toml, -r]

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import _, fields, models
 
 
 class IpaiPageTemplate(models.Model):
@@ -11,6 +11,7 @@ class IpaiPageTemplate(models.Model):
     - Include pre-defined blocks
     - Auto-populate with variables
     """
+
     _name = "ipai.page.template"
     _description = "IPAI Page Template"
     _order = "sequence, name"
@@ -75,14 +76,18 @@ class IpaiPageTemplate(models.Model):
     )
 
     # Categories
-    category = fields.Selection([
-        ("general", "General"),
-        ("meeting", "Meetings"),
-        ("project", "Projects"),
-        ("documentation", "Documentation"),
-        ("planning", "Planning"),
-        ("personal", "Personal"),
-    ], string="Category", default="general")
+    category = fields.Selection(
+        [
+            ("general", "General"),
+            ("meeting", "Meetings"),
+            ("project", "Projects"),
+            ("documentation", "Documentation"),
+            ("planning", "Planning"),
+            ("personal", "Personal"),
+        ],
+        string="Category",
+        default="general",
+    )
 
     # -------------------------------------------------------------------------
     # METHODS
@@ -100,29 +105,33 @@ class IpaiPageTemplate(models.Model):
         Block = self.env["ipai.block"]
 
         # Create the page
-        page = Page.create({
-            "name": self.default_title,
-            "icon": self.icon,
-            "workspace_id": workspace_id,
-            "parent_id": parent_id,
-            "template_id": self.id,
-            "content_html": self.content_html,
-            "content_json": self.content_json,
-        })
+        page = Page.create(
+            {
+                "name": self.default_title,
+                "icon": self.icon,
+                "workspace_id": workspace_id,
+                "parent_id": parent_id,
+                "template_id": self.id,
+                "content_html": self.content_html,
+                "content_json": self.content_json,
+            }
+        )
 
         # Copy template blocks
         for tblock in self.template_block_ids.sorted("sequence"):
-            Block.create({
-                "page_id": page.id,
-                "block_type": tblock.block_type,
-                "sequence": tblock.sequence,
-                "content": tblock.content,
-                "content_html": tblock.content_html,
-                "properties": tblock.properties,
-                "callout_icon": tblock.callout_icon,
-                "callout_color": tblock.callout_color,
-                "code_language": tblock.code_language,
-            })
+            Block.create(
+                {
+                    "page_id": page.id,
+                    "block_type": tblock.block_type,
+                    "sequence": tblock.sequence,
+                    "content": tblock.content,
+                    "content_html": tblock.content_html,
+                    "properties": tblock.properties,
+                    "callout_icon": tblock.callout_icon,
+                    "callout_color": tblock.callout_color,
+                    "code_language": tblock.code_language,
+                }
+            )
 
         return page
 
@@ -141,6 +150,7 @@ class IpaiPageTemplate(models.Model):
 
 class IpaiTemplateBlock(models.Model):
     """Template Block - Block definition within a template."""
+
     _name = "ipai.template.block"
     _description = "IPAI Template Block"
     _order = "sequence"
@@ -152,19 +162,24 @@ class IpaiTemplateBlock(models.Model):
         ondelete="cascade",
     )
 
-    block_type = fields.Selection([
-        ("paragraph", "Paragraph"),
-        ("heading_1", "Heading 1"),
-        ("heading_2", "Heading 2"),
-        ("heading_3", "Heading 3"),
-        ("bulleted_list", "Bulleted List"),
-        ("numbered_list", "Numbered List"),
-        ("todo", "To-do"),
-        ("quote", "Quote"),
-        ("callout", "Callout"),
-        ("divider", "Divider"),
-        ("code", "Code"),
-    ], string="Block Type", default="paragraph", required=True)
+    block_type = fields.Selection(
+        [
+            ("paragraph", "Paragraph"),
+            ("heading_1", "Heading 1"),
+            ("heading_2", "Heading 2"),
+            ("heading_3", "Heading 3"),
+            ("bulleted_list", "Bulleted List"),
+            ("numbered_list", "Numbered List"),
+            ("todo", "To-do"),
+            ("quote", "Quote"),
+            ("callout", "Callout"),
+            ("divider", "Divider"),
+            ("code", "Code"),
+        ],
+        string="Block Type",
+        default="paragraph",
+        required=True,
+    )
 
     sequence = fields.Integer(
         string="Sequence",
@@ -185,18 +200,22 @@ class IpaiTemplateBlock(models.Model):
         string="Callout Icon",
         default="💡",
     )
-    callout_color = fields.Selection([
-        ("default", "Default"),
-        ("gray", "Gray"),
-        ("brown", "Brown"),
-        ("orange", "Orange"),
-        ("yellow", "Yellow"),
-        ("green", "Green"),
-        ("blue", "Blue"),
-        ("purple", "Purple"),
-        ("pink", "Pink"),
-        ("red", "Red"),
-    ], string="Callout Color", default="default")
+    callout_color = fields.Selection(
+        [
+            ("default", "Default"),
+            ("gray", "Gray"),
+            ("brown", "Brown"),
+            ("orange", "Orange"),
+            ("yellow", "Yellow"),
+            ("green", "Green"),
+            ("blue", "Blue"),
+            ("purple", "Purple"),
+            ("pink", "Pink"),
+            ("red", "Red"),
+        ],
+        string="Callout Color",
+        default="default",
+    )
     code_language = fields.Char(
         string="Language",
     )

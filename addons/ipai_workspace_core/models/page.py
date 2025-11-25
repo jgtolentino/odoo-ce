@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
-from odoo import api, fields, models, _
+
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,6 +16,7 @@ class IpaiPage(models.Model):
     - Backlinks
     - Database linking (future ipai_workspace_db module)
     """
+
     _name = "ipai.page"
     _description = "IPAI Page"
     _inherit = ["mail.thread", "mail.activity.mixin"]
@@ -253,11 +255,13 @@ class IpaiPage(models.Model):
 
     def unlink(self):
         """Clean up backlinks before deletion."""
-        self.env["ipai.backlink"].search([
-            "|",
-            ("source_page_id", "in", self.ids),
-            ("target_page_id", "in", self.ids),
-        ]).unlink()
+        self.env["ipai.backlink"].search(
+            [
+                "|",
+                ("source_page_id", "in", self.ids),
+                ("target_page_id", "in", self.ids),
+            ]
+        ).unlink()
         return super().unlink()
 
     # -------------------------------------------------------------------------
@@ -294,18 +298,23 @@ class IpaiPage(models.Model):
                         continue
                 else:
                     # Search by title in same workspace
-                    target = self.search([
-                        ("workspace_id", "=", page.workspace_id.id),
-                        ("name", "=ilike", match),
-                        ("id", "!=", page.id),
-                    ], limit=1)
+                    target = self.search(
+                        [
+                            ("workspace_id", "=", page.workspace_id.id),
+                            ("name", "=ilike", match),
+                            ("id", "!=", page.id),
+                        ],
+                        limit=1,
+                    )
 
                 if target:
-                    Backlink.create({
-                        "source_page_id": page.id,
-                        "target_page_id": target.id,
-                        "link_text": match,
-                    })
+                    Backlink.create(
+                        {
+                            "source_page_id": page.id,
+                            "target_page_id": target.id,
+                            "link_text": match,
+                        }
+                    )
 
     # -------------------------------------------------------------------------
     # ACTION METHODS
@@ -379,11 +388,14 @@ class IpaiPage(models.Model):
         breadcrumb = []
         page = self
         while page:
-            breadcrumb.insert(0, {
-                "id": page.id,
-                "name": page.name,
-                "icon": page.icon,
-            })
+            breadcrumb.insert(
+                0,
+                {
+                    "id": page.id,
+                    "name": page.name,
+                    "icon": page.icon,
+                },
+            )
             page = page.parent_id
         return breadcrumb
 
