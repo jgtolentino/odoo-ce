@@ -1,0 +1,24 @@
+# =============================================================================
+# CODEOWNERS - Automatic review assignment
+# =============================================================================
+# GitHub will automatically request reviews from these owners
+# when pull requests modify matching files.
+# =============================================================================
+
+# Default owners for everything
+*                               @jgtolentino
+
+# Custom IPAI modules
+/addons/ipai_*/                 @jgtolentino
+
+# Infrastructure and CI/CD
+/.github/                       @jgtolentino
+/deploy/                        @jgtolentino
+/scripts/                       @jgtolentino
+Dockerfile                      @jgtolentino
+docker-compose*.yml             @jgtolentino
+
+# Configuration files
+.pre-commit-config.yaml         @jgtolentino
+pyproject.toml                  @jgtolentino
+requirements.txt                @jgtolentino

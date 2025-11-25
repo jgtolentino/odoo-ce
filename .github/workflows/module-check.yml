@@ -1,0 +1,111 @@
+# =============================================================================
+# Module Manifest Validation
+# =============================================================================
+# Quick validation of Odoo module manifests and structure.
+# Runs on any changes to addons directory.
+# =============================================================================
+
+name: Module Check
+
+on:
+  push:
+    paths:
+      - 'addons/**/__manifest__.py'
+      - 'addons/**/__init__.py'
+  pull_request:
+    paths:
+      - 'addons/**/__manifest__.py'
+      - 'addons/**/__init__.py'
+
+jobs:
+  validate:
+    name: Validate Modules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate module manifests
+        run: |
+          echo "Validating Odoo module manifests..."
+
+          for manifest in addons/*/__manifest__.py; do
+            if [ -f "$manifest" ]; then
+              module_dir=$(dirname "$manifest")
+              module_name=$(basename "$module_dir")
+
+              echo "Checking: $module_name"
+
+              # Check manifest is valid Python
+              python -c "exec(open('$manifest').read())" || {
+                echo "ERROR: Invalid Python syntax in $manifest"
+                exit 1
+              }
+
+              # Check required keys exist
+              python << EOF
+          import ast
+          with open("$manifest") as f:
+              manifest = ast.literal_eval(f.read())
+
+          required_keys = ["name", "version", "depends", "data"]
+          missing = [k for k in required_keys if k not in manifest]
+          if missing:
+              print(f"WARNING: Missing keys in $module_name: {missing}")
+
+          # Validate version format (Odoo 18.0.x.x.x)
+          version = manifest.get("version", "")
+          if not version.startswith("18.0."):
+              print(f"WARNING: Version should start with '18.0.' in $module_name")
+
+          print(f"  - Name: {manifest.get('name')}")
+          print(f"  - Version: {version}")
+          print(f"  - License: {manifest.get('license', 'Not specified')}")
+          EOF
+
+              # Check __init__.py exists
+              if [ ! -f "$module_dir/__init__.py" ]; then
+                echo "ERROR: Missing __init__.py in $module_name"
+                exit 1
+              fi
+
+              # Check security directory if models exist
+              if [ -d "$module_dir/models" ]; then
+                if [ ! -f "$module_dir/security/ir.model.access.csv" ]; then
+                  echo "WARNING: No security/ir.model.access.csv in $module_name (has models/)"
+                fi
+              fi
+
+              echo "  ✓ $module_name validated"
+              echo ""
+            fi
+          done
+
+          echo "All module manifests validated successfully!"
+
+      - name: Check for naming conventions
+        run: |
+          echo "Checking naming conventions..."
+
+          # Check model naming (should be ipai.* or company prefix)
+          for pyfile in addons/ipai_*/models/*.py; do
+            if [ -f "$pyfile" ]; then
+              # Check for _name definitions
+              if grep -q "_name\s*=" "$pyfile"; then
+                model_names=$(grep "_name\s*=" "$pyfile" | grep -oP '"[^"]+"|'"'"'[^'"'"']+'"'" | tr -d '"'"'" || true)
+                for name in $model_names; do
+                  if [[ ! "$name" =~ ^ipai\. ]] && [[ ! "$name" =~ ^res\. ]] && [[ ! "$name" =~ ^ir\. ]]; then
+                    echo "INFO: Model '$name' in $pyfile doesn't use ipai.* namespace"
+                  fi
+                done
+              fi
+            fi
+          done
+
+          echo "Naming convention check complete!"
