@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- =====================================================================
+         DEFAULT TEMPLATES
+         ===================================================================== -->
+
+    <!-- Meeting Notes Template -->
+    <record id="template_meeting_notes" model="ipai.page.template">
+        <field name="name">Meeting Notes</field>
+        <field name="icon">📝</field>
+        <field name="description">Template for capturing meeting discussions, decisions, and action items.</field>
+        <field name="category">meeting</field>
+        <field name="is_global" eval="True"/>
+        <field name="default_title">Meeting Notes - [Date]</field>
+        <field name="content_html"><![CDATA[
+<h2>📅 Meeting Details</h2>
+<ul>
+    <li><strong>Date:</strong> </li>
+    <li><strong>Attendees:</strong> </li>
+    <li><strong>Duration:</strong> </li>
+</ul>
+
+<h2>📋 Agenda</h2>
+<ol>
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+</ol>
+
+<h2>💬 Discussion Notes</h2>
+<p>Key points discussed...</p>
+
+<h2>✅ Decisions Made</h2>
+<ul>
+    <li>Decision 1</li>
+</ul>
+
+<h2>📌 Action Items</h2>
+<ul>
+    <li>[ ] Action item 1 - @owner</li>
+    <li>[ ] Action item 2 - @owner</li>
+</ul>
+
+<h2>📅 Next Steps</h2>
+<p>Follow-up date and items...</p>
+        ]]></field>
+    </record>
+
+    <!-- Project Brief Template -->
+    <record id="template_project_brief" model="ipai.page.template">
+        <field name="name">Project Brief</field>
+        <field name="icon">🎯</field>
+        <field name="description">Template for documenting project scope, goals, and timeline.</field>
+        <field name="category">project</field>
+        <field name="is_global" eval="True"/>
+        <field name="default_title">Project: [Name]</field>
+        <field name="content_html"><![CDATA[
+<h2>🎯 Project Overview</h2>
+<p>Brief description of the project and its purpose.</p>
+
+<h2>📊 Goals &amp; Objectives</h2>
+<ul>
+    <li>Goal 1</li>
+    <li>Goal 2</li>
+    <li>Goal 3</li>
+</ul>
+
+<h2>👥 Team</h2>
+<ul>
+    <li><strong>Project Lead:</strong> </li>
+    <li><strong>Team Members:</strong> </li>
+    <li><strong>Stakeholders:</strong> </li>
+</ul>
+
+<h2>📅 Timeline</h2>
+<ul>
+    <li><strong>Start Date:</strong> </li>
+    <li><strong>End Date:</strong> </li>
+    <li><strong>Key Milestones:</strong></li>
+</ul>
+
+<h2>📝 Scope</h2>
+<h3>In Scope</h3>
+<ul>
+    <li>Item 1</li>
+</ul>
+
+<h3>Out of Scope</h3>
+<ul>
+    <li>Item 1</li>
+</ul>
+
+<h2>⚠️ Risks &amp; Dependencies</h2>
+<ul>
+    <li>Risk 1</li>
+</ul>
+
+<h2>📎 Resources</h2>
+<p>Links to related documents, tools, etc.</p>
+        ]]></field>
+    </record>
+
+    <!-- Weekly Planning Template -->
+    <record id="template_weekly_planning" model="ipai.page.template">
+        <field name="name">Weekly Planning</field>
+        <field name="icon">📆</field>
+        <field name="description">Template for weekly goal setting and task planning.</field>
+        <field name="category">planning</field>
+        <field name="is_global" eval="True"/>
+        <field name="default_title">Week of [Date]</field>
+        <field name="content_html"><![CDATA[
+<h2>🎯 Weekly Goals</h2>
+<ol>
+    <li>Goal 1</li>
+    <li>Goal 2</li>
+    <li>Goal 3</li>
+</ol>
+
+<h2>📋 Tasks</h2>
+<h3>High Priority</h3>
+<ul>
+    <li>[ ] Task 1</li>
+</ul>
+
+<h3>Medium Priority</h3>
+<ul>
+    <li>[ ] Task 1</li>
+</ul>
+
+<h3>Low Priority</h3>
+<ul>
+    <li>[ ] Task 1</li>
+</ul>
+
+<h2>📅 Daily Breakdown</h2>
+<h3>Monday</h3>
+<ul>
+    <li>[ ] </li>
+</ul>
+
+<h3>Tuesday</h3>
+<ul>
+    <li>[ ] </li>
+</ul>
+
+<h3>Wednesday</h3>
+<ul>
+    <li>[ ] </li>
+</ul>
+
+<h3>Thursday</h3>
+<ul>
+    <li>[ ] </li>
+</ul>
+
+<h3>Friday</h3>
+<ul>
+    <li>[ ] </li>
+</ul>
+
+<h2>📝 Notes</h2>
+<p>Additional thoughts or reminders...</p>
+        ]]></field>
+    </record>
+
+    <!-- Documentation Page Template -->
+    <record id="template_documentation" model="ipai.page.template">
+        <field name="name">Documentation Page</field>
+        <field name="icon">📚</field>
+        <field name="description">Template for technical or process documentation.</field>
+        <field name="category">documentation</field>
+        <field name="is_global" eval="True"/>
+        <field name="default_title">Documentation: [Topic]</field>
+        <field name="content_html"><![CDATA[
+<h2>📖 Overview</h2>
+<p>Brief introduction to this documentation.</p>
+
+<h2>🎯 Purpose</h2>
+<p>Why this documentation exists and who it's for.</p>
+
+<h2>📋 Prerequisites</h2>
+<ul>
+    <li>Requirement 1</li>
+</ul>
+
+<h2>📝 Instructions</h2>
+<h3>Step 1: [Title]</h3>
+<p>Description...</p>
+
+<h3>Step 2: [Title]</h3>
+<p>Description...</p>
+
+<h3>Step 3: [Title]</h3>
+<p>Description...</p>
+
+<h2>💡 Tips &amp; Best Practices</h2>
+<ul>
+    <li>Tip 1</li>
+</ul>
+
+<h2>⚠️ Troubleshooting</h2>
+<h3>Common Issue 1</h3>
+<p>Solution...</p>
+
+<h2>📎 Related Links</h2>
+<ul>
+    <li><a href="#">Link 1</a></li>
+</ul>
+
+<h2>📅 Version History</h2>
+<ul>
+    <li><strong>v1.0</strong> - Initial version</li>
+</ul>
+        ]]></field>
+    </record>
+
+    <!-- Blank Page Template -->
+    <record id="template_blank" model="ipai.page.template">
+        <field name="name">Blank Page</field>
+        <field name="icon">📄</field>
+        <field name="description">Start with a clean slate.</field>
+        <field name="category">general</field>
+        <field name="is_global" eval="True"/>
+        <field name="default_title">Untitled</field>
+        <field name="content_html"><![CDATA[
+<p>Start writing here...</p>
+        ]]></field>
+    </record>
+
+</odoo>

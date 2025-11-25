@@ -1,0 +1,319 @@
+/**
+ * IPAI Workspace Core - Styles
+ * Notion-inspired workspace styling for Odoo
+ */
+
+/* =============================================================================
+   WORKSPACE LIST / KANBAN
+   ============================================================================= */
+
+.o_ipai_workspace_kanban .oe_kanban_card {
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease;
+}
+
+.o_ipai_workspace_kanban .oe_kanban_card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.o_ipai_workspace_kanban .o_kanban_image {
+    height: 80px;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+}
+
+.o_ipai_workspace_kanban .o_kanban_image img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* =============================================================================
+   PAGE STYLING
+   ============================================================================= */
+
+/* Page icon in title */
+.o_form_view .oe_title h1 .o_field_char:first-child {
+    font-size: 1.5em;
+    margin-right: 0.25em;
+}
+
+/* Page content area */
+.o_field_html[name="content_html"] {
+    min-height: 400px;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.o_field_html[name="content_html"] p {
+    margin-bottom: 0.75em;
+}
+
+.o_field_html[name="content_html"] h1,
+.o_field_html[name="content_html"] h2,
+.o_field_html[name="content_html"] h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.o_field_html[name="content_html"] h1 {
+    font-size: 1.875em;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.25em;
+}
+
+.o_field_html[name="content_html"] h2 {
+    font-size: 1.5em;
+}
+
+.o_field_html[name="content_html"] h3 {
+    font-size: 1.25em;
+}
+
+.o_field_html[name="content_html"] ul,
+.o_field_html[name="content_html"] ol {
+    padding-left: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+.o_field_html[name="content_html"] li {
+    margin-bottom: 0.25em;
+}
+
+.o_field_html[name="content_html"] code {
+    background-color: #f3f4f6;
+    padding: 0.125em 0.375em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+}
+
+.o_field_html[name="content_html"] pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1em;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.o_field_html[name="content_html"] pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+.o_field_html[name="content_html"] blockquote {
+    border-left: 3px solid #6366f1;
+    padding-left: 1em;
+    margin-left: 0;
+    color: #4b5563;
+    font-style: italic;
+}
+
+/* =============================================================================
+   BLOCK STYLING
+   ============================================================================= */
+
+/* Todo checkbox styling */
+.o_field_boolean[name="is_checked"] .o_checkbox {
+    width: 18px;
+    height: 18px;
+}
+
+/* Block type badges */
+.o_list_view .o_field_badge[name="block_type"] .badge {
+    font-size: 0.75rem;
+    padding: 0.25em 0.5em;
+}
+
+/* Callout colors */
+.ipai-callout {
+    padding: 1em;
+    border-radius: 8px;
+    margin: 0.5em 0;
+    display: flex;
+    gap: 0.75em;
+}
+
+.ipai-callout-icon {
+    font-size: 1.25em;
+    flex-shrink: 0;
+}
+
+.ipai-callout-default { background-color: #f3f4f6; }
+.ipai-callout-gray { background-color: #e5e7eb; }
+.ipai-callout-brown { background-color: #d6ccc2; }
+.ipai-callout-orange { background-color: #fed7aa; }
+.ipai-callout-yellow { background-color: #fef08a; }
+.ipai-callout-green { background-color: #bbf7d0; }
+.ipai-callout-blue { background-color: #bfdbfe; }
+.ipai-callout-purple { background-color: #ddd6fe; }
+.ipai-callout-pink { background-color: #fbcfe8; }
+.ipai-callout-red { background-color: #fecaca; }
+
+/* =============================================================================
+   SIDEBAR / TREE NAVIGATION
+   ============================================================================= */
+
+.ipai-page-tree {
+    font-size: 14px;
+}
+
+.ipai-page-tree-item {
+    display: flex;
+    align-items: center;
+    padding: 0.375em 0.5em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.ipai-page-tree-item:hover {
+    background-color: #f3f4f6;
+}
+
+.ipai-page-tree-item.active {
+    background-color: #e5e7eb;
+}
+
+.ipai-page-tree-icon {
+    margin-right: 0.5em;
+    font-size: 1em;
+}
+
+.ipai-page-tree-toggle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.25em;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.ipai-page-tree-toggle:hover {
+    background-color: #e5e7eb;
+}
+
+.ipai-page-tree-children {
+    padding-left: 1.25em;
+}
+
+/* =============================================================================
+   BACKLINKS
+   ============================================================================= */
+
+.ipai-backlinks {
+    background-color: #f9fafb;
+    border-radius: 8px;
+    padding: 1em;
+    margin-top: 1em;
+}
+
+.ipai-backlinks-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ipai-backlink-item {
+    display: flex;
+    align-items: center;
+    padding: 0.375em 0;
+    color: #4b5563;
+    text-decoration: none;
+}
+
+.ipai-backlink-item:hover {
+    color: #6366f1;
+}
+
+.ipai-backlink-item .icon {
+    margin-right: 0.5em;
+}
+
+/* =============================================================================
+   TEMPLATE GALLERY
+   ============================================================================= */
+
+.ipai-template-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1em;
+}
+
+.ipai-template-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ipai-template-card:hover {
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.ipai-template-card-icon {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+.ipai-template-card-name {
+    font-weight: 600;
+    margin-bottom: 0.25em;
+}
+
+.ipai-template-card-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* =============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================= */
+
+@media (max-width: 768px) {
+    .o_field_html[name="content_html"] {
+        min-height: 300px;
+        font-size: 14px;
+    }
+
+    .ipai-template-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+/* =============================================================================
+   DARK MODE SUPPORT (via Odoo's dark mode)
+   ============================================================================= */
+
+html.dark .o_field_html[name="content_html"] code {
+    background-color: #374151;
+}
+
+html.dark .ipai-page-tree-item:hover {
+    background-color: #374151;
+}
+
+html.dark .ipai-page-tree-item.active {
+    background-color: #4b5563;
+}
+
+html.dark .ipai-backlinks {
+    background-color: #1f2937;
+}
+
+html.dark .ipai-template-card {
+    border-color: #374151;
+    background-color: #1f2937;
+}
+
+html.dark .ipai-callout-default { background-color: #374151; }
+html.dark .ipai-callout-gray { background-color: #4b5563; }

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- =====================================================================
+         BLOCK VIEWS
+         ===================================================================== -->
+
+    <!-- Block: Tree View -->
+    <record id="view_ipai_block_tree" model="ir.ui.view">
+        <field name="name">ipai.block.tree</field>
+        <field name="model">ipai.block</field>
+        <field name="arch" type="xml">
+            <tree string="Blocks" decoration-success="block_type == 'todo' and is_checked"
+                  decoration-muted="block_type == 'divider'">
+                <field name="sequence" widget="handle"/>
+                <field name="block_type" widget="badge"/>
+                <field name="display_preview"/>
+                <field name="is_checked" widget="boolean_toggle"
+                       invisible="block_type != 'todo'"/>
+                <field name="page_id"/>
+                <field name="workspace_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Block: Form View -->
+    <record id="view_ipai_block_form" model="ir.ui.view">
+        <field name="name">ipai.block.form</field>
+        <field name="model">ipai.block</field>
+        <field name="arch" type="xml">
+            <form string="Block">
+                <sheet>
+                    <group>
+                        <group string="Block Settings">
+                            <field name="page_id" readonly="1"/>
+                            <field name="workspace_id" readonly="1"/>
+                            <field name="block_type"/>
+                            <field name="sequence"/>
+                            <field name="parent_block_id"/>
+                        </group>
+                        <group string="Todo" invisible="block_type != 'todo'">
+                            <field name="is_checked" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <field name="content" placeholder="Plain text content..."/>
+                            <field name="content_html" widget="html"
+                                   placeholder="Rich text content..."
+                                   invisible="block_type in ('code', 'divider')"/>
+                        </page>
+                        <page string="Code" name="code" invisible="block_type != 'code'">
+                            <group>
+                                <field name="code_language" placeholder="python, javascript, etc."/>
+                            </group>
+                            <field name="content" widget="ace"
+                                   options="{'mode': code_language or 'text'}"/>
+                        </page>
+                        <page string="Embed" name="embed"
+                              invisible="block_type not in ('embed', 'video', 'image')">
+                            <group>
+                                <field name="embed_url" placeholder="https://..."/>
+                                <field name="attachment_id" invisible="block_type != 'image'"/>
+                            </group>
+                        </page>
+                        <page string="Callout" name="callout" invisible="block_type != 'callout'">
+                            <group>
+                                <field name="callout_icon"/>
+                                <field name="callout_color" widget="radio"
+                                       options="{'horizontal': true}"/>
+                            </group>
+                        </page>
+                        <page string="Database View" name="database"
+                              invisible="block_type != 'database_view'" groups="base.group_no_one">
+                            <group>
+                                <field name="database_model_name"/>
+                                <field name="database_view_type"/>
+                                <field name="database_filter"/>
+                            </group>
+                        </page>
+                        <page string="Properties (JSON)" name="properties" groups="base.group_no_one">
+                            <field name="properties"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Block: Kanban View -->
+    <record id="view_ipai_block_kanban" model="ir.ui.view">
+        <field name="name">ipai.block.kanban</field>
+        <field name="model">ipai.block</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="block_type">
+                <field name="block_type"/>
+                <field name="content"/>
+                <field name="is_checked"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <span class="badge rounded-pill text-bg-secondary">
+                                        <field name="block_type"/>
+                                    </span>
+                                    <field name="is_checked" widget="boolean_toggle"
+                                           invisible="block_type != 'todo'"/>
+                                </div>
+                                <div class="mt-2">
+                                    <field name="display_preview"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Block: Search View -->
+    <record id="view_ipai_block_search" model="ir.ui.view">
+        <field name="name">ipai.block.search</field>
+        <field name="model">ipai.block</field>
+        <field name="arch" type="xml">
+            <search string="Search Blocks">
+                <field name="content"/>
+                <field name="page_id"/>
+                <field name="workspace_id"/>
+                <separator/>
+                <filter name="filter_todo" string="To-dos"
+                        domain="[('block_type', '=', 'todo')]"/>
+                <filter name="filter_todo_unchecked" string="Incomplete To-dos"
+                        domain="[('block_type', '=', 'todo'), ('is_checked', '=', False)]"/>
+                <filter name="filter_todo_checked" string="Completed To-dos"
+                        domain="[('block_type', '=', 'todo'), ('is_checked', '=', True)]"/>
+                <separator/>
+                <filter name="filter_headings" string="Headings"
+                        domain="[('block_type', 'in', ['heading_1', 'heading_2', 'heading_3'])]"/>
+                <filter name="filter_code" string="Code Blocks"
+                        domain="[('block_type', '=', 'code')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_type" string="Block Type"
+                            context="{'group_by': 'block_type'}"/>
+                    <filter name="group_page" string="Page"
+                            context="{'group_by': 'page_id'}"/>
+                    <filter name="group_workspace" string="Workspace"
+                            context="{'group_by': 'workspace_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Block: Action -->
+    <record id="action_ipai_block" model="ir.actions.act_window">
+        <field name="name">Blocks</field>
+        <field name="res_model">ipai.block</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_ipai_block_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No blocks found
+            </p>
+            <p>
+                Blocks are modular content units within pages.
+                They are typically created through the page editor.
+            </p>
+        </field>
+    </record>
+
+    <!-- Block: Action for Todos -->
+    <record id="action_ipai_block_todos" model="ir.actions.act_window">
+        <field name="name">To-dos</field>
+        <field name="res_model">ipai.block</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('block_type', '=', 'todo')]</field>
+        <field name="context">{'search_default_filter_todo_unchecked': 1}</field>
+        <field name="search_view_id" ref="view_ipai_block_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No to-dos found
+            </p>
+            <p>
+                To-dos are created in pages using the todo block type.
+            </p>
+        </field>
+    </record>
+
+</odoo>

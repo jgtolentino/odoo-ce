@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- =====================================================================
+         SECURITY GROUPS
+         ===================================================================== -->
+
+    <!-- Module category -->
+    <record id="module_category_workspace" model="ir.module.category">
+        <field name="name">Workspace</field>
+        <field name="description">IPAI Workspace Management</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- Workspace User - Can view and edit assigned workspaces -->
+    <record id="group_workspace_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_category_workspace"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can access workspaces they are members of</field>
+    </record>
+
+    <!-- Workspace Manager - Can create workspaces and manage templates -->
+    <record id="group_workspace_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_workspace"/>
+        <field name="implied_ids" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="comment">Can create workspaces and manage global templates</field>
+    </record>
+
+    <!-- Workspace Admin - Full access -->
+    <record id="group_workspace_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="module_category_workspace"/>
+        <field name="implied_ids" eval="[(4, ref('group_workspace_manager'))]"/>
+        <field name="comment">Full administrative access to all workspaces</field>
+    </record>
+
+    <!-- =====================================================================
+         RECORD RULES - WORKSPACE
+         ===================================================================== -->
+
+    <!-- Users can see workspaces they own, are members of, or are public -->
+    <record id="rule_workspace_read_own_member_public" model="ir.rule">
+        <field name="name">Workspace: Read Own/Member/Public</field>
+        <field name="model_id" ref="model_ipai_workspace"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|', '|',
+            ('owner_id', '=', user.id),
+            ('member_ids', 'in', user.id),
+            ('privacy', '=', 'public')
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Users can write to workspaces they own or are members of (shared) -->
+    <record id="rule_workspace_write_own_member" model="ir.rule">
+        <field name="name">Workspace: Write Own/Member</field>
+        <field name="model_id" ref="model_ipai_workspace"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|',
+            ('owner_id', '=', user.id),
+            '&amp;',
+            ('member_ids', 'in', user.id),
+            ('privacy', '=', 'shared')
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Only owners can delete workspaces -->
+    <record id="rule_workspace_unlink_owner" model="ir.rule">
+        <field name="name">Workspace: Delete Owner Only</field>
+        <field name="model_id" ref="model_ipai_workspace"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[('owner_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Managers can create workspaces -->
+    <record id="rule_workspace_create_manager" model="ir.rule">
+        <field name="name">Workspace: Create for Managers</field>
+        <field name="model_id" ref="model_ipai_workspace"/>
+        <field name="groups" eval="[(4, ref('group_workspace_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Admins have full access to all workspaces -->
+    <record id="rule_workspace_admin_full" model="ir.rule">
+        <field name="name">Workspace: Admin Full Access</field>
+        <field name="model_id" ref="model_ipai_workspace"/>
+        <field name="groups" eval="[(4, ref('group_workspace_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- =====================================================================
+         RECORD RULES - PAGE
+         ===================================================================== -->
+
+    <!-- Pages: Read based on workspace access -->
+    <record id="rule_page_read_workspace" model="ir.rule">
+        <field name="name">Page: Read Based on Workspace</field>
+        <field name="model_id" ref="model_ipai_page"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|', '|',
+            ('workspace_id.owner_id', '=', user.id),
+            ('workspace_id.member_ids', 'in', user.id),
+            ('workspace_id.privacy', '=', 'public')
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Pages: Write based on workspace membership -->
+    <record id="rule_page_write_workspace" model="ir.rule">
+        <field name="name">Page: Write Based on Workspace</field>
+        <field name="model_id" ref="model_ipai_page"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|',
+            ('workspace_id.owner_id', '=', user.id),
+            '&amp;',
+            ('workspace_id.member_ids', 'in', user.id),
+            ('workspace_id.privacy', '=', 'shared')
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Admin full access to pages -->
+    <record id="rule_page_admin_full" model="ir.rule">
+        <field name="name">Page: Admin Full Access</field>
+        <field name="model_id" ref="model_ipai_page"/>
+        <field name="groups" eval="[(4, ref('group_workspace_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- =====================================================================
+         RECORD RULES - BLOCK
+         ===================================================================== -->
+
+    <!-- Blocks: Access follows page access -->
+    <record id="rule_block_read_page" model="ir.rule">
+        <field name="name">Block: Read Based on Page</field>
+        <field name="model_id" ref="model_ipai_block"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|', '|',
+            ('workspace_id.owner_id', '=', user.id),
+            ('workspace_id.member_ids', 'in', user.id),
+            ('workspace_id.privacy', '=', 'public')
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_block_write_page" model="ir.rule">
+        <field name="name">Block: Write Based on Page</field>
+        <field name="model_id" ref="model_ipai_block"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|',
+            ('workspace_id.owner_id', '=', user.id),
+            '&amp;',
+            ('workspace_id.member_ids', 'in', user.id),
+            ('workspace_id.privacy', '=', 'shared')
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_block_admin_full" model="ir.rule">
+        <field name="name">Block: Admin Full Access</field>
+        <field name="model_id" ref="model_ipai_block"/>
+        <field name="groups" eval="[(4, ref('group_workspace_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- =====================================================================
+         RECORD RULES - TEMPLATE
+         ===================================================================== -->
+
+    <!-- Templates: Global templates visible to all, workspace templates to members -->
+    <record id="rule_template_read" model="ir.rule">
+        <field name="name">Template: Read Access</field>
+        <field name="model_id" ref="model_ipai_page_template"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|',
+            ('is_global', '=', True),
+            '|',
+            ('workspace_id.owner_id', '=', user.id),
+            ('workspace_id.member_ids', 'in', user.id)
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Managers can create/edit templates -->
+    <record id="rule_template_write_manager" model="ir.rule">
+        <field name="name">Template: Manager Write Access</field>
+        <field name="model_id" ref="model_ipai_page_template"/>
+        <field name="groups" eval="[(4, ref('group_workspace_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- =====================================================================
+         RECORD RULES - BACKLINK
+         ===================================================================== -->
+
+    <!-- Backlinks: Read based on workspace access -->
+    <record id="rule_backlink_read" model="ir.rule">
+        <field name="name">Backlink: Read Based on Workspace</field>
+        <field name="model_id" ref="model_ipai_backlink"/>
+        <field name="groups" eval="[(4, ref('group_workspace_user'))]"/>
+        <field name="domain_force">[
+            '|', '|',
+            ('workspace_id.owner_id', '=', user.id),
+            ('workspace_id.member_ids', 'in', user.id),
+            ('workspace_id.privacy', '=', 'public')
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ipai_workspace_user,ipai.workspace.user,model_ipai_workspace,group_workspace_user,1,1,0,0
+access_ipai_workspace_manager,ipai.workspace.manager,model_ipai_workspace,group_workspace_manager,1,1,1,1
+access_ipai_workspace_admin,ipai.workspace.admin,model_ipai_workspace,group_workspace_admin,1,1,1,1
+access_ipai_page_user,ipai.page.user,model_ipai_page,group_workspace_user,1,1,1,1
+access_ipai_page_admin,ipai.page.admin,model_ipai_page,group_workspace_admin,1,1,1,1
+access_ipai_block_user,ipai.block.user,model_ipai_block,group_workspace_user,1,1,1,1
+access_ipai_block_admin,ipai.block.admin,model_ipai_block,group_workspace_admin,1,1,1,1
+access_ipai_backlink_user,ipai.backlink.user,model_ipai_backlink,group_workspace_user,1,1,1,1
+access_ipai_backlink_admin,ipai.backlink.admin,model_ipai_backlink,group_workspace_admin,1,1,1,1
+access_ipai_page_template_user,ipai.page.template.user,model_ipai_page_template,group_workspace_user,1,0,0,0
+access_ipai_page_template_manager,ipai.page.template.manager,model_ipai_page_template,group_workspace_manager,1,1,1,1
+access_ipai_page_template_admin,ipai.page.template.admin,model_ipai_page_template,group_workspace_admin,1,1,1,1
+access_ipai_template_block_user,ipai.template.block.user,model_ipai_template_block,group_workspace_user,1,0,0,0
+access_ipai_template_block_manager,ipai.template.block.manager,model_ipai_template_block,group_workspace_manager,1,1,1,1
+access_ipai_template_block_admin,ipai.template.block.admin,model_ipai_template_block,group_workspace_admin,1,1,1,1

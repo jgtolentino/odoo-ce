@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- =====================================================================
+         DEMO DATA
+         ===================================================================== -->
+
+    <!-- Demo Workspace -->
+    <record id="demo_workspace_team" model="ipai.workspace">
+        <field name="name">Team Workspace</field>
+        <field name="icon">🏢</field>
+        <field name="description">Shared workspace for team collaboration and documentation.</field>
+        <field name="privacy">shared</field>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="member_ids" eval="[(6, 0, [ref('base.user_admin'), ref('base.user_demo')])]"/>
+    </record>
+
+    <record id="demo_workspace_personal" model="ipai.workspace">
+        <field name="name">Personal Notes</field>
+        <field name="icon">📓</field>
+        <field name="description">Private workspace for personal notes and ideas.</field>
+        <field name="privacy">private</field>
+        <field name="owner_id" ref="base.user_demo"/>
+    </record>
+
+    <!-- Demo Pages in Team Workspace -->
+    <record id="demo_page_welcome" model="ipai.page">
+        <field name="name">Welcome to Workspace</field>
+        <field name="icon">👋</field>
+        <field name="workspace_id" ref="demo_workspace_team"/>
+        <field name="created_by_id" ref="base.user_admin"/>
+        <field name="content_html"><![CDATA[
+<h1>Welcome to the Team Workspace! 👋</h1>
+<p>This is your central hub for team collaboration, documentation, and knowledge sharing.</p>
+
+<h2>Getting Started</h2>
+<ul>
+    <li>Create pages to document your work</li>
+    <li>Use <code>[[Page Name]]</code> to link between pages</li>
+    <li>Organize content with sub-pages</li>
+    <li>Use templates for common page types</li>
+</ul>
+
+<h2>Quick Links</h2>
+<ul>
+    <li>[[Team Handbook]]</li>
+    <li>[[Meeting Notes]]</li>
+    <li>[[Project Documentation]]</li>
+</ul>
+        ]]></field>
+    </record>
+
+    <record id="demo_page_handbook" model="ipai.page">
+        <field name="name">Team Handbook</field>
+        <field name="icon">📘</field>
+        <field name="workspace_id" ref="demo_workspace_team"/>
+        <field name="created_by_id" ref="base.user_admin"/>
+        <field name="content_html"><![CDATA[
+<h1>Team Handbook</h1>
+<p>Essential information for team members.</p>
+
+<h2>Team Values</h2>
+<ul>
+    <li><strong>Collaboration:</strong> Work together effectively</li>
+    <li><strong>Transparency:</strong> Share information openly</li>
+    <li><strong>Quality:</strong> Deliver excellent work</li>
+    <li><strong>Growth:</strong> Continuously learn and improve</li>
+</ul>
+
+<h2>Communication</h2>
+<p>We use the following channels:</p>
+<ul>
+    <li>Mattermost for real-time chat</li>
+    <li>Email for formal communications</li>
+    <li>This workspace for documentation</li>
+</ul>
+        ]]></field>
+    </record>
+
+    <record id="demo_page_meetings" model="ipai.page">
+        <field name="name">Meeting Notes</field>
+        <field name="icon">📝</field>
+        <field name="workspace_id" ref="demo_workspace_team"/>
+        <field name="created_by_id" ref="base.user_admin"/>
+        <field name="content_html"><![CDATA[
+<h1>Meeting Notes</h1>
+<p>Archive of team meeting notes and decisions.</p>
+
+<h2>Recent Meetings</h2>
+<ul>
+    <li>[[Weekly Standup - 2024-01-15]]</li>
+    <li>[[Sprint Planning - 2024-01-12]]</li>
+</ul>
+        ]]></field>
+    </record>
+
+    <record id="demo_page_standup" model="ipai.page">
+        <field name="name">Weekly Standup - 2024-01-15</field>
+        <field name="icon">📋</field>
+        <field name="workspace_id" ref="demo_workspace_team"/>
+        <field name="parent_id" ref="demo_page_meetings"/>
+        <field name="created_by_id" ref="base.user_admin"/>
+        <field name="template_id" ref="template_meeting_notes"/>
+        <field name="content_html"><![CDATA[
+<h2>📅 Meeting Details</h2>
+<ul>
+    <li><strong>Date:</strong> January 15, 2024</li>
+    <li><strong>Attendees:</strong> Team Lead, Developer 1, Developer 2</li>
+    <li><strong>Duration:</strong> 30 minutes</li>
+</ul>
+
+<h2>📋 Agenda</h2>
+<ol>
+    <li>Progress updates</li>
+    <li>Blockers review</li>
+    <li>Week planning</li>
+</ol>
+
+<h2>💬 Discussion Notes</h2>
+<p>Good progress on the workspace module. Block editor integration scheduled for next sprint.</p>
+
+<h2>✅ Decisions Made</h2>
+<ul>
+    <li>Prioritize core functionality before advanced features</li>
+    <li>Schedule code review for Friday</li>
+</ul>
+
+<h2>📌 Action Items</h2>
+<ul>
+    <li>[ ] Complete page model tests - @Developer1</li>
+    <li>[ ] Review block types specification - @Developer2</li>
+    <li>[x] Update project timeline - @TeamLead</li>
+</ul>
+        ]]></field>
+    </record>
+
+    <record id="demo_page_project_docs" model="ipai.page">
+        <field name="name">Project Documentation</field>
+        <field name="icon">📁</field>
+        <field name="workspace_id" ref="demo_workspace_team"/>
+        <field name="created_by_id" ref="base.user_admin"/>
+        <field name="content_html"><![CDATA[
+<h1>Project Documentation</h1>
+<p>Technical documentation and project briefs.</p>
+
+<h2>Projects</h2>
+<ul>
+    <li>[[Workspace Module]]</li>
+    <li>[[Integration API]]</li>
+</ul>
+        ]]></field>
+    </record>
+
+    <!-- Demo Page in Personal Workspace -->
+    <record id="demo_page_ideas" model="ipai.page">
+        <field name="name">Ideas &amp; Brainstorming</field>
+        <field name="icon">💡</field>
+        <field name="workspace_id" ref="demo_workspace_personal"/>
+        <field name="created_by_id" ref="base.user_demo"/>
+        <field name="content_html"><![CDATA[
+<h1>Ideas &amp; Brainstorming</h1>
+<p>A place to capture random thoughts and ideas.</p>
+
+<h2>Feature Ideas</h2>
+<ul>
+    <li>Add real-time collaboration</li>
+    <li>Implement AI summarization</li>
+    <li>Mobile app support</li>
+</ul>
+
+<h2>Research Topics</h2>
+<ul>
+    <li>Block editor frameworks (TipTap, ProseMirror)</li>
+    <li>Real-time sync protocols (CRDT, OT)</li>
+</ul>
+        ]]></field>
+    </record>
+
+    <!-- Demo Blocks -->
+    <record id="demo_block_welcome_callout" model="ipai.block">
+        <field name="page_id" ref="demo_page_welcome"/>
+        <field name="block_type">callout</field>
+        <field name="sequence">5</field>
+        <field name="content">Pro tip: Press Ctrl+K to quickly search for pages!</field>
+        <field name="callout_icon">💡</field>
+        <field name="callout_color">blue</field>
+    </record>
+
+    <record id="demo_block_todo_1" model="ipai.block">
+        <field name="page_id" ref="demo_page_welcome"/>
+        <field name="block_type">todo</field>
+        <field name="sequence">100</field>
+        <field name="content">Read the Team Handbook</field>
+        <field name="is_checked" eval="False"/>
+    </record>
+
+    <record id="demo_block_todo_2" model="ipai.block">
+        <field name="page_id" ref="demo_page_welcome"/>
+        <field name="block_type">todo</field>
+        <field name="sequence">110</field>
+        <field name="content">Create your first page</field>
+        <field name="is_checked" eval="True"/>
+    </record>
+
+    <record id="demo_block_todo_3" model="ipai.block">
+        <field name="page_id" ref="demo_page_welcome"/>
+        <field name="block_type">todo</field>
+        <field name="sequence">120</field>
+        <field name="content">Invite team members</field>
+        <field name="is_checked" eval="False"/>
+    </record>
+
+</odoo>

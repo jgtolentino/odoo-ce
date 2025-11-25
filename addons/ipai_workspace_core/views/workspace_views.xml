@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- =====================================================================
+         WORKSPACE VIEWS
+         ===================================================================== -->
+
+    <!-- Workspace: Tree View -->
+    <record id="view_ipai_workspace_tree" model="ir.ui.view">
+        <field name="name">ipai.workspace.tree</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <tree string="Workspaces" decoration-muted="not active">
+                <field name="icon" string=" " class="text-center" width="40px"/>
+                <field name="name"/>
+                <field name="privacy" widget="badge"
+                       decoration-info="privacy == 'shared'"
+                       decoration-success="privacy == 'public'"
+                       decoration-warning="privacy == 'private'"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+                <field name="member_count" string="Members"/>
+                <field name="page_count" string="Pages"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Workspace: Form View -->
+    <record id="view_ipai_workspace_form" model="ir.ui.view">
+        <field name="name">ipai.workspace.form</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <form string="Workspace">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pages" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="page_count" widget="statinfo" string="Pages"/>
+                        </button>
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive"
+                                invisible="active">
+                            <span class="o_stat_text">Archived</span>
+                        </button>
+                    </div>
+                    <field name="cover_image" widget="image" class="oe_avatar"
+                           options="{'preview_image': 'cover_image'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="icon" class="me-2" placeholder="📁"/>
+                            <field name="name" placeholder="Workspace Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Settings">
+                            <field name="privacy" widget="radio" options="{'horizontal': true}"/>
+                            <field name="owner_id" widget="many2one_avatar_user"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Members" invisible="privacy == 'private'">
+                            <field name="member_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"
+                                   placeholder="Add members..."/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Describe the purpose of this workspace..."/>
+                        </page>
+                        <page string="Pages" name="pages">
+                            <field name="root_page_ids" context="{'default_workspace_id': active_id}">
+                                <tree string="Root Pages" editable="bottom">
+                                    <field name="icon" string=" " width="40px"/>
+                                    <field name="name"/>
+                                    <field name="child_count" string="Sub-pages"/>
+                                    <field name="block_count" string="Blocks"/>
+                                    <field name="last_edited_date" string="Modified"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Workspace: Kanban View -->
+    <record id="view_ipai_workspace_kanban" model="ir.ui.view">
+        <field name="name">ipai.workspace.kanban</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="name"/>
+                <field name="icon"/>
+                <field name="privacy"/>
+                <field name="owner_id"/>
+                <field name="page_count"/>
+                <field name="member_count"/>
+                <field name="cover_image"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image" t-if="record.cover_image.raw_value">
+                                <img t-att-src="kanban_image('ipai.workspace', 'cover_image', record.id.raw_value)"
+                                     alt="Cover" class="o_image_64_contain"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <span t-esc="record.icon.value"/> <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_tags_section">
+                                    <span class="badge rounded-pill"
+                                          t-att-class="{
+                                              'text-bg-info': record.privacy.raw_value == 'shared',
+                                              'text-bg-success': record.privacy.raw_value == 'public',
+                                              'text-bg-warning': record.privacy.raw_value == 'private'
+                                          }">
+                                        <t t-esc="record.privacy.value"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span><i class="fa fa-file-text-o"/> <t t-esc="record.page_count.value"/> pages</span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="owner_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Workspace: Search View -->
+    <record id="view_ipai_workspace_search" model="ir.ui.view">
+        <field name="name">ipai.workspace.search</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <search string="Search Workspaces">
+                <field name="name"/>
+                <field name="owner_id"/>
+                <field name="member_ids"/>
+                <separator/>
+                <filter name="filter_my_workspaces" string="My Workspaces"
+                        domain="[('owner_id', '=', uid)]"/>
+                <filter name="filter_member" string="Member Of"
+                        domain="[('member_ids', 'in', uid)]"/>
+                <separator/>
+                <filter name="filter_private" string="Private"
+                        domain="[('privacy', '=', 'private')]"/>
+                <filter name="filter_shared" string="Shared"
+                        domain="[('privacy', '=', 'shared')]"/>
+                <filter name="filter_public" string="Public"
+                        domain="[('privacy', '=', 'public')]"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_privacy" string="Privacy"
+                            context="{'group_by': 'privacy'}"/>
+                    <filter name="group_owner" string="Owner"
+                            context="{'group_by': 'owner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Workspace: Action -->
+    <record id="action_ipai_workspace" model="ir.actions.act_window">
+        <field name="name">Workspaces</field>
+        <field name="res_model">ipai.workspace</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_ipai_workspace_search"/>
+        <field name="context">{'search_default_filter_my_workspaces': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first workspace
+            </p>
+            <p>
+                Workspaces are collaborative containers for pages, databases, and documents.
+                Invite team members and start organizing your knowledge.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- =====================================================================
+         MENUS
+         ===================================================================== -->
+
+    <!-- Root Menu -->
+    <menuitem id="menu_ipai_workspace_root"
+              name="Workspace"
+              web_icon="ipai_workspace_core,static/description/icon.png"
+              sequence="5"/>
+
+    <!-- Main Menu Items -->
+    <menuitem id="menu_ipai_workspace_main"
+              name="Workspaces"
+              parent="menu_ipai_workspace_root"
+              action="action_ipai_workspace"
+              sequence="10"/>
+
+    <menuitem id="menu_ipai_page_main"
+              name="All Pages"
+              parent="menu_ipai_workspace_root"
+              action="action_ipai_page"
+              sequence="20"/>
+
+    <menuitem id="menu_ipai_todos"
+              name="To-dos"
+              parent="menu_ipai_workspace_root"
+              action="action_ipai_block_todos"
+              sequence="30"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_ipai_workspace_config"
+              name="Configuration"
+              parent="menu_ipai_workspace_root"
+              groups="group_workspace_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_ipai_page_template"
+              name="Page Templates"
+              parent="menu_ipai_workspace_config"
+              action="action_ipai_page_template"
+              sequence="10"/>
+
+    <menuitem id="menu_ipai_block_all"
+              name="All Blocks"
+              parent="menu_ipai_workspace_config"
+              action="action_ipai_block"
+              groups="base.group_no_one"
+              sequence="90"/>
+
+</odoo>

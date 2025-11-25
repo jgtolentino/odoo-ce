@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- =====================================================================
+         PAGE VIEWS
+         ===================================================================== -->
+
+    <!-- Page: Tree View -->
+    <record id="view_ipai_page_tree" model="ir.ui.view">
+        <field name="name">ipai.page.tree</field>
+        <field name="model">ipai.page</field>
+        <field name="arch" type="xml">
+            <tree string="Pages" decoration-muted="not active"
+                  decoration-info="is_template">
+                <field name="icon" string=" " class="text-center" width="40px"/>
+                <field name="name"/>
+                <field name="workspace_id"/>
+                <field name="parent_id"/>
+                <field name="child_count" string="Sub-pages"/>
+                <field name="block_count" string="Blocks"/>
+                <field name="last_edited_by_id" widget="many2one_avatar_user" string="Edited By"/>
+                <field name="last_edited_date" string="Modified"/>
+                <field name="is_template" invisible="1"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Page: Tree View (Hierarchy) -->
+    <record id="view_ipai_page_tree_hierarchy" model="ir.ui.view">
+        <field name="name">ipai.page.tree.hierarchy</field>
+        <field name="model">ipai.page</field>
+        <field name="arch" type="xml">
+            <tree string="Pages (Hierarchy)" decoration-muted="not active"
+                  child_of="parent_id">
+                <field name="icon" string=" " class="text-center" width="40px"/>
+                <field name="name"/>
+                <field name="workspace_id" column_invisible="1"/>
+                <field name="parent_id" column_invisible="1"/>
+                <field name="child_count" string="Sub-pages"/>
+                <field name="last_edited_date" string="Modified"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Page: Form View -->
+    <record id="view_ipai_page_form" model="ir.ui.view">
+        <field name="name">ipai.page.form</field>
+        <field name="model">ipai.page</field>
+        <field name="arch" type="xml">
+            <form string="Page">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_subpages" type="object"
+                                class="oe_stat_button" icon="fa-sitemap"
+                                invisible="child_count == 0">
+                            <field name="child_count" widget="statinfo" string="Sub-pages"/>
+                        </button>
+                        <button name="action_view_backlinks" type="object"
+                                class="oe_stat_button" icon="fa-link"
+                                invisible="not backlink_ids">
+                            <span class="o_stat_text">Backlinks</span>
+                        </button>
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive"
+                                invisible="active">
+                            <span class="o_stat_text">Archived</span>
+                        </button>
+                    </div>
+                    <field name="cover_image" widget="image" class="oe_avatar"
+                           options="{'preview_image': 'cover_image'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="icon" class="me-2" placeholder="📄"/>
+                            <field name="name" placeholder="Untitled"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="workspace_id" options="{'no_create': True}"/>
+                            <field name="parent_id" domain="[('workspace_id', '=', workspace_id), ('id', '!=', id)]"/>
+                        </group>
+                        <group>
+                            <field name="is_template" widget="boolean_toggle"/>
+                            <field name="is_database" widget="boolean_toggle" groups="base.group_no_one"/>
+                            <field name="template_id" invisible="not template_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <field name="content_html"
+                                   widget="html"
+                                   options="{'collaborative': true}"
+                                   placeholder="Start typing here... Use [[Page Name]] to create links."/>
+                        </page>
+                        <page string="Blocks" name="blocks" groups="base.group_no_one">
+                            <field name="block_ids" context="{'default_page_id': active_id}">
+                                <tree string="Blocks" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="block_type"/>
+                                    <field name="content"/>
+                                    <field name="is_checked" invisible="block_type != 'todo'"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Sub-pages" name="subpages" invisible="child_count == 0">
+                            <field name="child_ids" context="{'default_workspace_id': workspace_id, 'default_parent_id': active_id}">
+                                <tree string="Sub-pages">
+                                    <field name="icon" string=" " width="40px"/>
+                                    <field name="name"/>
+                                    <field name="child_count" string="Sub-pages"/>
+                                    <field name="last_edited_date" string="Modified"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Links" name="links">
+                            <group>
+                                <group string="Pages linking here">
+                                    <field name="backlink_ids" nolabel="1">
+                                        <tree string="Backlinks" create="0" edit="0">
+                                            <field name="source_page_id"/>
+                                            <field name="link_text"/>
+                                            <field name="create_date" string="Created"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Links from this page">
+                                    <field name="outgoing_link_ids" nolabel="1">
+                                        <tree string="Outgoing Links" create="0" edit="0">
+                                            <field name="target_page_id"/>
+                                            <field name="link_text"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Info" name="info">
+                            <group>
+                                <group string="Metadata">
+                                    <field name="created_by_id" widget="many2one_avatar_user"/>
+                                    <field name="create_date"/>
+                                    <field name="last_edited_by_id" widget="many2one_avatar_user"/>
+                                    <field name="last_edited_date"/>
+                                </group>
+                                <group string="Hierarchy">
+                                    <field name="depth"/>
+                                    <field name="parent_path" groups="base.group_no_one"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Page: Kanban View -->
+    <record id="view_ipai_page_kanban" model="ir.ui.view">
+        <field name="name">ipai.page.kanban</field>
+        <field name="model">ipai.page</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1" default_group_by="workspace_id">
+                <field name="name"/>
+                <field name="icon"/>
+                <field name="workspace_id"/>
+                <field name="parent_id"/>
+                <field name="child_count"/>
+                <field name="cover_image"/>
+                <field name="last_edited_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image" t-if="record.cover_image.raw_value">
+                                <img t-att-src="kanban_image('ipai.page', 'cover_image', record.id.raw_value)"
+                                     alt="Cover" class="o_image_64_contain"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <span t-esc="record.icon.value"/> <field name="name"/>
+                                </strong>
+                                <div class="text-muted small" t-if="record.parent_id.raw_value">
+                                    <i class="fa fa-level-up fa-rotate-90"/> <field name="parent_id"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span t-if="record.child_count.raw_value > 0">
+                                            <i class="fa fa-sitemap"/> <t t-esc="record.child_count.value"/>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right text-muted small">
+                                        <field name="last_edited_date" widget="date"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Page: Search View -->
+    <record id="view_ipai_page_search" model="ir.ui.view">
+        <field name="name">ipai.page.search</field>
+        <field name="model">ipai.page</field>
+        <field name="arch" type="xml">
+            <search string="Search Pages">
+                <field name="name"/>
+                <field name="full_text" string="Content"/>
+                <field name="workspace_id"/>
+                <field name="created_by_id"/>
+                <separator/>
+                <filter name="filter_root" string="Root Pages"
+                        domain="[('parent_id', '=', False)]"/>
+                <filter name="filter_my_pages" string="Created by Me"
+                        domain="[('created_by_id', '=', uid)]"/>
+                <filter name="filter_templates" string="Templates"
+                        domain="[('is_template', '=', True)]"/>
+                <filter name="filter_databases" string="Databases"
+                        domain="[('is_database', '=', True)]"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_workspace" string="Workspace"
+                            context="{'group_by': 'workspace_id'}"/>
+                    <filter name="group_parent" string="Parent Page"
+                            context="{'group_by': 'parent_id'}"/>
+                    <filter name="group_creator" string="Creator"
+                            context="{'group_by': 'created_by_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Page: Action (All Pages) -->
+    <record id="action_ipai_page" model="ir.actions.act_window">
+        <field name="name">Pages</field>
+        <field name="res_model">ipai.page</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_ipai_page_search"/>
+        <field name="context">{'search_default_filter_root': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first page
+            </p>
+            <p>
+                Pages are documents that can contain rich text, blocks, and sub-pages.
+                Use [[Page Name]] to create links between pages.
+            </p>
+        </field>
+    </record>
+
+</odoo>
