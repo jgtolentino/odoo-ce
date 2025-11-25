@@ -7,9 +7,9 @@ Status: Draft checklist aligned with plan.md
 ## Phase 0 – Repo & CI Skeleton
 
 - [x] Create base directories: `addons/`, `oca/`, `deploy/`, `.github/workflows/`.
-- [ ] Add `spec.md`, `plan.md`, `tasks.md` to root.
-- [ ] Add `README.md` with high-level description and constraints.
-- [ ] Add `.gitignore` tuned for Odoo / Python / Docker.
+- [x] Add `spec.md`, `plan.md`, `tasks.md` to root.
+- [x] Add `README.md` with high-level description and constraints.
+- [x] Add `.gitignore` tuned for Odoo / Python / Docker.
 - [ ] Implement CI guardrail job:
   - [ ] Fail on Enterprise module references.
   - [ ] Fail on `odoo.com` links in templates/code.
