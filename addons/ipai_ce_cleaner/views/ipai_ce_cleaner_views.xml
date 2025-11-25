@@ -2,13 +2,42 @@
 <odoo>
     <data>
         <!--
-        IPAI CE Cleaner: Hide Enterprise/IAP Upsells
+        IPAI CE Cleaner: Hide Enterprise/IAP Upsells via XPath
 
-        This module uses CSS to hide Enterprise badges, odoo.com links,
-        and upgrade prompts across the Odoo CE interface.
-
-        CSS rules are in static/src/css/ipai_ce_cleaner.css
-        Assets loaded via ipai_ce_cleaner_assets.xml
+        Uses view inheritance to surgically remove IAP-related settings
+        from the General Settings form. CSS handles remaining edge cases.
         -->
+
+        <!-- Hide IAP Settings Section in General Settings -->
+        <record id="view_res_config_settings_iap_hide" model="ir.ui.view">
+            <field name="name">res.config.settings.iap.hide</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <!-- Hide IAP account settings if they exist -->
+                <xpath expr="//div[hasclass('o_setting_box')]//field[@name='module_account_online_synchronization']/.." position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Hide Upgrade/Enterprise banners in App Installation -->
+        <record id="view_module_form_hide_upgrade" model="ir.ui.view">
+            <field name="name">ir.module.module.form.hide.upgrade</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_form"/>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <!-- Hide the 'Buy' button for enterprise modules -->
+                <xpath expr="//button[@name='button_immediate_install']" position="after">
+                    <style>
+                        .o_enterprise_btn { display: none !important; }
+                        a[href*="odoo.com/pricing"] { display: none !important; }
+                    </style>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>

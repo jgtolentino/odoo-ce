@@ -1,39 +1,67 @@
 /**
  * IPAI CE Cleaner CSS
- * Hides Enterprise/IAP upsells and odoo.com links
+ * Hides Enterprise/IAP upsells, odoo.com links, and upgrade prompts
+ * Works in conjunction with XPath view inheritance in views.xml
  */
 
-/* Hide all links to odoo.com */
+/* === Hide odoo.com Links === */
 a[href*="odoo.com"],
 a[href*="apps.odoo.com"],
-a[href*="iap.odoo.com"] {
+a[href*="iap.odoo.com"],
+a[href*="odoo.com/pricing"],
+a[href*="odoo.com/page/upgrade"] {
     display: none !important;
 }
 
-/* Hide upgrade links and database manager */
+/* === Hide Database Manager === */
 a[href*="/web/database/manager"],
-a[href*="upgrade"],
-button[name="button_choose_version"] {
-    display: none !important;
-}
-
-/* Hide payment acquirer onboarding */
-.o_onboarding_payment_acquirer,
-.o_onboarding_payment_acquirer_item {
-    display: none !important;
-}
-
-/* Hide upgrade banners in settings */
-.alert-info > a[href*="upgrade"] {
-    display: none !important;
-}
-
-/* Hide parent alert if it only contains upgrade link */
-.alert-info:empty {
-    display: none !important;
-}
-
-/* Hide database selector link in debug menu */
 .dropdown-item[href*="/web/database/manager"] {
+    display: none !important;
+}
+
+/* === Hide Upgrade Prompts === */
+a[href*="upgrade"],
+button[name="button_choose_version"],
+.o_upgrade_btn,
+.o_enterprise_btn,
+.o_enterprise_label {
+    display: none !important;
+}
+
+/* === Hide Payment/IAP Onboarding === */
+.o_onboarding_payment_acquirer,
+.o_onboarding_payment_acquirer_item,
+.o_iap_credits {
+    display: none !important;
+}
+
+/* === Hide Upgrade Banners === */
+.alert-info:has(a[href*="upgrade"]),
+.alert-warning:has(a[href*="upgrade"]),
+.o_notification_bar:has(a[href*="odoo.com"]) {
+    display: none !important;
+}
+
+/* === Hide Enterprise Module Badges === */
+.badge:has(span:contains("Enterprise")),
+.o_tag:has(span:contains("Enterprise")) {
+    display: none !important;
+}
+
+/* === Hide IAP Balance Indicators === */
+.o_iap_account_balance,
+.o_iap_buy_credits {
+    display: none !important;
+}
+
+/* === Hide Odoo.sh Promotion === */
+.o_odoo_sh_promotion,
+a[href*="odoo.sh"] {
+    display: none !important;
+}
+
+/* === Clean Empty Alerts === */
+.alert-info:empty,
+.alert-warning:empty {
     display: none !important;
 }
