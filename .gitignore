@@ -84,3 +84,34 @@ temp/
 *.sql
 *.db
 *.sqlite
+
+# Pre-commit
+.pre-commit-cache/
+
+# Coverage
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# pytest
+.pytest_cache/
+pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node (for frontend development)
+node_modules/
+package-lock.json
+
+# Flutter/OCR adapter
+ocr-adapter/.dart_tool/
+ocr-adapter/build/

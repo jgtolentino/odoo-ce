@@ -1,0 +1,185 @@
+# =============================================================================
+# Odoo 18 CE - Python Project Configuration
+# =============================================================================
+# Unified configuration for Black, isort, Pylint, Bandit, and pytest.
+# =============================================================================
+
+[project]
+name = "odoo-ce"
+version = "18.0.1.0.0"
+description = "Odoo 18 Community Edition with OCA-first delta modules"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "AGPL-3.0"}
+authors = [
+    {name = "InsightPulseAI", email = "dev@insightpulseai.net"}
+]
+keywords = ["odoo", "erp", "oca", "workspace", "ppm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: Odoo",
+    "Framework :: Odoo :: 18.0",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/jgtolentino/odoo-ce"
+Repository = "https://github.com/jgtolentino/odoo-ce.git"
+Documentation = "https://github.com/jgtolentino/odoo-ce#readme"
+
+# =============================================================================
+# Black - Code Formatter
+# =============================================================================
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | migrations
+    | __pycache__
+)/
+'''
+
+# =============================================================================
+# isort - Import Sorting
+# =============================================================================
+[tool.isort]
+profile = "black"
+line_length = 88
+known_odoo = ["odoo", "odoo.addons"]
+known_first_party = [
+    "ipai_workspace_core",
+    "ipai_workspace_db",
+    "ipai_finance_ppm",
+    "ipai_docs",
+]
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "THIRDPARTY",
+    "ODOO",
+    "FIRSTPARTY",
+    "LOCALFOLDER",
+]
+skip = [
+    ".git",
+    "__pycache__",
+    "migrations",
+    ".venv",
+]
+skip_glob = ["**/migrations/*.py"]
+
+# =============================================================================
+# Pylint - Linting
+# =============================================================================
+[tool.pylint.master]
+load-plugins = "pylint_odoo"
+score = true
+
+[tool.pylint.odoolint]
+manifest_version_format = "18.0.\\d+.\\d+.\\d+"
+
+[tool.pylint.messages_control]
+disable = [
+    "C0114",  # missing-module-docstring
+    "C0115",  # missing-class-docstring
+    "C0116",  # missing-function-docstring
+    "R0801",  # duplicate-code
+    "W0511",  # fixme
+]
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pylint.basic]
+good-names = ["i", "j", "k", "ex", "Run", "_", "id", "cr", "uid", "env"]
+
+# =============================================================================
+# Bandit - Security Scanner
+# =============================================================================
+[tool.bandit]
+exclude_dirs = [
+    "tests",
+    "demo",
+    ".venv",
+    "migrations",
+]
+skips = [
+    "B101",  # assert_used (OK in tests)
+    "B104",  # hardcoded_bind_all_interfaces (OK for dev)
+]
+
+# =============================================================================
+# pytest - Testing
+# =============================================================================
+[tool.pytest.ini_options]
+testpaths = ["addons"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+# =============================================================================
+# Coverage - Test Coverage
+# =============================================================================
+[tool.coverage.run]
+source = ["addons"]
+omit = [
+    "*/tests/*",
+    "*/demo/*",
+    "*/__manifest__.py",
+    "*/migrations/*",
+]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+fail_under = 60
+show_missing = true
+
+# =============================================================================
+# MyPy - Type Checking (Optional)
+# =============================================================================
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = [
+    "migrations",
+    "tests",
+]
