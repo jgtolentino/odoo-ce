@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Resource Calendar: Mon-Fri (skips weekends) -->
+        <record id="resource_calendar_bir_standard" model="resource.calendar">
+            <field name="name">BIR Standard Work Week (Mon-Fri)</field>
+            <field name="tz">Asia/Manila</field>
+            <field name="hours_per_day">8.0</field>
+        </record>
+
+        <!-- Monday -->
+        <record id="resource_calendar_attendance_monday" model="resource.calendar.attendance">
+            <field name="name">Monday Morning</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="dayofweek">0</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">17</field>
+        </record>
+
+        <!-- Tuesday -->
+        <record id="resource_calendar_attendance_tuesday" model="resource.calendar.attendance">
+            <field name="name">Tuesday Morning</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="dayofweek">1</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">17</field>
+        </record>
+
+        <!-- Wednesday -->
+        <record id="resource_calendar_attendance_wednesday" model="resource.calendar.attendance">
+            <field name="name">Wednesday Morning</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="dayofweek">2</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">17</field>
+        </record>
+
+        <!-- Thursday -->
+        <record id="resource_calendar_attendance_thursday" model="resource.calendar.attendance">
+            <field name="name">Thursday Morning</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="dayofweek">3</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">17</field>
+        </record>
+
+        <!-- Friday -->
+        <record id="resource_calendar_attendance_friday" model="resource.calendar.attendance">
+            <field name="name">Friday Morning</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="dayofweek">4</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">17</field>
+        </record>
+
+        <!-- Philippine Holidays 2025-2026 -->
+        <record id="holiday_new_year_2025" model="resource.calendar.leaves">
+            <field name="name">New Year's Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-01-01 00:00:00</field>
+            <field name="date_to">2025-01-01 23:59:59</field>
+        </record>
+
+        <record id="holiday_chinese_new_year_2025" model="resource.calendar.leaves">
+            <field name="name">Chinese New Year 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-01-29 00:00:00</field>
+            <field name="date_to">2025-01-29 23:59:59</field>
+        </record>
+
+        <record id="holiday_edsa_revolution_2025" model="resource.calendar.leaves">
+            <field name="name">EDSA Revolution Anniversary 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-02-25 00:00:00</field>
+            <field name="date_to">2025-02-25 23:59:59</field>
+        </record>
+
+        <record id="holiday_araw_ng_kagitingan_2025" model="resource.calendar.leaves">
+            <field name="name">Araw ng Kagitingan 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-04-09 00:00:00</field>
+            <field name="date_to">2025-04-09 23:59:59</field>
+        </record>
+
+        <record id="holiday_maundy_thursday_2025" model="resource.calendar.leaves">
+            <field name="name">Maundy Thursday 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-04-17 00:00:00</field>
+            <field name="date_to">2025-04-17 23:59:59</field>
+        </record>
+
+        <record id="holiday_good_friday_2025" model="resource.calendar.leaves">
+            <field name="name">Good Friday 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-04-18 00:00:00</field>
+            <field name="date_to">2025-04-18 23:59:59</field>
+        </record>
+
+        <record id="holiday_labor_day_2025" model="resource.calendar.leaves">
+            <field name="name">Labor Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-05-01 00:00:00</field>
+            <field name="date_to">2025-05-01 23:59:59</field>
+        </record>
+
+        <record id="holiday_independence_day_2025" model="resource.calendar.leaves">
+            <field name="name">Independence Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-06-12 00:00:00</field>
+            <field name="date_to">2025-06-12 23:59:59</field>
+        </record>
+
+        <record id="holiday_ninoy_aquino_day_2025" model="resource.calendar.leaves">
+            <field name="name">Ninoy Aquino Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-08-21 00:00:00</field>
+            <field name="date_to">2025-08-21 23:59:59</field>
+        </record>
+
+        <record id="holiday_national_heroes_day_2025" model="resource.calendar.leaves">
+            <field name="name">National Heroes Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-08-25 00:00:00</field>
+            <field name="date_to">2025-08-25 23:59:59</field>
+        </record>
+
+        <record id="holiday_all_saints_day_2025" model="resource.calendar.leaves">
+            <field name="name">All Saints' Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-11-01 00:00:00</field>
+            <field name="date_to">2025-11-01 23:59:59</field>
+        </record>
+
+        <record id="holiday_bonifacio_day_2025" model="resource.calendar.leaves">
+            <field name="name">Bonifacio Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-11-30 00:00:00</field>
+            <field name="date_to">2025-11-30 23:59:59</field>
+        </record>
+
+        <record id="holiday_immaculate_conception_2025" model="resource.calendar.leaves">
+            <field name="name">Feast of the Immaculate Conception 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-12-08 00:00:00</field>
+            <field name="date_to">2025-12-08 23:59:59</field>
+        </record>
+
+        <record id="holiday_christmas_2025" model="resource.calendar.leaves">
+            <field name="name">Christmas Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-12-25 00:00:00</field>
+            <field name="date_to">2025-12-25 23:59:59</field>
+        </record>
+
+        <record id="holiday_rizal_day_2025" model="resource.calendar.leaves">
+            <field name="name">Rizal Day 2025</field>
+            <field name="calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="date_from">2025-12-30 00:00:00</field>
+            <field name="date_to">2025-12-30 23:59:59</field>
+        </record>
+
+        <!-- BIR Task Hierarchy: Monthly 1601-C (Parent → 3 Children) -->
+        <record id="project_bir_compliance" model="project.project">
+            <field name="name">BIR Compliance 2025</field>
+            <field name="resource_calendar_id" ref="resource_calendar_bir_standard"/>
+            <field name="allow_task_dependencies" eval="True"/>
+        </record>
+
+        <!-- Parent Task: 1601-C Jan 2025 (Due: 2025-02-10) -->
+        <record id="task_1601c_jan_2025_parent" model="project.task">
+            <field name="name">BIR 1601-C - January 2025</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="date_deadline">2025-02-10</field>
+            <field name="description">Monthly withholding tax return (all 8 agencies consolidated)</field>
+        </record>
+
+        <!-- Child Task 1: Data Collection (7 days before deadline) -->
+        <record id="task_1601c_jan_2025_collect" model="project.task">
+            <field name="name">1601-C Jan 2025: Collect Withholding Tax Data</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1601c_jan_2025_parent"/>
+            <field name="date_deadline">2025-02-03</field>
+            <field name="description">Gather WHT data from all 8 agencies (RIM, CKVC, BOM, JPAL, JLI, JAP, LAS, RMQB)</field>
+        </record>
+
+        <!-- Child Task 2: Form Preparation (depends on Task 1, 4 days before) -->
+        <record id="task_1601c_jan_2025_prepare" model="project.task">
+            <field name="name">1601-C Jan 2025: Prepare Form and Schedules</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1601c_jan_2025_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_1601c_jan_2025_collect')])]"/>
+            <field name="date_deadline">2025-02-06</field>
+            <field name="description">Complete 1601-C form + Schedules (per ATC)</field>
+        </record>
+
+        <!-- Child Task 3: Filing (depends on Task 2, 1 day before) -->
+        <record id="task_1601c_jan_2025_file" model="project.task">
+            <field name="name">1601-C Jan 2025: File with BIR</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1601c_jan_2025_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_1601c_jan_2025_prepare')])]"/>
+            <field name="date_deadline">2025-02-09</field>
+            <field name="description">Submit via eBIRForms + generate RELIEF DAT file</field>
+        </record>
+
+        <!-- Parent Task: 1601-C Feb 2025 (Due: 2025-03-10) -->
+        <record id="task_1601c_feb_2025_parent" model="project.task">
+            <field name="name">BIR 1601-C - February 2025</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="date_deadline">2025-03-10</field>
+            <field name="description">Monthly withholding tax return (all 8 agencies consolidated)</field>
+        </record>
+
+        <record id="task_1601c_feb_2025_collect" model="project.task">
+            <field name="name">1601-C Feb 2025: Collect Withholding Tax Data</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1601c_feb_2025_parent"/>
+            <field name="date_deadline">2025-03-03</field>
+        </record>
+
+        <record id="task_1601c_feb_2025_prepare" model="project.task">
+            <field name="name">1601-C Feb 2025: Prepare Form and Schedules</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1601c_feb_2025_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_1601c_feb_2025_collect')])]"/>
+            <field name="date_deadline">2025-03-06</field>
+        </record>
+
+        <record id="task_1601c_feb_2025_file" model="project.task">
+            <field name="name">1601-C Feb 2025: File with BIR</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1601c_feb_2025_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_1601c_feb_2025_prepare')])]"/>
+            <field name="date_deadline">2025-03-09</field>
+        </record>
+
+        <!-- Quarterly Task: 2550Q Q1 2025 (Due: 2025-05-30, 60 days after Q1 end) -->
+        <record id="task_2550q_q1_2025_parent" model="project.task">
+            <field name="name">BIR 2550Q - Q1 2025 (Quarterly Income Tax)</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="date_deadline">2025-05-30</field>
+            <field name="description">Quarterly income tax return (60 days after quarter-end)</field>
+        </record>
+
+        <record id="task_2550q_q1_2025_collect" model="project.task">
+            <field name="name">2550Q Q1 2025: Collect Income Tax Data</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_2550q_q1_2025_parent"/>
+            <field name="date_deadline">2025-05-16</field>
+            <field name="description">Gather income, deductions, tax credits for Q1</field>
+        </record>
+
+        <record id="task_2550q_q1_2025_prepare" model="project.task">
+            <field name="name">2550Q Q1 2025: Prepare Quarterly Return</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_2550q_q1_2025_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_2550q_q1_2025_collect')])]"/>
+            <field name="date_deadline">2025-05-23</field>
+        </record>
+
+        <record id="task_2550q_q1_2025_file" model="project.task">
+            <field name="name">2550Q Q1 2025: File with BIR</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_2550q_q1_2025_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_2550q_q1_2025_prepare')])]"/>
+            <field name="date_deadline">2025-05-29</field>
+        </record>
+
+        <!-- Annual Task: 1702-RT 2024 (Due: 2025-04-15) -->
+        <record id="task_1702rt_2024_parent" model="project.task">
+            <field name="name">BIR 1702-RT - Annual Income Tax 2024</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="date_deadline">2025-04-15</field>
+            <field name="description">Annual income tax return (due April 15)</field>
+        </record>
+
+        <record id="task_1702rt_2024_collect" model="project.task">
+            <field name="name">1702-RT 2024: Collect Annual Income Data</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1702rt_2024_parent"/>
+            <field name="date_deadline">2025-04-01</field>
+        </record>
+
+        <record id="task_1702rt_2024_prepare" model="project.task">
+            <field name="name">1702-RT 2024: Prepare Annual Return</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1702rt_2024_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_1702rt_2024_collect')])]"/>
+            <field name="date_deadline">2025-04-10</field>
+        </record>
+
+        <record id="task_1702rt_2024_file" model="project.task">
+            <field name="name">1702-RT 2024: File with BIR</field>
+            <field name="project_id" ref="project_bir_compliance"/>
+            <field name="parent_id" ref="task_1702rt_2024_parent"/>
+            <field name="depend_on_ids" eval="[(6, 0, [ref('task_1702rt_2024_prepare')])]"/>
+            <field name="date_deadline">2025-04-14</field>
+        </record>
+
+    </data>
+</odoo>

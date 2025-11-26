@@ -34,6 +34,7 @@ Dependencies:
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/bir_schedule_seed.xml',
         'reports/bir_2307_report.xml',
         'wizards/bir_dat_file_wizard_view.xml',
     ],
