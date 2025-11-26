@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_finance_logframe_user,finance.logframe.user,model_ipai_finance_logframe,base.group_user,1,1,1,0
+access_finance_logframe_manager,finance.logframe.manager,model_ipai_finance_logframe,base.group_system,1,1,1,1
+access_bir_schedule_user,bir.schedule.user,model_ipai_finance_bir_schedule,base.group_user,1,1,1,0
+access_bir_schedule_manager,bir.schedule.manager,model_ipai_finance_bir_schedule,base.group_system,1,1,1,1

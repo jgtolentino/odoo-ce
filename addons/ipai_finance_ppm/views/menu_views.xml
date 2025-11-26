@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_finance_ppm_root"
+              name="Finance PPM"
+              sequence="10"
+              web_icon="ipai_finance_ppm,static/description/icon.png"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_finance_ppm_dashboard"
+              name="Dashboard"
+              parent="menu_finance_ppm_root"
+              sequence="1"
+              action="action_finance_ppm_dashboard"/>
+
+    <record id="action_finance_ppm_dashboard" model="ir.actions.act_url">
+        <field name="name">Finance PPM Dashboard</field>
+        <field name="url">/ipai/finance/ppm</field>
+        <field name="target">self</field>
+    </record>
+
+    <!-- BIR Schedule -->
+    <menuitem id="menu_finance_bir_schedule"
+              name="BIR Schedule"
+              parent="menu_finance_ppm_root"
+              sequence="10"
+              action="action_finance_bir_schedule"/>
+
+    <!-- Logframe -->
+    <menuitem id="menu_finance_logframe"
+              name="Logframe"
+              parent="menu_finance_ppm_root"
+              sequence="20"
+              action="action_finance_logframe"/>
+
+    <!-- Finance PPM Tasks -->
+    <menuitem id="menu_finance_ppm_tasks"
+              name="Finance Tasks"
+              parent="menu_finance_ppm_root"
+              sequence="30"
+              action="action_finance_ppm_tasks"/>
+
+    <record id="action_finance_ppm_tasks" model="ir.actions.act_window">
+        <field name="name">Finance PPM Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,form,kanban,calendar,gantt</field>
+        <field name="domain">[('is_finance_ppm', '=', True)]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

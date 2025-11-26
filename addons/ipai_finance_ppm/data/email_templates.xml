@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email Template: 7-Day Warning -->
+        <record id="email_template_bir_7day_warning" model="mail.template">
+            <field name="name">BIR Deadline - 7 Days Warning</field>
+            <field name="model_id" ref="model_ipai_finance_bir_schedule"/>
+            <field name="subject">⚠️ BIR Deadline Alert: ${object.form_code} ${object.period} Due in 7 Days</field>
+            <field name="email_from">${(object.company_id.email or user.email)|safe}</field>
+            <field name="email_to">${object.responsible_prep.email},${object.responsible_review.email}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background-color: #ffa500; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">⚠️ BIR Deadline Alert</h1>
+    </div>
+
+    <div style="padding: 20px; background-color: #f5f5f5;">
+        <h2 style="color: #2c3e50;">7-Day Warning: ${object.form_code} ${object.period}</h2>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>BIR Form:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">${object.form_code}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Period:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">${object.period}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>BIR Filing Deadline:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd; color: red; font-weight: bold;">
+                    ${format_date(object.filing_deadline, date_format='EEEE, MMMM d, yyyy')}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Status:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">
+                    <span style="padding: 5px 10px; background-color: #ffa500; color: white; border-radius: 3px;">
+                        ${object.status.replace('_', ' ').title()}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Completion:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">
+                    <div style="background-color: #e0e0e0; border-radius: 10px; height: 20px; position: relative;">
+                        <div style="background-color: #ffa500; border-radius: 10px; height: 20px; width: ${object.completion_pct}%;"></div>
+                        <span style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); line-height: 20px; font-weight: bold;">
+                            ${int(object.completion_pct)}%
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <h3 style="color: #2c3e50;">Internal Deadlines</h3>
+        <ul style="list-style: none; padding: 0;">
+            <li style="padding: 8px; background-color: white; margin-bottom: 5px; border-left: 4px solid #3498db;">
+                <strong>Preparation:</strong> ${format_date(object.prep_deadline, date_format='MMMM d, yyyy')}
+                <span style="color: #7f8c8d;">(${object.responsible_prep.name})</span>
+            </li>
+            <li style="padding: 8px; background-color: white; margin-bottom: 5px; border-left: 4px solid #9b59b6;">
+                <strong>Review:</strong> ${format_date(object.review_deadline, date_format='MMMM d, yyyy')}
+                <span style="color: #7f8c8d;">(${object.responsible_review.name})</span>
+            </li>
+            <li style="padding: 8px; background-color: white; margin-bottom: 5px; border-left: 4px solid #e74c3c;">
+                <strong>Approval:</strong> ${format_date(object.approval_deadline, date_format='MMMM d, yyyy')}
+                <span style="color: #7f8c8d;">(${object.responsible_approval.name})</span>
+            </li>
+        </ul>
+
+        <div style="margin: 20px 0; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107;">
+            <strong>Action Required:</strong> Please ensure all preparation tasks are completed by ${format_date(object.prep_deadline, date_format='MMMM d, yyyy')}.
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="${object.get_base_url()}/web#id=${object.id}&model=ipai.finance.bir_schedule&view_type=form"
+               style="display: inline-block; padding: 12px 30px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View BIR Form Details
+            </a>
+        </div>
+    </div>
+
+    <div style="padding: 15px; background-color: #2c3e50; color: white; text-align: center; font-size: 12px;">
+        <p style="margin: 0;">InsightPulse Finance PPM | This is an automated alert from Odoo</p>
+    </div>
+</div>
+            ]]></field>
+        </record>
+
+        <!-- Email Template: Overdue Alert -->
+        <record id="email_template_bir_overdue" model="mail.template">
+            <field name="name">BIR Deadline - Overdue</field>
+            <field name="model_id" ref="model_ipai_finance_bir_schedule"/>
+            <field name="subject">🚨 URGENT: BIR Deadline OVERDUE - ${object.form_code} ${object.period}</field>
+            <field name="email_from">${(object.company_id.email or user.email)|safe}</field>
+            <field name="email_to">${object.responsible_approval.email}</field>
+            <field name="email_cc">${object.responsible_prep.email},${object.responsible_review.email}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background-color: #e74c3c; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">🚨 URGENT: BIR DEADLINE OVERDUE</h1>
+    </div>
+
+    <div style="padding: 20px; background-color: #f5f5f5;">
+        <div style="background-color: #f8d7da; border-left: 4px solid #e74c3c; padding: 15px; margin-bottom: 20px;">
+            <h2 style="color: #721c24; margin: 0 0 10px 0;">Critical Alert: ${object.form_code} ${object.period}</h2>
+            <p style="color: #721c24; margin: 0;">
+                <strong>The BIR filing deadline has passed.</strong> Immediate action required to avoid penalties.
+            </p>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>BIR Form:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">${object.form_code}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Period:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">${object.period}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Original Deadline:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd; color: red; font-weight: bold;">
+                    ${format_date(object.filing_deadline, date_format='EEEE, MMMM d, yyyy')} (OVERDUE)
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Days Overdue:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd; color: red; font-weight: bold;">
+                    ${(context_today() - object.filing_deadline).days} days
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Current Status:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">
+                    <span style="padding: 5px 10px; background-color: #e74c3c; color: white; border-radius: 3px;">
+                        ${object.status.replace('_', ' ').title()}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Completion:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">
+                    ${int(object.completion_pct)}%
+                </td>
+            </tr>
+        </table>
+
+        <h3 style="color: #2c3e50;">Responsible Persons</h3>
+        <ul style="list-style: none; padding: 0;">
+            <li style="padding: 8px; background-color: white; margin-bottom: 5px;">
+                <strong>Preparation:</strong> ${object.responsible_prep.name} (${object.responsible_prep.email})
+            </li>
+            <li style="padding: 8px; background-color: white; margin-bottom: 5px;">
+                <strong>Review:</strong> ${object.responsible_review.name} (${object.responsible_review.email})
+            </li>
+            <li style="padding: 8px; background-color: white; margin-bottom: 5px;">
+                <strong>Approval:</strong> ${object.responsible_approval.name} (${object.responsible_approval.email})
+            </li>
+        </ul>
+
+        <div style="margin: 20px 0; padding: 15px; background-color: #f8d7da; border-left: 4px solid #e74c3c;">
+            <strong>Immediate Action Required:</strong>
+            <ul style="margin: 10px 0;">
+                <li>Contact BIR to determine late filing penalties</li>
+                <li>Complete and file the form immediately</li>
+                <li>Update form status to "filed" in Odoo after submission</li>
+                <li>Document the delay and implement corrective measures</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="${object.get_base_url()}/web#id=${object.id}&model=ipai.finance.bir_schedule&view_type=form"
+               style="display: inline-block; padding: 12px 30px; background-color: #e74c3c; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View BIR Form Details
+            </a>
+        </div>
+    </div>
+
+    <div style="padding: 15px; background-color: #2c3e50; color: white; text-align: center; font-size: 12px;">
+        <p style="margin: 0;">InsightPulse Finance PPM | Critical Automated Alert</p>
+    </div>
+</div>
+            ]]></field>
+        </record>
+
+        <!-- Email Template: Task Completion Reminder -->
+        <record id="email_template_bir_task_reminder" model="mail.template">
+            <field name="name">BIR Task - Completion Reminder</field>
+            <field name="model_id" ref="model_ipai_finance_bir_schedule"/>
+            <field name="subject">📋 Reminder: Complete BIR Tasks for ${object.form_code} ${object.period}</field>
+            <field name="email_from">${(object.company_id.email or user.email)|safe}</field>
+            <field name="email_to">${object.responsible_prep.email}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background-color: #3498db; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">📋 BIR Task Reminder</h1>
+    </div>
+
+    <div style="padding: 20px; background-color: #f5f5f5;">
+        <h2 style="color: #2c3e50;">Task Reminder: ${object.form_code} ${object.period}</h2>
+
+        <p style="font-size: 16px; color: #555;">
+            Hello ${object.responsible_prep.name},
+        </p>
+
+        <p style="font-size: 14px; color: #555;">
+            This is a friendly reminder about the following BIR tasks that require your attention:
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>BIR Form:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">${object.form_code}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Period:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">${object.period}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Your Deadline:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd; font-weight: bold;">
+                    ${format_date(object.prep_deadline, date_format='EEEE, MMMM d, yyyy')}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;"><strong>Progress:</strong></td>
+                <td style="padding: 10px; background-color: white; border: 1px solid #ddd;">
+                    <div style="background-color: #e0e0e0; border-radius: 10px; height: 20px; position: relative;">
+                        <div style="background-color: #3498db; border-radius: 10px; height: 20px; width: ${object.completion_pct}%;"></div>
+                        <span style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); line-height: 20px; font-weight: bold;">
+                            ${int(object.completion_pct)}%
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        % if object.task_prep_id:
+        <div style="margin: 20px 0; padding: 15px; background-color: white; border-left: 4px solid #3498db;">
+            <h3 style="margin: 0 0 10px 0; color: #2c3e50;">Your Task:</h3>
+            <p style="margin: 0;"><strong>${object.task_prep_id.name}</strong></p>
+            <p style="margin: 5px 0 0 0; color: #7f8c8d; font-size: 12px;">
+                Stage: ${object.task_prep_id.stage_id.name} |
+                Deadline: ${format_date(object.task_prep_id.date_deadline, date_format='MMM d, yyyy')}
+            </p>
+        </div>
+        % endif
+
+        <div style="text-align: center; margin-top: 20px;">
+            % if object.task_prep_id:
+            <a href="${object.get_base_url()}/web#id=${object.task_prep_id.id}&model=project.task&view_type=form"
+               style="display: inline-block; padding: 12px 30px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-right: 10px;">
+                Open Task
+            </a>
+            % endif
+            <a href="${object.get_base_url()}/web#id=${object.id}&model=ipai.finance.bir_schedule&view_type=form"
+               style="display: inline-block; padding: 12px 30px; background-color: #95a5a6; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View BIR Form
+            </a>
+        </div>
+
+        <p style="font-size: 12px; color: #7f8c8d; margin-top: 30px; text-align: center;">
+            If you have any questions or need assistance, please contact your supervisor.
+        </p>
+    </div>
+
+    <div style="padding: 15px; background-color: #2c3e50; color: white; text-align: center; font-size: 12px;">
+        <p style="margin: 0;">InsightPulse Finance PPM | Automated Task Reminder</p>
+    </div>
+</div>
+            ]]></field>
+        </record>
+    </data>
+</odoo>

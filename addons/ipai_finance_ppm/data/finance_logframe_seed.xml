@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Goal Level -->
+        <record id="logframe_goal" model="ipai.finance.logframe">
+            <field name="name">100% compliant and timely month-end closing and tax filing</field>
+            <field name="level">goal</field>
+            <field name="indicator">Zero BIR penalties</field>
+            <field name="target_value">100</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Outcome Level -->
+        <record id="logframe_outcome" model="ipai.finance.logframe">
+            <field name="name">Zero-penalty compliance with timely financial reporting</field>
+            <field name="level">outcome</field>
+            <field name="parent_id" ref="logframe_goal"/>
+            <field name="indicator">On-time filing rate</field>
+            <field name="target_value">100</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Immediate Objective 1 - Month-End Closing -->
+        <record id="logframe_im1" model="ipai.finance.logframe">
+            <field name="name">Month-end closing completed within 5 business days</field>
+            <field name="level">im1</field>
+            <field name="parent_id" ref="logframe_outcome"/>
+            <field name="indicator">Days to close month-end</field>
+            <field name="target_value">5</field>
+            <field name="description">Ensure all month-end closing activities (bank recon, GL recon, adjusting entries) completed within 5 business days after month-end</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Immediate Objective 2 - Tax Filing -->
+        <record id="logframe_im2" model="ipai.finance.logframe">
+            <field name="name">100% on-time BIR tax filing compliance</field>
+            <field name="level">im2</field>
+            <field name="parent_id" ref="logframe_outcome"/>
+            <field name="indicator">On-time BIR filing rate</field>
+            <field name="target_value">100</field>
+            <field name="description">Ensure all BIR forms (1601-C, 2550Q, 1702-RT) filed before official deadlines with zero late penalties</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <!-- Output 1 - Reconciliations -->
+        <record id="logframe_output_recon" model="ipai.finance.logframe">
+            <field name="name">Bank and GL reconciliations completed accurately</field>
+            <field name="level">output</field>
+            <field name="parent_id" ref="logframe_im1"/>
+            <field name="indicator">Reconciliation accuracy rate</field>
+            <field name="target_value">100</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- Output 2 - Journal Entries -->
+        <record id="logframe_output_je" model="ipai.finance.logframe">
+            <field name="name">Adjusting journal entries posted and reviewed</field>
+            <field name="level">output</field>
+            <field name="parent_id" ref="logframe_im1"/>
+            <field name="indicator">JE approval rate</field>
+            <field name="target_value">100</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <!-- Output 3 - BIR Forms -->
+        <record id="logframe_output_bir" model="ipai.finance.logframe">
+            <field name="name">BIR forms prepared, reviewed, and filed</field>
+            <field name="level">output</field>
+            <field name="parent_id" ref="logframe_im2"/>
+            <field name="indicator">BIR form submission rate</field>
+            <field name="target_value">100</field>
+            <field name="sequence">70</field>
+        </record>
+
+        <!-- Activity 1 - Bank Reconciliation -->
+        <record id="logframe_activity_bank_recon" model="ipai.finance.logframe">
+            <field name="name">Perform daily bank reconciliation</field>
+            <field name="level">activity</field>
+            <field name="parent_id" ref="logframe_output_recon"/>
+            <field name="indicator">Bank statement items reconciled</field>
+            <field name="target_value">100</field>
+            <field name="sequence">80</field>
+        </record>
+
+        <!-- Activity 2 - GL Reconciliation -->
+        <record id="logframe_activity_gl_recon" model="ipai.finance.logframe">
+            <field name="name">Reconcile all GL accounts</field>
+            <field name="level">activity</field>
+            <field name="parent_id" ref="logframe_output_recon"/>
+            <field name="indicator">GL accounts reconciled</field>
+            <field name="target_value">100</field>
+            <field name="sequence">90</field>
+        </record>
+
+        <!-- Activity 3 - WHT Computation -->
+        <record id="logframe_activity_wht" model="ipai.finance.logframe">
+            <field name="name">Compute withholding taxes (1601-C)</field>
+            <field name="level">activity</field>
+            <field name="parent_id" ref="logframe_output_bir"/>
+            <field name="indicator">WHT computation accuracy</field>
+            <field name="target_value">100</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- Activity 4 - VAT Computation -->
+        <record id="logframe_activity_vat" model="ipai.finance.logframe">
+            <field name="name">Compute VAT for quarterly returns (2550Q)</field>
+            <field name="level">activity</field>
+            <field name="parent_id" ref="logframe_output_bir"/>
+            <field name="indicator">VAT computation accuracy</field>
+            <field name="target_value">100</field>
+            <field name="sequence">110</field>
+        </record>
+    </data>
+</odoo>

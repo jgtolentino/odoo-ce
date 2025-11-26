@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- BIR Schedule Tree View -->
+    <record id="view_bir_schedule_tree" model="ir.ui.view">
+        <field name="name">ipai.finance.bir_schedule.tree</field>
+        <field name="model">ipai.finance.bir_schedule</field>
+        <field name="arch" type="xml">
+            <tree string="BIR Filing Schedule" decoration-danger="status=='late'" decoration-success="status=='filed'">
+                <field name="form_code"/>
+                <field name="period"/>
+                <field name="filing_deadline"/>
+                <field name="prep_deadline"/>
+                <field name="review_deadline"/>
+                <field name="approval_deadline"/>
+                <field name="status"/>
+                <field name="completion_pct" widget="progressbar"/>
+                <field name="responsible_prep"/>
+                <field name="responsible_review"/>
+                <field name="responsible_approval"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- BIR Schedule Form View -->
+    <record id="view_bir_schedule_form" model="ir.ui.view">
+        <field name="name">ipai.finance.bir_schedule.form</field>
+        <field name="model">ipai.finance.bir_schedule</field>
+        <field name="arch" type="xml">
+            <form string="BIR Filing Schedule">
+                <header>
+                    <button name="action_create_tasks" string="Create Tasks" type="object" class="btn-primary"/>
+                    <button name="action_mark_filed" string="Mark as Filed" type="object" class="btn-success" attrs="{'invisible': [('status', '=', 'filed')]}"/>
+                    <field name="status" widget="statusbar" statusbar_visible="not_started,in_progress,submitted,filed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="form_code" required="1"/>
+                        </h1>
+                        <h2>
+                            <field name="period" required="1" placeholder="e.g., December 2025"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group name="deadlines" string="Deadlines">
+                            <field name="filing_deadline" required="1"/>
+                            <field name="prep_deadline"/>
+                            <field name="review_deadline"/>
+                            <field name="approval_deadline"/>
+                        </group>
+                        <group name="responsible" string="Responsible Persons">
+                            <field name="responsible_prep"/>
+                            <field name="responsible_review"/>
+                            <field name="responsible_approval"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="completion_pct" widget="progressbar"/>
+                        <field name="logframe_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Tasks" name="tasks">
+                            <group>
+                                <field name="task_prep_id"/>
+                                <field name="task_review_id"/>
+                                <field name="task_approval_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- BIR Schedule Action -->
+    <record id="action_finance_bir_schedule" model="ir.actions.act_window">
+        <field name="name">BIR Filing Schedule</field>
+        <field name="res_model">ipai.finance.bir_schedule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

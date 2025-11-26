@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Project Task Form View -->
+    <record id="view_task_form_finance_ppm" model="ir.ui.view">
+        <field name="name">project.task.form.finance_ppm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Finance PPM" name="finance_ppm" attrs="{'invisible': [('is_finance_ppm', '=', False)]}">
+                    <group>
+                        <group>
+                            <field name="finance_logframe_id"/>
+                            <field name="bir_schedule_id"/>
+                        </group>
+                        <group>
+                            <field name="is_finance_ppm" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
