@@ -9,9 +9,9 @@ USER root
 
 # 1. Install System Dependencies for OCA Modules
 # (Some OCA reporting tools need xmlsec1, pandas, etc.)
+# Note: Using PostgreSQL 16 client for Supabase compatibility
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libpq-dev \
     git \
     libssl-dev \
     python3-pandas \
@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     libxslt1-dev \
     libsasl2-dev \
     libldap2-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Prepare Directories
@@ -47,19 +48,33 @@ COPY ./external-src/contract /mnt/oca-addons/contract
 COPY ./external-src/server-tools /mnt/oca-addons/server-tools
 
 # 4. Copy Custom Delta Modules
+# - ipai_finance_ppm (Finance PPM with Logframe and BIR)
 # - ipai_bir_compliance (Tax Shield)
 # - ipai_ce_cleaner (Enterprise upsell hiding)
+# - ipai_portal_fix (Portal fixes)
 # - tbwa_spectra_integration (Company-specific export)
 COPY ./addons /mnt/extra-addons
 
 # 5. Copy Configuration
 COPY ./deploy/odoo.conf /etc/odoo/odoo.conf
 
-# 6. Install Python Dependencies from OCA modules
+# 6. Install Python Dependencies from OCA modules and custom addons
 RUN find /mnt/oca-addons -name "requirements.txt" -exec pip3 install --no-cache-dir -r {} \; 2>/dev/null || true
+RUN if [ -f /mnt/extra-addons/requirements.txt ]; then \
+      pip install --no-cache-dir --break-system-packages -r /mnt/extra-addons/requirements.txt; \
+    fi
 
 # 7. Fix Permissions
 RUN chown -R odoo:odoo /mnt/extra-addons /mnt/oca-addons /etc/odoo/odoo.conf
+
+# Environment variable defaults
+ENV HOST=db \
+    PORT=5432 \
+    USER=odoo \
+    PASSWORD=odoo \
+    DB=odoo
+
+ENV ODOO_RC=/etc/odoo/odoo.conf
 
 USER odoo
 
@@ -67,7 +82,11 @@ USER odoo
 # This tells Odoo where to look for modules inside the container
 ENV ODOO_ADDONS_PATH=/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons,/mnt/oca-addons/reporting-engine,/mnt/oca-addons/account-closing,/mnt/oca-addons/account-financial-reporting,/mnt/oca-addons/account-financial-tools,/mnt/oca-addons/account-invoicing,/mnt/oca-addons/project,/mnt/oca-addons/hr-expense,/mnt/oca-addons/purchase-workflow,/mnt/oca-addons/maintenance,/mnt/oca-addons/dms,/mnt/oca-addons/calendar,/mnt/oca-addons/web,/mnt/oca-addons/contract,/mnt/oca-addons/server-tools
 
+# Health check for container orchestration
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8069/web/health || exit 1
+
 # The image is now production-ready with:
 # - Odoo 18 CE base
 # - 14 OCA repositories
-# - 3 custom delta modules (Tax Shield, CE Cleaner, Spectra)
+# - 5 custom delta modules (Finance PPM, Tax Shield, CE Cleaner, Portal Fix, Spectra)
