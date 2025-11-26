@@ -47,12 +47,9 @@ COPY ./external-src/web /mnt/oca-addons/web
 COPY ./external-src/contract /mnt/oca-addons/contract
 COPY ./external-src/server-tools /mnt/oca-addons/server-tools
 
-# 4. Copy Custom Delta Modules
-# - ipai_finance_ppm (Finance PPM with Logframe and BIR)
-# - ipai_bir_compliance (Tax Shield)
-# - ipai_ce_cleaner (Enterprise upsell hiding)
-# - ipai_portal_fix (Portal fixes)
-# - tbwa_spectra_integration (Company-specific export)
+# 4. Copy Custom Delta Modules (Minimalist 2-Module Strategy)
+# - ipai_finance_ppm (Finance PPM with Logframe and BIR Tax Shield)
+# - ipai_portal_fix (Portal rendering fix + TBWA/OMC branding)
 COPY ./addons /mnt/extra-addons
 
 # 5. Copy Configuration
@@ -87,6 +84,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8069/web/health || exit 1
 
 # The image is now production-ready with:
-# - Odoo 18 CE base
-# - 14 OCA repositories
-# - 5 custom delta modules (Finance PPM, Tax Shield, CE Cleaner, Portal Fix, Spectra)
+# - Odoo 18 CE base (accounting, invoicing, expenses, projects built-in)
+# - 14 OCA repositories (reporting, financial tools, project extensions)
+# - 2 custom delta modules (Finance PPM with BIR Tax Shield, Portal Fix with branding)
+# - Target: Marketing agency industry with minimal technical debt
