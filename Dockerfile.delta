@@ -1,0 +1,35 @@
+# -----------------------------------------------------------------------------
+# Delta Build: 2-Module Marketing Agency Strategy
+# Base: ghcr.io/jgtolentino/odoo-ce:v0.9.0 (Odoo 18 CE + 14 OCA repos)
+# Delta: Only ipai_bir_compliance + ipai_portal_fix
+# -----------------------------------------------------------------------------
+FROM ghcr.io/jgtolentino/odoo-ce:v0.9.0
+
+USER root
+
+# Copy ONLY the 2 custom delta modules
+COPY ./addons/ipai_bir_compliance /mnt/extra-addons/ipai_bir_compliance
+COPY ./addons/ipai_portal_fix /mnt/extra-addons/ipai_portal_fix
+
+# Install any Python dependencies from custom modules (if present)
+RUN if [ -f /mnt/extra-addons/ipai_bir_compliance/requirements.txt ]; then \
+      pip3 install --no-cache-dir -r /mnt/extra-addons/ipai_bir_compliance/requirements.txt; \
+    fi && \
+    if [ -f /mnt/extra-addons/ipai_portal_fix/requirements.txt ]; then \
+      pip3 install --no-cache-dir -r /mnt/extra-addons/ipai_portal_fix/requirements.txt; \
+    fi
+
+# Fix permissions for custom modules only
+RUN chown -R odoo:odoo /mnt/extra-addons/ipai_bir_compliance /mnt/extra-addons/ipai_portal_fix
+
+USER odoo
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8069/web/health || exit 1
+
+# Image metadata
+LABEL maintainer="TBWA Finance SSC <finance@insightpulseai.net>"
+LABEL description="Odoo 18 CE Marketing Agency ERP (2-Module Delta)"
+LABEL version="2.0-delta"
+LABEL modules="ipai_bir_compliance,ipai_portal_fix"
