@@ -48,8 +48,9 @@ COPY ./external-src/contract /mnt/oca-addons/contract
 COPY ./external-src/server-tools /mnt/oca-addons/server-tools
 
 # 4. Copy Custom Delta Modules (Minimalist 2-Module Strategy)
-# - ipai_finance_ppm (Finance PPM with Logframe and BIR Tax Shield)
+# - ipai_bir_compliance (Lightweight BIR 2307 + DAT file Tax Shield)
 # - ipai_portal_fix (Portal rendering fix + TBWA/OMC branding)
+# Note: BIR calendar/PPM handled by OCA project modules + ipai_bir_compliance links
 COPY ./addons /mnt/extra-addons
 
 # 5. Copy Configuration
@@ -84,7 +85,8 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8069/web/health || exit 1
 
 # The image is now production-ready with:
-# - Odoo 18 CE base (accounting, invoicing, expenses, projects built-in)
-# - 14 OCA repositories (reporting, financial tools, project extensions)
-# - 2 custom delta modules (Finance PPM with BIR Tax Shield, Portal Fix with branding)
+# - Odoo 18 CE base (accounting, invoicing, expenses, projects, timesheets built-in)
+# - 14 OCA repositories (reporting, financial tools, project extensions, withholding tax)
+# - 2 custom delta modules (BIR 2307 Tax Shield, Portal Fix with branding)
 # - Target: Marketing agency industry with minimal technical debt
+# - BIR calendar/PPM: Use OCA project modules + ipai_bir_compliance integration

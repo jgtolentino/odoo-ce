@@ -5,7 +5,8 @@
       "Bash(git add:*)",
       "Bash(docker build:*)",
       "Bash(git fetch:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(gh pr view:*)"
     ],
     "deny": [],
     "ask": []
