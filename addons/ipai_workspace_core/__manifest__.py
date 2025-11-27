@@ -18,6 +18,7 @@
         "security/ir.model.access.csv",
         "views/ipai_workspace_views.xml",
         "views/ipai_workspace_menu.xml",
+        "data/res_users_data.xml",
     ],
     "assets": {
         "web.assets_backend": [

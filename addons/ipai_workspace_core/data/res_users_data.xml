@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            OMC Users Directory
+            Import these users on fresh Odoo install
+        -->
+
+        <record id="user_khalil_veracruz" model="res.users">
+            <field name="name">Khalil Veracruz</field>
+            <field name="login">khalil.veracruz@omc.com</field>
+            <field name="email">khalil.veracruz@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_rey_meran" model="res.users">
+            <field name="name">Rey Meran</field>
+            <field name="login">rey.meran@omc.com</field>
+            <field name="email">rey.meran@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_amor_lasaga" model="res.users">
+            <field name="name">Amor Lasaga</field>
+            <field name="login">amor.lasaga@omc.com</field>
+            <field name="email">amor.lasaga@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_beng_manalo" model="res.users">
+            <field name="name">Beng Manalo</field>
+            <field name="login">beng.manalo@omc.com</field>
+            <field name="email">beng.manalo@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_jinky_paladin" model="res.users">
+            <field name="name">Jinky Paladin</field>
+            <field name="login">jinky.paladin@omc.com</field>
+            <field name="email">jinky.paladin@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_jerald_loterte" model="res.users">
+            <field name="name">Jerald Loterte</field>
+            <field name="login">jerald.loterte@omc.com</field>
+            <field name="email">jerald.loterte@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_jasmin_ignacio" model="res.users">
+            <field name="name">Jasmin Ignacio</field>
+            <field name="login">jasmin.ignacio@omc.com</field>
+            <field name="email">jasmin.ignacio@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_jhoee_oliva" model="res.users">
+            <field name="name">Jhoee Oliva</field>
+            <field name="login">jhoee.oliva@omc.com</field>
+            <field name="email">jhoee.oliva@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_joana_maravillas" model="res.users">
+            <field name="name">Joana Maravillas</field>
+            <field name="login">joana.maravillas@omc.com</field>
+            <field name="email">joana.maravillas@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_sally_brillantes" model="res.users">
+            <field name="name">Sally Brillantes</field>
+            <field name="login">sally.brillantes@omc.com</field>
+            <field name="email">sally.brillantes@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_cliff_dejecacion" model="res.users">
+            <field name="name">Cliff Dejecacion</field>
+            <field name="login">cliff.dejecacion@omc.com</field>
+            <field name="email">cliff.dejecacion@omc.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+        </record>
+
+        <record id="user_jake_tolentino" model="res.users">
+            <field name="name">Jake Tolentino</field>
+            <field name="login">jgtolentino.rn@gmail.com</field>
+            <field name="email">jgtolentino.rn@gmail.com</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('ipai_workspace_core.group_ipai_workspace_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>
