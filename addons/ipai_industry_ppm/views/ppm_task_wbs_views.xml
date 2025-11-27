@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Task form: WBS section -->
+        <record id="view_task_form_wbs" model="ir.ui.view">
+            <field name="name">project.task.form.wbs</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group" position="inside">
+                    <group string="WBS">
+                        <field name="parent_task_id"/>
+                        <field name="wbs_sequence"/>
+                        <field name="wbs_code"/>
+                        <field name="wbs_auto" readonly="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Task list: show WBS columns -->
+        <record id="view_task_list_wbs" model="ir.ui.view">
+            <field name="name">project.task.list.wbs</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="wbs_auto" optional="show"/>
+                    <field name="wbs_code" optional="hide"/>
+                    <field name="parent_task_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Task search: group by parent -->
+        <record id="view_task_search_wbs" model="ir.ui.view">
+            <field name="name">project.task.search.wbs</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/group[last()]" position="after">
+                    <group expand="0" string="Group By (WBS)">
+                        <filter name="group_parent_task"
+                                string="Parent Task"
+                                context="{'group_by': 'parent_task_id'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

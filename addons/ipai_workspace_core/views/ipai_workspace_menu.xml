@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Root app menu (icon on /web) -->
+        <record id="menu_ipai_workspace_root" model="ir.ui.menu">
+            <field name="name">Workspaces</field>
+            <field name="sequence">10</field>
+            <field name="action" ref="action_ipai_workspace"/>
+            <field name="groups_id" eval="[(4, ref('ipai_workspace_core.group_ipai_workspace_user'))]"/>
+            <field name="web_icon">
+                ipai_workspace_core,static/description/icon.png
+            </field>
+        </record>
+
+        <!-- Optional submenus if you want (can be extended by industry packs) -->
+        <!-- E.g. accounting / marketing packs will add menus under this root -->
+    </data>
+</odoo>

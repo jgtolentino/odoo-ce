@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- List view -->
+        <record id="view_ipai_workspace_list" model="ir.ui.view">
+            <field name="name">ipai.workspace.list</field>
+            <field name="model">ipai.workspace</field>
+            <field name="arch" type="xml">
+                <list string="Workspaces">
+                    <field name="name"/>
+                    <field name="workspace_type"/>
+                    <field name="partner_id"/>
+                    <field name="owner_id"/>
+                    <field name="project_count" optional="show"/>
+                    <field name="last_activity_date" optional="show"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Kanban view -->
+        <record id="view_ipai_workspace_kanban" model="ir.ui.view">
+            <field name="name">ipai.workspace.kanban</field>
+            <field name="model">ipai.workspace</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="workspace_type" class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="workspace_type"/>
+                    <field name="partner_id"/>
+                    <field name="owner_id"/>
+                    <field name="member_ids"/>
+                    <field name="color"/>
+                    <field name="project_count"/>
+                    <field name="last_activity_date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_record {{ record.color.raw_value ? 'o_kanban_color_' + record.color.raw_value : '' }}">
+                                <div class="o_kanban_primary_left">
+                                    <strong t-field="record.name"/>
+                                    <div class="o_text_muted">
+                                        <span t-field="record.workspace_type"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_primary_right">
+                                    <span t-if="record.partner_id" class="o_text_muted">
+                                        <t t-field="record.partner_id"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_secondary_bottom">
+                                    <span t-if="record.owner_id" class="o_text_muted">
+                                        Owner: <t t-field="record.owner_id"/>
+                                    </span>
+                                    <span t-if="record.project_count" class="o_badge ms-2">
+                                        <t t-esc="record.project_count.raw_value or 0"/> projects
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Form view -->
+        <record id="view_ipai_workspace_form" model="ir.ui.view">
+            <field name="name">ipai.workspace.form</field>
+            <field name="model">ipai.workspace</field>
+            <field name="arch" type="xml">
+                <form string="Workspace">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- Reserved for future smart buttons -->
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="workspace_type"/>
+                                <field name="partner_id"/>
+                            </group>
+                            <group>
+                                <field name="owner_id"/>
+                                <field name="member_ids" widget="many2many_tags"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Overview">
+                                <field name="description" nolabel="1"/>
+                            </page>
+                            <page string="Meta">
+                                <group>
+                                    <field name="project_count" readonly="1"/>
+                                    <field name="last_activity_date" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search view -->
+        <record id="view_ipai_workspace_search" model="ir.ui.view">
+            <field name="name">ipai.workspace.search</field>
+            <field name="model">ipai.workspace</field>
+            <field name="arch" type="xml">
+                <search string="Search Workspaces">
+                    <field name="name"/>
+                    <field name="workspace_type"/>
+                    <field name="partner_id"/>
+                    <field name="owner_id"/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]" help="Active workspaces"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]" help="Archived workspaces"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_type" string="Workspace Type" context="{'group_by': 'workspace_type'}"/>
+                        <filter name="group_owner" string="Owner" context="{'group_by': 'owner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_ipai_workspace" model="ir.actions.act_window">
+            <field name="name">Workspaces</field>
+            <field name="res_model">ipai.workspace</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="search_view_id" ref="view_ipai_workspace_search"/>
+        </record>
+
+    </data>
+</odoo>

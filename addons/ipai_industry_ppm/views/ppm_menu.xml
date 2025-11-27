@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Action: PPM Workspaces (portfolios/programs/projects only) -->
+        <record id="action_ipai_ppm_workspaces" model="ir.actions.act_window">
+            <field name="name">PPM</field>
+            <field name="res_model">ipai.workspace</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="domain">
+                [('ppm_level', '!=', 'none')]
+            </field>
+            <field name="target">current</field>
+        </record>
+
+        <!-- App icon for PPM -->
+        <record id="menu_ipai_ppm_root" model="ir.ui.menu">
+            <field name="name">PPM</field>
+            <field name="sequence">60</field>
+            <field name="action" ref="action_ipai_ppm_workspaces"/>
+            <field name="groups_id" eval="[(4, ref('ipai_industry_ppm.group_ipai_ppm_user'))]"/>
+            <field name="web_icon">
+                ipai_industry_ppm,static/description/icon.png
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,3 +1,1 @@
-# -*- coding: utf-8 -*-
-
-from . import workspace
+from . import ipai_workspace

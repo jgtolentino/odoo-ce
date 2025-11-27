@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_ipai_workspace_form_ppm" model="ir.ui.view">
+            <field name="name">ipai.workspace.form.ppm</field>
+            <field name="model">ipai.workspace</field>
+            <field name="inherit_id" ref="ipai_workspace_core.view_ipai_workspace_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="PPM" groups="ipai_industry_ppm.group_ipai_ppm_user">
+                        <group>
+                            <field name="ppm_level"/>
+                            <field name="ppm_status"/>
+                        </group>
+                        <group>
+                            <field name="strategic_theme"/>
+                            <field name="portfolio_owner_id"/>
+                        </group>
+                        <group>
+                            <field name="risk_score"/>
+                            <field name="roi_projection"/>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</odoo>

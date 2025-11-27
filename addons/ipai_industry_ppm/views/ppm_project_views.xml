@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_project_form_ppm" model="ir.ui.view">
+            <field name="name">project.project.form.ppm</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group" position="inside">
+                    <group string="PPM">
+                        <field name="ppm_workspace_id"
+                               domain="[('ppm_level', 'in', ['portfolio', 'program'])]"/>
+                        <field name="ppm_alignment"/>
+                        <field name="ppm_priority"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_list_ppm" model="ir.ui.view">
+            <field name="name">project.project.list.ppm</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="ppm_workspace_id" optional="show"/>
+                    <field name="ppm_priority" optional="show"/>
+                    <field name="ppm_alignment" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
