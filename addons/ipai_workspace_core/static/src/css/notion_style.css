@@ -1,0 +1,269 @@
+/*
+ * IPAI Workspace - Notion-Style Design Tokens & Styling
+ * =====================================================
+ * A clean, minimal UI inspired by Notion's business workspace aesthetic.
+ */
+
+:root {
+  /* Colors - neutral first, accent second */
+  --ipai-color-bg-page:        #F8FAFC;    /* slate-50-ish */
+  --ipai-color-bg-surface:     #FFFFFF;
+  --ipai-color-border-subtle:  #E2E8F0;    /* slate-200 */
+  --ipai-color-border-strong:  #CBD5E1;    /* slate-300 */
+  --ipai-color-text-primary:   #0F172A;    /* slate-900 */
+  --ipai-color-text-muted:     #6B7280;    /* gray-500 */
+  --ipai-color-text-faint:     #9CA3AF;    /* gray-400 */
+
+  --ipai-color-accent-primary: #2563EB;    /* Notion-ish blue accent */
+  --ipai-color-accent-soft:    rgba(37, 99, 235, 0.08);
+  --ipai-color-accent-hover:   #1D4ED8;
+
+  --ipai-color-tag-bg:         #F3F4F6;
+  --ipai-color-tag-text:       #374151;
+
+  --ipai-color-status-good-bg: #ECFDF3;
+  --ipai-color-status-good-tx: #15803D;
+  --ipai-color-status-risk-bg: #FEF3C7;
+  --ipai-color-status-risk-tx: #92400E;
+  --ipai-color-status-info-bg: #EFF6FF;
+  --ipai-color-status-info-tx: #1D4ED8;
+
+  /* Typography */
+  --ipai-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", sans-serif;
+  --ipai-text-xs:   0.75rem;
+  --ipai-text-sm:   0.875rem;
+  --ipai-text-base: 1rem;
+  --ipai-text-lg:   1.125rem;
+  --ipai-text-xl:   1.25rem;
+
+  /* Spacing */
+  --ipai-space-1: 4px;
+  --ipai-space-2: 8px;
+  --ipai-space-3: 12px;
+  --ipai-space-4: 16px;
+  --ipai-space-5: 20px;
+  --ipai-space-6: 24px;
+
+  /* Radius & shadow - flatter than typical */
+  --ipai-radius-sm: 4px;
+  --ipai-radius-md: 6px;
+  --ipai-radius-pill: 9999px;
+
+  --ipai-shadow-subtle: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+
+/* ============================================ */
+/* Workspace Tree View - Notion Table Style    */
+/* ============================================ */
+
+.o_ipai_workspace_tree {
+  font-family: var(--ipai-font-sans);
+}
+
+.o_ipai_workspace_tree .o_list_table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.o_ipai_workspace_tree .o_list_table thead th {
+  background-color: var(--ipai-color-bg-page);
+  color: var(--ipai-color-text-muted);
+  font-size: var(--ipai-text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--ipai-color-border-subtle);
+  padding: var(--ipai-space-2) var(--ipai-space-3);
+}
+
+.o_ipai_workspace_tree .o_list_table tbody tr {
+  background-color: var(--ipai-color-bg-surface);
+  border-bottom: 1px solid var(--ipai-color-border-subtle);
+  transition: background-color 0.15s ease;
+}
+
+.o_ipai_workspace_tree .o_list_table tbody tr:hover {
+  background-color: var(--ipai-color-accent-soft);
+}
+
+.o_ipai_workspace_tree .o_list_table tbody tr.o_selected_row {
+  background-color: var(--ipai-color-accent-soft);
+  box-shadow: inset 2px 0 0 var(--ipai-color-accent-primary);
+}
+
+.o_ipai_workspace_tree .o_list_table tbody td {
+  padding: var(--ipai-space-3) var(--ipai-space-3);
+  vertical-align: middle;
+  font-size: var(--ipai-text-sm);
+  color: var(--ipai-color-text-primary);
+}
+
+
+/* ============================================ */
+/* Workspace Kanban View - Notion Board Style  */
+/* ============================================ */
+
+.o_ipai_workspace_kanban {
+  font-family: var(--ipai-font-sans);
+  background-color: var(--ipai-color-bg-page);
+}
+
+.o_ipai_workspace_kanban .o_kanban_group {
+  background-color: transparent;
+  padding: var(--ipai-space-2);
+}
+
+.o_ipai_workspace_kanban .o_kanban_header {
+  background-color: transparent;
+  padding: var(--ipai-space-2) var(--ipai-space-3);
+}
+
+.o_ipai_workspace_kanban .o_kanban_header .o_column_title {
+  font-size: var(--ipai-text-sm);
+  font-weight: 600;
+  color: var(--ipai-color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.o_ipai_workspace_kanban .o_kanban_record {
+  background-color: var(--ipai-color-bg-surface);
+  border: 1px solid var(--ipai-color-border-subtle);
+  border-radius: var(--ipai-radius-md);
+  box-shadow: var(--ipai-shadow-subtle);
+  padding: var(--ipai-space-3);
+  margin-bottom: var(--ipai-space-2);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.o_ipai_workspace_kanban .o_kanban_record:hover {
+  border-color: var(--ipai-color-accent-primary);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.o_ipai_workspace_card .o_ipai_card_header {
+  margin-bottom: var(--ipai-space-2);
+}
+
+.o_ipai_workspace_card .o_ipai_card_title {
+  font-size: var(--ipai-text-base);
+  font-weight: 600;
+  color: var(--ipai-color-text-primary);
+  line-height: 1.4;
+}
+
+.o_ipai_workspace_card .o_ipai_card_partner {
+  font-size: var(--ipai-text-sm);
+  color: var(--ipai-color-text-muted);
+}
+
+.o_ipai_workspace_card .o_ipai_card_footer {
+  padding-top: var(--ipai-space-2);
+  border-top: 1px solid var(--ipai-color-border-subtle);
+}
+
+
+/* ============================================ */
+/* Tags & Badges - Notion Chip Style           */
+/* ============================================ */
+
+.o_ipai_workspace_tree .badge,
+.o_ipai_workspace_kanban .badge {
+  font-size: var(--ipai-text-xs);
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--ipai-radius-pill);
+}
+
+/* Type badges */
+.o_ipai_workspace_tree .badge.text-bg-info,
+.o_ipai_workspace_kanban .badge.text-bg-info {
+  background-color: var(--ipai-color-status-info-bg) !important;
+  color: var(--ipai-color-status-info-tx) !important;
+}
+
+.o_ipai_workspace_tree .badge.text-bg-success,
+.o_ipai_workspace_kanban .badge.text-bg-success {
+  background-color: var(--ipai-color-status-good-bg) !important;
+  color: var(--ipai-color-status-good-tx) !important;
+}
+
+.o_ipai_workspace_tree .badge.text-bg-warning,
+.o_ipai_workspace_kanban .badge.text-bg-warning {
+  background-color: var(--ipai-color-status-risk-bg) !important;
+  color: var(--ipai-color-status-risk-tx) !important;
+}
+
+.o_ipai_workspace_tree .badge.text-bg-secondary,
+.o_ipai_workspace_kanban .badge.text-bg-secondary {
+  background-color: var(--ipai-color-tag-bg) !important;
+  color: var(--ipai-color-tag-text) !important;
+}
+
+
+/* ============================================ */
+/* Form View - Notion Page Style               */
+/* ============================================ */
+
+.o_ipai_workspace_form {
+  font-family: var(--ipai-font-sans);
+}
+
+.o_ipai_workspace_form .oe_title h1 input {
+  font-size: var(--ipai-text-xl);
+  font-weight: 600;
+  color: var(--ipai-color-text-primary);
+}
+
+.o_ipai_workspace_form .o_group {
+  margin-bottom: var(--ipai-space-4);
+}
+
+.o_ipai_workspace_form .o_notebook {
+  margin-top: var(--ipai-space-4);
+}
+
+
+/* ============================================ */
+/* Search & Filters - Clean Style              */
+/* ============================================ */
+
+.o_ipai_workspace_tree .o_searchview,
+.o_ipai_workspace_kanban .o_searchview {
+  background-color: var(--ipai-color-bg-surface);
+  border: 1px solid var(--ipai-color-border-subtle);
+  border-radius: var(--ipai-radius-md);
+}
+
+.o_ipai_workspace_tree .o_searchview:focus-within,
+.o_ipai_workspace_kanban .o_searchview:focus-within {
+  border-color: var(--ipai-color-accent-primary);
+  box-shadow: 0 0 0 3px var(--ipai-color-accent-soft);
+}
+
+
+/* ============================================ */
+/* Avatar Styling                              */
+/* ============================================ */
+
+.o_ipai_workspace_tree .o_m2o_avatar,
+.o_ipai_workspace_kanban .o_m2o_avatar {
+  border-radius: 50%;
+}
+
+
+/* ============================================ */
+/* Responsive Adjustments                      */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  .o_ipai_workspace_tree .o_list_table tbody td {
+    padding: var(--ipai-space-2);
+    font-size: var(--ipai-text-xs);
+  }
+
+  .o_ipai_workspace_kanban .o_kanban_record {
+    padding: var(--ipai-space-2);
+  }
+}

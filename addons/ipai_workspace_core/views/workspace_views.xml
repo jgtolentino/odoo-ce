@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- Workspace Tree View (Notion Table Style)    -->
+    <!-- ============================================ -->
+    <record id="view_ipai_workspace_tree" model="ir.ui.view">
+        <field name="name">ipai.workspace.tree</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <tree string="Workspaces" class="o_ipai_workspace_tree">
+                <field name="display_type_badge" widget="badge"
+                       decoration-info="workspace_type == 'accounting'"
+                       decoration-success="workspace_type == 'brand'"
+                       decoration-warning="workspace_type == 'campaign'"
+                       decoration-muted="workspace_type == 'generic'"/>
+                <field name="name" string="Workspace"/>
+                <field name="partner_id" string="Client/Brand"/>
+                <field name="workspace_type" invisible="1"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-info="status == 'onboarding'"
+                       decoration-warning="status == 'at_risk'"
+                       decoration-muted="status == 'closed'"/>
+                <field name="industry" optional="show"/>
+                <field name="next_date" string="Next Date" optional="show"/>
+                <field name="write_date" string="Updated" widget="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- Workspace Kanban View (Notion Board Style)  -->
+    <!-- ============================================ -->
+    <record id="view_ipai_workspace_kanban" model="ir.ui.view">
+        <field name="name">ipai.workspace.kanban</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status" class="o_ipai_workspace_kanban">
+                <field name="name"/>
+                <field name="workspace_type"/>
+                <field name="status"/>
+                <field name="partner_id"/>
+                <field name="owner_id"/>
+                <field name="display_type_badge"/>
+                <field name="status_color"/>
+                <templates>
+                    <t t-name="card" class="o_ipai_workspace_card">
+                        <div class="o_ipai_card_header">
+                            <span t-attf-class="badge rounded-pill #{record.workspace_type.raw_value == 'accounting' ? 'text-bg-info' : record.workspace_type.raw_value == 'brand' ? 'text-bg-success' : record.workspace_type.raw_value == 'campaign' ? 'text-bg-warning' : 'text-bg-secondary'}">
+                                <field name="display_type_badge"/>
+                            </span>
+                        </div>
+                        <div class="o_ipai_card_title">
+                            <field name="name"/>
+                        </div>
+                        <div class="o_ipai_card_partner text-muted small">
+                            <field name="partner_id"/>
+                        </div>
+                        <div class="o_ipai_card_footer d-flex justify-content-between align-items-center mt-2">
+                            <field name="owner_id" widget="many2one_avatar_user"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- Workspace Calendar View                     -->
+    <!-- ============================================ -->
+    <record id="view_ipai_workspace_calendar" model="ir.ui.view">
+        <field name="name">ipai.workspace.calendar</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <calendar string="Workspaces" date_start="next_date" color="status_color" mode="month">
+                <field name="name"/>
+                <field name="workspace_type"/>
+                <field name="partner_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- Workspace Form View                         -->
+    <!-- ============================================ -->
+    <record id="view_ipai_workspace_form" model="ir.ui.view">
+        <field name="name">ipai.workspace.form</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <form string="Workspace" class="o_ipai_workspace_form">
+                <header>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="onboarding,active,at_risk,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_ipai_workspace_list)d" type="action"
+                                class="oe_stat_button" icon="fa-sitemap"
+                                invisible="not child_ids">
+                            <field name="task_count" widget="statinfo" string="Sub-workspaces"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-secondary"
+                            invisible="status != 'closed'"/>
+                    <widget name="web_ribbon" title="At Risk" bg_color="text-bg-warning"
+                            invisible="status != 'at_risk'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Workspace name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="main_info">
+                            <field name="workspace_type"/>
+                            <field name="partner_id"/>
+                            <field name="parent_id"
+                                   invisible="workspace_type not in ['campaign']"/>
+                            <field name="industry"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                        </group>
+                        <group name="ownership">
+                            <field name="owner_id" widget="many2one_avatar_user"/>
+                            <field name="member_ids" widget="many2many_avatar_user"/>
+                        </group>
+                    </group>
+
+                    <!-- Accounting Fields -->
+                    <group string="Accounting Details"
+                           invisible="workspace_type != 'accounting'"
+                           name="accounting_details">
+                        <group>
+                            <field name="fiscal_year_end"/>
+                            <field name="next_closing_date"/>
+                        </group>
+                    </group>
+
+                    <!-- Campaign Fields -->
+                    <group string="Campaign Details"
+                           invisible="workspace_type != 'campaign'"
+                           name="campaign_details">
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="budget"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Add description..."/>
+                        </page>
+                        <page string="Sub-workspaces" name="children"
+                              invisible="workspace_type not in ['accounting', 'brand']">
+                            <field name="child_ids" mode="tree">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="workspace_type"/>
+                                    <field name="status"/>
+                                    <field name="owner_id" widget="many2one_avatar_user"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- Workspace Search View (Filters)             -->
+    <!-- ============================================ -->
+    <record id="view_ipai_workspace_search" model="ir.ui.view">
+        <field name="name">ipai.workspace.search</field>
+        <field name="model">ipai.workspace</field>
+        <field name="arch" type="xml">
+            <search string="Search Workspaces">
+                <field name="name" string="Workspace"/>
+                <field name="partner_id" string="Client/Brand"/>
+                <field name="owner_id"/>
+                <field name="tag_ids"/>
+
+                <!-- Filters -->
+                <filter name="my_workspaces" string="My Workspaces"
+                        domain="[('owner_id', '=', uid)]"/>
+                <filter name="my_member" string="I'm a Member"
+                        domain="[('member_ids', 'in', uid)]"/>
+                <separator/>
+                <filter name="filter_accounting" string="Accounting Clients"
+                        domain="[('workspace_type', '=', 'accounting')]"/>
+                <filter name="filter_brand" string="Brands"
+                        domain="[('workspace_type', '=', 'brand')]"/>
+                <filter name="filter_campaign" string="Campaigns"
+                        domain="[('workspace_type', '=', 'campaign')]"/>
+                <separator/>
+                <filter name="filter_active" string="Active"
+                        domain="[('status', '=', 'active')]"/>
+                <filter name="filter_at_risk" string="At Risk"
+                        domain="[('status', '=', 'at_risk')]"/>
+                <filter name="filter_onboarding" string="Onboarding"
+                        domain="[('status', '=', 'onboarding')]"/>
+                <separator/>
+
+                <!-- Group By -->
+                <group expand="0" string="Group By">
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'workspace_type'}"/>
+                    <filter name="group_status" string="Status"
+                            context="{'group_by': 'status'}"/>
+                    <filter name="group_owner" string="Owner"
+                            context="{'group_by': 'owner_id'}"/>
+                    <filter name="group_industry" string="Industry"
+                            context="{'group_by': 'industry'}"/>
+                    <filter name="group_partner" string="Client/Partner"
+                            context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- Workspace Action                            -->
+    <!-- ============================================ -->
+    <record id="action_ipai_workspace_list" model="ir.actions.act_window">
+        <field name="name">Workspaces</field>
+        <field name="res_model">ipai.workspace</field>
+        <field name="view_mode">tree,kanban,calendar,form</field>
+        <field name="search_view_id" ref="view_ipai_workspace_search"/>
+        <field name="context">{
+            'search_default_my_workspaces': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first workspace
+            </p>
+            <p>
+                Workspaces help you organize clients, brands, and campaigns
+                in a unified, Notion-style interface.
+            </p>
+        </field>
+    </record>
+
+    <!-- Preset actions for filtered views -->
+    <record id="action_ipai_workspace_accounting" model="ir.actions.act_window">
+        <field name="name">Accounting Clients</field>
+        <field name="res_model">ipai.workspace</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('workspace_type', '=', 'accounting')]</field>
+        <field name="context">{'default_workspace_type': 'accounting'}</field>
+    </record>
+
+    <record id="action_ipai_workspace_brands" model="ir.actions.act_window">
+        <field name="name">Brands</field>
+        <field name="res_model">ipai.workspace</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('workspace_type', '=', 'brand')]</field>
+        <field name="context">{'default_workspace_type': 'brand'}</field>
+    </record>
+
+    <record id="action_ipai_workspace_campaigns" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">ipai.workspace</field>
+        <field name="view_mode">tree,kanban,calendar,form</field>
+        <field name="domain">[('workspace_type', '=', 'campaign')]</field>
+        <field name="context">{'default_workspace_type': 'campaign'}</field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- Workspace Tags Views                        -->
+    <!-- ============================================ -->
+    <record id="view_ipai_workspace_tag_tree" model="ir.ui.view">
+        <field name="name">ipai.workspace.tag.tree</field>
+        <field name="model">ipai.workspace.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Tags" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ipai_workspace_tags" model="ir.actions.act_window">
+        <field name="name">Workspace Tags</field>
+        <field name="res_model">ipai.workspace.tag</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+</odoo>

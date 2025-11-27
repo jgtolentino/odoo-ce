@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_ipai_workspace_root"
+              name="Workspaces"
+              sequence="5"
+              web_icon="ipai_workspace_core,static/description/icon.png"/>
+
+    <!-- Main Workspace Menu -->
+    <menuitem id="menu_ipai_workspace_main"
+              name="All Workspaces"
+              parent="menu_ipai_workspace_root"
+              action="action_ipai_workspace_list"
+              sequence="10"/>
+
+    <!-- By Type Submenu -->
+    <menuitem id="menu_ipai_workspace_by_type"
+              name="By Type"
+              parent="menu_ipai_workspace_root"
+              sequence="20"/>
+
+    <menuitem id="menu_ipai_workspace_accounting"
+              name="Accounting Clients"
+              parent="menu_ipai_workspace_by_type"
+              action="action_ipai_workspace_accounting"
+              sequence="10"/>
+
+    <menuitem id="menu_ipai_workspace_brands"
+              name="Brands"
+              parent="menu_ipai_workspace_by_type"
+              action="action_ipai_workspace_brands"
+              sequence="20"/>
+
+    <menuitem id="menu_ipai_workspace_campaigns"
+              name="Campaigns"
+              parent="menu_ipai_workspace_by_type"
+              action="action_ipai_workspace_campaigns"
+              sequence="30"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_ipai_workspace_config"
+              name="Configuration"
+              parent="menu_ipai_workspace_root"
+              sequence="100"/>
+
+    <menuitem id="menu_ipai_workspace_tags"
+              name="Tags"
+              parent="menu_ipai_workspace_config"
+              action="action_ipai_workspace_tags"
+              sequence="10"/>
+
+</odoo>
