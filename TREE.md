@@ -1,7 +1,7 @@
 # 📁 Repository Structure
 
 > Auto-generated on every commit. Last update: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
-> Commit: effbb494a5fb85cacde343075100c9d56bdcc769
+> Commit: a5fbf6c55129b72a8d6b793e9f0e8d26dbee0d5d
 
 ```
 .
@@ -268,6 +268,8 @@
 │   ├── FEATURE_CONCUR_PARITY.md
 │   ├── FEATURE_WORKSPACE_PARITY.md
 │   ├── FINAL_OPERABILITY_CHECKLIST.md
+│   ├── FINANCE_PPM_IMPLEMENTATION.md
+│   ├── FINANCE_WORKFLOW_RACI_ARCHITECTURE.md
 │   ├── HEALTH_CHECK.md
 │   ├── IMAGE_GUIDE.md
 │   ├── KEYCLOAK_IDENTITY_PROVIDER_DEPLOYMENT.md
@@ -314,6 +316,24 @@
 │   ├── reporting-engine
 │   ├── server-tools
 │   └── web
+├── ipai_addons
+│   └── ipai_finance_workflow
+│       ├── data
+│       │   └── ipai_finance_stage_seed.xml
+│       ├── models
+│       │   ├── __init__.py
+│       │   ├── ipai_finance_stage.py
+│       │   ├── ipai_finance_task.py
+│       │   ├── ipai_task_checklist.py
+│       │   └── project_task.py
+│       ├── security
+│       │   └── ir.model.access.csv
+│       ├── views
+│       │   ├── ipai_finance_stage_views.xml
+│       │   ├── ipai_finance_task_views.xml
+│       │   └── ipai_task_checklist_views.xml
+│       ├── __init__.py
+│       └── __manifest__.py
 ├── mcp
 │   └── agentic-cloud.yaml
 ├── notion-n8n-monthly-close
@@ -506,15 +526,15 @@
 ├── walkthrough.md
 └── workflow_template.csv
 
-126 directories, 375 files
+132 directories, 389 files
 ```
 
 ## 📊 Stats
 
 | Metric | Count |
 |--------|-------|
-| Directories | 134 |
-| Files | 396 |
-| Python files | 86 |
-| XML files | 47 |
-| Markdown files | 110 |
+| Directories | 140 |
+| Files | 410 |
+| Python files | 93 |
+| XML files | 51 |
+| Markdown files | 112 |

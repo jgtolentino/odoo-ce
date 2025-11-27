@@ -1,7 +1,7 @@
 # 🗺️ Sitemap - InsightPulse ERP
 
 > Auto-generated on every commit. Last update: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
-> Commit: effbb494a5fb85cacde343075100c9d56bdcc769
+> Commit: a5fbf6c55129b72a8d6b793e9f0e8d26dbee0d5d
 
 ## 📚 Documentation
 
@@ -71,6 +71,8 @@
 | [SAP Concur Parity Feature - Expense Management on Odoo CE](docs/FEATURE_CONCUR_PARITY.md) | docs |
 | [Notion Workspace Parity Feature - Docs, Projects, Tasks on Odoo CE](docs/FEATURE_WORKSPACE_PARITY.md) | docs |
 | [Final Operability Checklist](docs/FINAL_OPERABILITY_CHECKLIST.md) | docs |
+| [Finance PPM Implementation - Clarity/Notion-Style in Odoo CE](docs/FINANCE_PPM_IMPLEMENTATION.md) | docs |
+| [Finance Workflow RACI Architecture](docs/FINANCE_WORKFLOW_RACI_ARCHITECTURE.md) | docs |
 | [Finance Stack Health Check System](docs/HEALTH_CHECK.md) | docs |
 | [Target Image Documentation](docs/IMAGE_GUIDE.md) | docs |
 | [Keycloak Identity Provider Deployment Guide](docs/KEYCLOAK_IDENTITY_PROVIDER_DEPLOYMENT.md) | docs |
@@ -131,6 +133,8 @@
 | [ipai_finance_ppm_dashboard](./addons/ipai_finance_ppm_dashboard) | ✅ |  |
 | [ipai_portal_fix](./addons/ipai_portal_fix) | ✅ | Fixes KeyError: website in portal.frontend_layout template |
 | [ipai_ppm_monthly_close](./addons/ipai_ppm_monthly_close) | ✅ | Automated monthly financial close scheduling with PPM and Notion workspace parity |
+| [ipai_addons](./ipai_addons) | ⚠️ | Missing manifest |
+| [ipai_finance_workflow](./ipai_addons/ipai_finance_workflow) | ✅ |  |
 
 ## 🔧 Configuration Files
 
