@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Month-End Closing Stages -->
+    <record id="stage_month_end_prep" model="ipai.finance.stage">
+        <field name="name">Preparation</field>
+        <field name="code">ME_PREP</field>
+        <field name="category">month_end</field>
+        <field name="stage_type">prep</field>
+        <field name="sequence">10</field>
+        <field name="is_default" eval="True"/>
+        <field name="status_on_entry">in_progress</field>
+    </record>
+    
+    <record id="stage_month_end_review" model="ipai.finance.stage">
+        <field name="name">Review</field>
+        <field name="code">ME_REVIEW</field>
+        <field name="category">month_end</field>
+        <field name="stage_type">review</field>
+        <field name="sequence">20</field>
+        <field name="status_on_entry">waiting_review</field>
+    </record>
+    
+    <record id="stage_month_end_approve" model="ipai.finance.stage">
+        <field name="name">Approval</field>
+        <field name="code">ME_APPROVE</field>
+        <field name="category">month_end</field>
+        <field name="stage_type">approve</field>
+        <field name="sequence">30</field>
+        <field name="status_on_entry">waiting_review</field>
+    </record>
+    
+    <record id="stage_month_end_close" model="ipai.finance.stage">
+        <field name="name">Period Close</field>
+        <field name="code">ME_CLOSE</field>
+        <field name="category">month_end</field>
+        <field name="stage_type">close</field>
+        <field name="sequence">40</field>
+        <field name="status_on_entry">completed</field>
+        <field name="fold" eval="True"/>
+    </record>
+
+    <!-- BIR Tax Filing Stages -->
+    <record id="stage_bir_prep" model="ipai.finance.stage">
+        <field name="name">Preparation</field>
+        <field name="code">BIR_PREP</field>
+        <field name="category">tax_filing</field>
+        <field name="stage_type">prep</field>
+        <field name="sequence">10</field>
+        <field name="is_default" eval="True"/>
+        <field name="status_on_entry">in_progress</field>
+    </record>
+    
+    <record id="stage_bir_review" model="ipai.finance.stage">
+        <field name="name">Review</field>
+        <field name="code">BIR_REVIEW</field>
+        <field name="category">tax_filing</field>
+        <field name="stage_type">review</field>
+        <field name="sequence">20</field>
+        <field name="status_on_entry">waiting_review</field>
+    </record>
+    
+    <record id="stage_bir_approve" model="ipai.finance.stage">
+        <field name="name">Approval</field>
+        <field name="code">BIR_APPROVE</field>
+        <field name="category">tax_filing</field>
+        <field name="stage_type">approve</field>
+        <field name="sequence">30</field>
+        <field name="status_on_entry">waiting_review</field>
+    </record>
+    
+    <record id="stage_bir_file" model="ipai.finance.stage">
+        <field name="name">File & Pay</field>
+        <field name="code">BIR_FILE</field>
+        <field name="category">tax_filing</field>
+        <field name="stage_type">file_pay</field>
+        <field name="sequence">40</field>
+        <field name="status_on_entry">completed</field>
+        <field name="fold" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kanban View (Clarity-style) -->
+    <record id="view_ipai_finance_task_kanban" model="ir.ui.view">
+        <field name="name">ipai.finance.task.kanban</field>
+        <field name="model">ipai.finance.task</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id">
+                <field name="name"/>
+                <field name="workstream"/>
+                <field name="status"/>
+                <field name="health"/>
+                <field name="progress"/>
+                <field name="responsible_id"/>
+                <field name="due_date"/>
+                <field name="is_overdue"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <div class="o_kanban_record_title">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="o_kanban_record_subtitle">
+                                <field name="workstream"/> | <field name="health"/>
+                            </div>
+                            <div>R: <field name="responsible_id"/></div>
+                            <div t-if="record.due_date.raw_value">Due: <field name="due_date"/></div>
+                            <div><field name="progress" widget="progressbar"/>%</div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_ipai_finance_task_tree" model="ir.ui.view">
+        <field name="name">ipai.finance.task.tree</field>
+        <field name="model">ipai.finance.task</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="workstream"/>
+                <field name="stage_id"/>
+                <field name="status"/>
+                <field name="health"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="responsible_id"/>
+                <field name="due_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_ipai_finance_task_form" model="ir.ui.view">
+        <field name="name">ipai.finance.task.form</field>
+        <field name="model">ipai.finance.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="workstream"/>
+                            <field name="task_type"/>
+                            <field name="wbs_code"/>
+                        </group>
+                        <group>
+                            <field name="stage_id"/>
+                            <field name="status"/>
+                            <field name="health"/>
+                            <field name="progress"/>
+                            <field name="due_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="RACI">
+                            <group>
+                                <field name="responsible_id"/>
+                                <field name="accountable_id"/>
+                                <field name="consulted_ids" widget="many2many_tags"/>
+                                <field name="informed_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Checklist">
+                            <field name="checklist_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="done"/>
+                                    <field name="name"/>
+                                    <field name="role"/>
+                                    <field name="person_id"/>
+                                    <field name="planned_date"/>
+                                    <field name="done_date" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Details">
+                            <group>
+                                <field name="description"/>
+                                <field name="evidences"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ipai_finance_task" model="ir.actions.act_window">
+        <field name="name">Finance Tasks</field>
+        <field name="res_model">ipai.finance.task</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+</odoo>
