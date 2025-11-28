@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "IPAI CE Branding",
-    "summary": "CE/OCA branding - removes Enterprise upsells, applies InsightPulse styling.",
+    "summary": "InsightPulse CE/OCA branding: removes Odoo upsells and applies custom theme",
     "description": """
 IPAI CE Branding - Community Edition Compliance
 ===============================================
@@ -12,6 +12,17 @@ Ensures the Odoo stack remains CE/OCA compliant by:
 - Hiding upgrade banners and odoo.com links
 - Applying InsightPulse branded styling
 - Customizing the login page
+
+OCA Layer Integration:
+---------------------
+- portal_odoo_debranding: Removes Odoo branding from portal
+- theme_cobalt: Professional corporate theme
+
+Custom Delta:
+------------
+- InsightPulse/TBWA logos and color palette
+- Custom login page styling
+- Additional CSS overrides
 
 Configuration Applied:
 ---------------------
@@ -25,14 +36,18 @@ Part of InsightPulse ERP Target Image (Smart Delta Philosophy)
 Author: InsightPulse AI
 License: AGPL-3
     """,
-    "version": "18.0.3.0.0",
-    "category": "Tools",
+    "version": "18.0.4.0.0",
+    "category": "Hidden",
     "author": "InsightPulseAI",
     "website": "https://insightpulseai.net",
     "license": "AGPL-3",
     "depends": [
-        "ipai_dev_studio_base",  # Foundation dependency
-        "web",
+        "base",
+        "portal",
+        "website",
+        "ipai_dev_studio_base",        # Foundation (Canonical 1 of 5)
+        "portal_odoo_debranding",      # OCA server-brand debranding
+        "theme_cobalt",                # OCA corporate theme
     ],
     "data": [
         "views/ipai_ce_branding_views.xml",

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Remove "Powered by Odoo" from portal footer -->
+        <template id="portal_footer_debranding" inherit_id="portal.footer_copyright_claim" name="Portal Footer Debranding">
+            <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace">
+                <span t-esc="res_company.name"/>
+            </xpath>
+        </template>
+
+        <!-- Remove Odoo branding from portal layout -->
+        <template id="portal_layout_debranding" inherit_id="portal.portal_layout" name="Portal Layout Debranding" priority="99">
+            <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace"/>
+        </template>
+    </data>
+</odoo>
