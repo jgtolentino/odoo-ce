@@ -85,7 +85,7 @@
             <field name="code">JT</field>
             <field name="name">Jake Tolentino</field>
             <field name="email">jgtolentino.rn@gmail.com</field>
-            <field name="role">manager</field>
+            <field name="role">staff</field>
         </record>
     </data>
 </odoo>
