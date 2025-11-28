@@ -40,7 +40,8 @@ License: AGPL-3
     'depends': [
         'ipai_dev_studio_base',  # Foundation module (Canonical 1 of 5)
         'ipai_workspace_core',   # Workspace foundation (Canonical 2 of 5)
-        'sale_management',       # For client/brand relationships
+        # Note: res.partner comes from base (via dev_studio_base)
+        # Note: mail.thread comes from mail (via dev_studio_base)
     ],
     'data': [
         'security/ir.model.access.csv',

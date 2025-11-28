@@ -73,7 +73,7 @@ div[class*="upgrade"],
 .o_login_logo,
 img[src*="/web/static/img/logo"],
 img[src*="logo2.png"] {
-    content: url("/ipai_ce_cleaner/static/src/img/logo.svg") !important;
+    content: url("/ipai_ce_branding/static/src/img/logo.svg") !important;
     max-height: 50px !important;
     width: auto !important;
 }
@@ -108,7 +108,7 @@ footer.o_footer a[href*="odoo.com"],
 .o_main_navbar img.o_menu_logo,
 header img[src*="logo"],
 nav img[src*="logo"] {
-    content: url("/ipai_ce_cleaner/static/src/img/logo_white.svg") !important;
+    content: url("/ipai_ce_branding/static/src/img/logo_white.svg") !important;
     height: 30px !important;
     width: auto !important;
 }

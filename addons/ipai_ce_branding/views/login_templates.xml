@@ -5,7 +5,7 @@
         <!-- Replace the logo -->
         <xpath expr="//img[hasclass('o_login_logo')]" position="replace">
             <img class="o_login_logo mb-4"
-                 src="/ipai_ce_cleaner/static/src/img/logo.svg"
+                 src="/ipai_ce_branding/static/src/img/logo.svg"
                  alt="InsightPulse ERP"
                  style="max-height: 60px; width: auto;"/>
         </xpath>
