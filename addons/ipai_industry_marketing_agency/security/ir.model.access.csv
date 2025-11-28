@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_marketing_brand_user,ipai.marketing.brand.user,model_ipai_marketing_brand,base.group_user,1,1,1,0
+access_marketing_brand_manager,ipai.marketing.brand.manager,model_ipai_marketing_brand,base.group_system,1,1,1,1
+access_marketing_campaign_user,ipai.marketing.campaign.user,model_ipai_marketing_campaign,base.group_user,1,1,1,0
+access_marketing_campaign_manager,ipai.marketing.campaign.manager,model_ipai_marketing_campaign,base.group_system,1,1,1,1
+access_marketing_channel_user,ipai.marketing.channel.user,model_ipai_marketing_channel,base.group_user,1,1,1,0
+access_marketing_channel_manager,ipai.marketing.channel.manager,model_ipai_marketing_channel,base.group_system,1,1,1,1

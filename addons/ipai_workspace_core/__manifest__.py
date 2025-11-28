@@ -50,7 +50,9 @@ License: AGPL-3
     'website': 'https://insightpulseai.net',
     'license': 'AGPL-3',
     'depends': [
+        'ipai_dev_studio_base',  # Foundation module (Canonical 1 of 5)
         'project',
+        # OCA project modules (when available)
         'project_key',
         'project_category',
         'project_wbs',

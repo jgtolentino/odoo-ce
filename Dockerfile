@@ -1,7 +1,16 @@
 # -----------------------------------------------------------------------------
-# TARGET: Odoo 18 CE + OCA Production Image
-# Build: docker build -t odoo-ce-prod .
-# Save:  docker save -o odoo_ce_prod.tar odoo-ce-prod
+# TARGET: InsightPulse ERP - Odoo 18 CE + OCA Production Image
+# Build: docker build -t ghcr.io/jgtolentino/odoo-ce:18-oca-target .
+# Save:  docker save -o odoo_ce_prod.tar ghcr.io/jgtolentino/odoo-ce:18-oca-target
+# -----------------------------------------------------------------------------
+# Smart Delta Philosophy: Config -> OCA -> Delta -> Custom
+#
+# Canonical 5-Module Architecture:
+# 1. ipai_dev_studio_base    - Foundation (aggregates deps, disables IAP)
+# 2. ipai_workspace_core     - Notion-style workspace foundation
+# 3. ipai_ce_branding        - CE/OCA branding, hide Enterprise upsells
+# 4. ipai_finance_ppm        - Accounting industry pack (BIR compliance)
+# 5. ipai_industry_marketing_agency - Marketing agency industry pack
 # -----------------------------------------------------------------------------
 FROM odoo:18.0
 
@@ -46,10 +55,15 @@ COPY ./external-src/web /mnt/oca-addons/web
 COPY ./external-src/contract /mnt/oca-addons/contract
 COPY ./external-src/server-tools /mnt/oca-addons/server-tools
 
-# 4. Copy Custom Delta Modules
-# - ipai_bir_compliance (Tax Shield)
-# - ipai_ce_cleaner (Enterprise upsell hiding)
-# - tbwa_spectra_integration (Company-specific export)
+# 4. Copy Custom Delta Modules (Canonical 5 + Legacy)
+# Canonical 5:
+#   - ipai_dev_studio_base (Foundation)
+#   - ipai_workspace_core (Notion parity)
+#   - ipai_ce_branding (CE compliance)
+#   - ipai_finance_ppm (Accounting industry)
+#   - ipai_industry_marketing_agency (Marketing industry)
+# Legacy (to be consolidated):
+#   - ipai_bir_compliance, ipai_docs, tbwa_spectra_integration, etc.
 COPY ./addons /mnt/extra-addons
 
 # 5. Copy Configuration
@@ -69,5 +83,8 @@ ENV ODOO_ADDONS_PATH=/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addon
 
 # The image is now production-ready with:
 # - Odoo 18 CE base
-# - 14 OCA repositories
-# - 3 custom delta modules (Tax Shield, CE Cleaner, Spectra)
+# - 14 OCA repositories (project, web, account-*, etc.)
+# - Canonical 5 custom modules (Smart Delta Architecture)
+#
+# First-run initialization command:
+# docker compose run --rm odoo odoo -d ipai_prod -i ipai_dev_studio_base,ipai_ce_branding,ipai_workspace_core,ipai_finance_ppm

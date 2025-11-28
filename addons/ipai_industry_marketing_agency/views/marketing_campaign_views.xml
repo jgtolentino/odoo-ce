@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Campaign Tree View -->
+    <record id="view_marketing_campaign_tree" model="ir.ui.view">
+        <field name="name">ipai.marketing.campaign.tree</field>
+        <field name="model">ipai.marketing.campaign</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="brand_id"/>
+                <field name="campaign_type"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="budget_allocated" sum="Total Budget"/>
+                <field name="budget_spent" sum="Total Spent"/>
+                <field name="state" widget="badge" decoration-success="state == 'completed'" decoration-info="state == 'active'" decoration-warning="state == 'paused'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Campaign Kanban View -->
+    <record id="view_marketing_campaign_kanban" model="ir.ui.view">
+        <field name="name">ipai.marketing.campaign.kanban</field>
+        <field name="model">ipai.marketing.campaign</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="brand_id"/>
+                <field name="budget_allocated"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <strong><field name="name"/></strong>
+                            <div><field name="brand_id"/></div>
+                            <div>Budget: <field name="budget_allocated" widget="monetary"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Campaign Form View -->
+    <record id="view_marketing_campaign_form" model="ir.ui.view">
+        <field name="name">ipai.marketing.campaign.form</field>
+        <field name="model">ipai.marketing.campaign</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start_planning" type="object" string="Start Planning" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_activate" type="object" string="Activate" invisible="state not in ['draft', 'planning', 'paused']" class="btn-primary"/>
+                    <button name="action_pause" type="object" string="Pause" invisible="state != 'active'" class="btn-warning"/>
+                    <button name="action_complete" type="object" string="Complete" invisible="state not in ['active', 'paused']" class="btn-success"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,planning,active,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Campaign Name"/></h1>
+                        <field name="code" placeholder="Campaign Code"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="brand_id"/>
+                            <field name="partner_id"/>
+                            <field name="campaign_type"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Brief" name="brief">
+                            <group>
+                                <field name="description" placeholder="Campaign brief..."/>
+                                <field name="objectives" placeholder="Campaign objectives..."/>
+                                <field name="target_audience" placeholder="Target audience description..."/>
+                            </group>
+                        </page>
+                        <page string="Budget" name="budget">
+                            <group>
+                                <group>
+                                    <field name="currency_id"/>
+                                    <field name="budget_allocated"/>
+                                </group>
+                                <group>
+                                    <field name="budget_spent"/>
+                                    <field name="budget_remaining"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Channels" name="channels">
+                            <field name="channel_ids" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Campaign Search View -->
+    <record id="view_marketing_campaign_search" model="ir.ui.view">
+        <field name="name">ipai.marketing.campaign.search</field>
+        <field name="model">ipai.marketing.campaign</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="brand_id"/>
+                <field name="partner_id"/>
+                <filter string="Active" name="active_campaigns" domain="[('state', '=', 'active')]"/>
+                <filter string="Planning" name="planning" domain="[('state', '=', 'planning')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <separator/>
+                <filter string="This Month" name="this_month" domain="[('start_date', '&gt;=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d')), ('start_date', '&lt;=', (context_today() + relativedelta(day=31)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Brand" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'campaign_type'}"/>
+                    <filter string="Start Month" name="group_month" context="{'group_by': 'start_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Campaign Action -->
+    <record id="action_marketing_campaign" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">ipai.marketing.campaign</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_marketing_campaign_search"/>
+        <field name="context">{'search_default_active_campaigns': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first marketing campaign
+            </p>
+            <p>
+                Track campaigns, budgets, and deliverables for your brands.
+            </p>
+        </field>
+    </record>
+
+    <!-- Channel Tree View (simple) -->
+    <record id="view_marketing_channel_tree" model="ir.ui.view">
+        <field name="name">ipai.marketing.channel.tree</field>
+        <field name="model">ipai.marketing.channel</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+                <field name="channel_type"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Channel Action -->
+    <record id="action_marketing_channel" model="ir.actions.act_window">
+        <field name="name">Marketing Channels</field>
+        <field name="res_model">ipai.marketing.channel</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Marketing Agency Root Menu -->
+    <menuitem id="menu_marketing_agency_root"
+              name="Marketing Agency"
+              sequence="40"
+              web_icon="ipai_industry_marketing_agency,static/description/icon.png"/>
+
+    <!-- Brands Menu -->
+    <menuitem id="menu_marketing_brands"
+              name="Brands"
+              parent="menu_marketing_agency_root"
+              action="action_marketing_brand"
+              sequence="10"/>
+
+    <!-- Campaigns Menu -->
+    <menuitem id="menu_marketing_campaigns"
+              name="Campaigns"
+              parent="menu_marketing_agency_root"
+              action="action_marketing_campaign"
+              sequence="20"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_marketing_config"
+              name="Configuration"
+              parent="menu_marketing_agency_root"
+              sequence="100"/>
+
+    <menuitem id="menu_marketing_channels"
+              name="Marketing Channels"
+              parent="menu_marketing_config"
+              action="action_marketing_channel"
+              sequence="10"/>
+</odoo>

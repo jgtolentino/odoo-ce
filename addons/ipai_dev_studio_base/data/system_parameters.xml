@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- InsightPulse Stack Identification -->
+        <record id="ipai_stack_param" model="ir.config_parameter">
+            <field name="key">ipai.stack</field>
+            <field name="value">odoo18-oca</field>
+        </record>
+
+        <record id="ipai_version_param" model="ir.config_parameter">
+            <field name="key">ipai.version</field>
+            <field name="value">18.0.1.0.0</field>
+        </record>
+
+        <!-- Smart Delta Philosophy marker -->
+        <record id="ipai_delta_philosophy" model="ir.config_parameter">
+            <field name="key">ipai.delta_philosophy</field>
+            <field name="value">Config-OCA-Delta-Custom</field>
+        </record>
+
+        <!-- Canonical 5-module marker -->
+        <record id="ipai_canonical_modules" model="ir.config_parameter">
+            <field name="key">ipai.canonical_modules</field>
+            <field name="value">ipai_dev_studio_base,ipai_workspace_core,ipai_ce_branding,ipai_finance_ppm,ipai_industry_marketing_agency</field>
+        </record>
+    </data>
+</odoo>

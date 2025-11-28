@@ -28,16 +28,19 @@ CE Module Dependencies:
 * account - Core accounting
 * resource - Business day calculations
 
+Canonical Module: 4 of 5
+Part of InsightPulse ERP Target Image (Smart Delta Philosophy)
+
 Author: InsightPulse AI
 License: AGPL-3
     """,
-    "version": "18.0.2.0.0",
+    "version": "18.0.3.0.0",
     "category": "Accounting/Finance",
     "author": "InsightPulseAI",
     "website": "https://insightpulseai.net",
     "license": "AGPL-3",
     "depends": [
-        "base",
+        "ipai_dev_studio_base",  # Foundation module (Canonical 1 of 5)
         "mail",
         "project",
         "resource",  # Business day calculations

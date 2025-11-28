@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Brand Tree View -->
+    <record id="view_marketing_brand_tree" model="ir.ui.view">
+        <field name="name">ipai.marketing.brand.tree</field>
+        <field name="model">ipai.marketing.brand</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="partner_id"/>
+                <field name="industry"/>
+                <field name="campaign_count"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-warning="state == 'on_hold'" decoration-danger="state == 'churned'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Brand Form View -->
+    <record id="view_marketing_brand_form" model="ir.ui.view">
+        <field name="name">ipai.marketing.brand.form</field>
+        <field name="model">ipai.marketing.brand</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_view_campaigns" type="object" string="View Campaigns" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="prospect,active,on_hold"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_campaigns" type="object" class="oe_stat_button" icon="fa-bullhorn">
+                            <field name="campaign_count" widget="statinfo" string="Campaigns"/>
+                        </button>
+                    </div>
+                    <field name="logo" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Brand Name"/></h1>
+                        <field name="code" placeholder="Code"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="industry"/>
+                        </group>
+                        <group>
+                            <field name="brand_guidelines_url" widget="url"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Brand description and notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Brand Search View -->
+    <record id="view_marketing_brand_search" model="ir.ui.view">
+        <field name="name">ipai.marketing.brand.search</field>
+        <field name="model">ipai.marketing.brand</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="partner_id"/>
+                <filter string="Active Clients" name="active_clients" domain="[('state', '=', 'active')]"/>
+                <filter string="Prospects" name="prospects" domain="[('state', '=', 'prospect')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Industry" name="group_industry" context="{'group_by': 'industry'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Client" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Brand Action -->
+    <record id="action_marketing_brand" model="ir.actions.act_window">
+        <field name="name">Brands</field>
+        <field name="res_model">ipai.marketing.brand</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_marketing_brand_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first brand
+            </p>
+            <p>
+                Brands represent client accounts or product lines you manage.
+            </p>
+        </field>
+    </record>
+</odoo>

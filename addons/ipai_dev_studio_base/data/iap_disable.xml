@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Disable IAP (In-App Purchase) for CE-only operation -->
+        <record id="iap_disabled_param" model="ir.config_parameter">
+            <field name="key">iap.disabled</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- Disable Enterprise upgrade prompts -->
+        <record id="enterprise_upgrade_disabled" model="ir.config_parameter">
+            <field name="key">database.enterprise_code</field>
+            <field name="value">disabled</field>
+        </record>
+
+        <!-- Mark as CE edition -->
+        <record id="ipai_edition_param" model="ir.config_parameter">
+            <field name="key">ipai.edition</field>
+            <field name="value">ce</field>
+        </record>
+    </data>
+</odoo>
