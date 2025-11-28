@@ -29,7 +29,7 @@
             <field name="code">BOM</field>
             <field name="name">Beng Manalo</field>
             <field name="email">beng.manalo@omc.com</field>
-            <field name="role">staff</field>
+            <field name="role">supervisor</field>
         </record>
 
         <record id="person_jpal" model="ipai.finance.person">
