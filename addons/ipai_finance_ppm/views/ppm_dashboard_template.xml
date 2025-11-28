@@ -2,17 +2,28 @@
 <odoo>
     <template id="ppm_dashboard_template" name="Finance PPM Dashboard">
         <t t-call="web.layout">
+            <!-- ECharts CDN -->
+            <t t-set="head">
+                <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+            </t>
+
             <div class="container-fluid o_finance_ppm_dashboard">
                 <div class="row mt-4">
                     <div class="col-12">
-                        <h1>Finance PPM Dashboard</h1>
+                        <h1>
+                            <i class="fa fa-bar-chart me-2"/>Finance PPM Dashboard
+                        </h1>
                         <p class="text-muted">
                             Real-time view of BIR filing schedules and completion status
                         </p>
-                        <p>
-                            <strong>Total Schedules:</strong> <t t-esc="schedule_count"/>
-                            | <strong>Today:</strong> <t t-esc="today"/>
-                        </p>
+                        <div class="d-flex gap-4 mb-3">
+                            <span class="badge bg-primary fs-6">
+                                <i class="fa fa-calendar me-1"/>Total Schedules: <t t-esc="schedule_count"/>
+                            </span>
+                            <span class="badge bg-secondary fs-6">
+                                <i class="fa fa-clock-o me-1"/>Today: <t t-esc="today"/>
+                            </span>
+                        </div>
                     </div>
                 </div>
 

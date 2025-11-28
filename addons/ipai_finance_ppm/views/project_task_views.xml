@@ -6,26 +6,46 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <!-- Add Finance Roles tab -->
+            <!-- Add Finance Roles tab with Clarity PPM hierarchy -->
             <xpath expr="//page[@name='specification']" position="after">
-                <page string="Finance Roles">
+                <page string="Finance PPM" name="finance_ppm_tab">
                     <group>
+                        <group string="Clarity PPM Hierarchy">
+                            <field name="finance_phase_id"/>
+                            <field name="finance_milestone"/>
+                            <field name="finance_milestone_type" invisible="not finance_milestone"/>
+                            <field name="finance_todo_progress" widget="progressbar"/>
+                        </group>
                         <group string="Finance Assignment">
                             <field name="finance_code"/>
                             <field name="finance_person_id"/>
                             <field name="finance_category"/>
                         </group>
+                    </group>
+                    <group>
                         <group string="Approval Workflow">
                             <field name="reviewer_id"/>
                             <field name="approver_id"/>
                             <field name="finance_deadline_type"/>
                         </group>
+                        <group string="Duration Planning">
+                            <field name="prep_duration"/>
+                            <field name="review_duration"/>
+                            <field name="approval_duration"/>
+                        </group>
                     </group>
-                    <group string="Duration Planning">
-                        <field name="prep_duration"/>
-                        <field name="review_duration"/>
-                        <field name="approval_duration"/>
-                    </group>
+                    <!-- To-Do Checklist (Clarity PPM concept) -->
+                    <separator string="To-Do Checklist"/>
+                    <field name="finance_todo_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="assignee_id"/>
+                            <field name="due_date"/>
+                            <field name="is_done" widget="boolean_toggle"/>
+                            <field name="done_date" readonly="1"/>
+                        </list>
+                    </field>
                 </page>
             </xpath>
             

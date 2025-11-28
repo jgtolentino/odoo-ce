@@ -2,6 +2,15 @@
 <odoo>
     <!-- Root menu now defined in ppm_dashboard_views.xml to avoid loading order issues -->
 
+    <!-- ECharts Dashboard URL Action -->
+    <record id="action_ppm_echarts_dashboard" model="ir.actions.act_url">
+        <field name="name">PPM Analytics Dashboard</field>
+        <field name="url">/ipai/finance/ppm</field>
+        <field name="target">self</field>
+    </record>
+
+    <menuitem id="menu_ppm_echarts_dashboard" name="Analytics Dashboard" parent="menu_finance_ppm_root" action="action_ppm_echarts_dashboard" sequence="1"/>
+    <menuitem id="menu_revenue_search" name="Revenue Insights" parent="menu_finance_ppm_root" action="action_monthly_revenue_search" sequence="5"/>
     <menuitem id="menu_finance_directory" name="Directory" parent="menu_finance_ppm_root" action="action_finance_person" sequence="10"/>
     <menuitem id="menu_finance_tasks" name="Task Templates" parent="menu_finance_ppm_root" action="action_finance_task_template" sequence="20"/>
     <menuitem id="menu_finance_bir_deadlines" name="BIR Deadlines" parent="menu_finance_ppm_root" action="action_finance_bir_deadline" sequence="25"/>
@@ -13,6 +22,4 @@
         <field name="tag">ipai_finance_ppm.monthly_revenue_search</field>
         <field name="target">current</field>
     </record>
-
-    <menuitem id="menu_revenue_search" name="Revenue Insights" parent="menu_finance_ppm_root" action="action_monthly_revenue_search" sequence="5"/>
 </odoo>

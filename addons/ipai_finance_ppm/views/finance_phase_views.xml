@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Phase Tree View -->
+    <record id="view_finance_phase_tree" model="ir.ui.view">
+        <field name="name">ipai.finance.phase.tree</field>
+        <field name="model">ipai.finance.phase</field>
+        <field name="arch" type="xml">
+            <list string="Finance Phases" decoration-success="state == 'completed'" decoration-muted="state == 'cancelled'">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="phase_type"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="task_count"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'active'" decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Phase Kanban View -->
+    <record id="view_finance_phase_kanban" model="ir.ui.view">
+        <field name="name">ipai.finance.phase.kanban</field>
+        <field name="model">ipai.finance.phase</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="phase_type" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="state"/>
+                <field name="progress"/>
+                <field name="task_count"/>
+                <progressbar field="state" colors='{"draft": "muted", "active": "success", "completed": "info", "cancelled": "danger"}'/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <strong><field name="name"/></strong>
+                            <div class="text-muted small">
+                                <field name="code"/>
+                            </div>
+                            <div class="mt-2">
+                                <field name="progress" widget="progressbar"/>
+                            </div>
+                            <div class="mt-1">
+                                <span class="badge bg-secondary">
+                                    <field name="task_count"/> Tasks
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Phase Form View -->
+    <record id="view_finance_phase_form" model="ir.ui.view">
+        <field name="name">ipai.finance.phase.form</field>
+        <field name="model">ipai.finance.phase</field>
+        <field name="arch" type="xml">
+            <form string="Finance Phase">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-tasks">
+                            <field name="task_count" widget="statinfo" string="Tasks"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Phase Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Phase Details">
+                            <field name="code"/>
+                            <field name="phase_type"/>
+                            <field name="project_id"/>
+                            <field name="responsible_id"/>
+                        </group>
+                        <group string="Timeline">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="Describe this phase..."/>
+                        </page>
+                        <page string="Tasks">
+                            <field name="task_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="user_ids" widget="many2many_tags"/>
+                                    <field name="date_deadline"/>
+                                    <field name="stage_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Phase Search View -->
+    <record id="view_finance_phase_search" model="ir.ui.view">
+        <field name="name">ipai.finance.phase.search</field>
+        <field name="model">ipai.finance.phase</field>
+        <field name="arch" type="xml">
+            <search string="Search Phases">
+                <field name="name"/>
+                <field name="code"/>
+                <filter string="Active" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <separator/>
+                <filter string="Monthly Close" name="monthly_close" domain="[('phase_type', '=', 'monthly_close')]"/>
+                <filter string="Tax Filing" name="tax_filing" domain="[('phase_type', '=', 'tax_filing')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Phase Type" name="group_phase_type" context="{'group_by': 'phase_type'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Phase Action -->
+    <record id="action_finance_phase" model="ir.actions.act_window">
+        <field name="name">Phases (Clarity PPM)</field>
+        <field name="res_model">ipai.finance.phase</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Finance Phase
+            </p>
+            <p>
+                Phases group related tasks following the Clarity PPM methodology.
+                Use phases to organize monthly close, tax filing, and reporting activities.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_finance_phases"
+              name="Phases"
+              parent="menu_finance_ppm_root"
+              action="action_finance_phase"
+              sequence="15"/>
+</odoo>
