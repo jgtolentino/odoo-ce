@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Override login page template to replace Odoo branding -->
+    <template id="login_layout" inherit_id="web.login_layout">
+        <!-- Replace the logo -->
+        <xpath expr="//img[hasclass('o_login_logo')]" position="replace">
+            <img class="o_login_logo mb-4"
+                 src="/ipai_ce_cleaner/static/src/img/logo.svg"
+                 alt="InsightPulse ERP"
+                 style="max-height: 60px; width: auto;"/>
+        </xpath>
+    </template>
+
+    <!-- Override the footer to remove Odoo links -->
+    <template id="login_footer" inherit_id="web.login_layout" priority="100">
+        <xpath expr="//footer" position="replace">
+            <footer class="o_footer text-center text-muted mt-4">
+                <small>
+                    <span>InsightPulse ERP</span>
+                </small>
+            </footer>
+        </xpath>
+    </template>
+
+    <!-- Override web client title -->
+    <template id="webclient_bootstrap_title" inherit_id="web.webclient_bootstrap">
+        <xpath expr="//title" position="replace">
+            <title>InsightPulse ERP</title>
+        </xpath>
+    </template>
+</odoo>

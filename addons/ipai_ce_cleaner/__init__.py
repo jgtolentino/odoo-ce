@@ -1,2 +1,3 @@
 # -*- coding: utf-8 -*-
-# No Python logic yet – this module starts as pure XML overrides.
+from . import models
+from .hooks import post_init_hook, uninstall_hook

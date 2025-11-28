@@ -1,39 +1,210 @@
 /**
- * IPAI CE Cleaner CSS
- * Hides Enterprise/IAP upsells and odoo.com links
+ * IPAI CE Cleaner - InsightPulse Branding
+ * Removes Odoo branding and hides Enterprise/IAP upsells
  */
 
-/* Hide all links to odoo.com */
+/* ============================================
+   SECTION 1: Hide Odoo.com Links & References
+   ============================================ */
+
+/* Hide all external odoo.com links */
 a[href*="odoo.com"],
 a[href*="apps.odoo.com"],
-a[href*="iap.odoo.com"] {
+a[href*="iap.odoo.com"],
+a[href*="upgrade.odoo.com"],
+a[href*="www.odoo.com"] {
     display: none !important;
 }
 
-/* Hide upgrade links and database manager */
+/* Hide upgrade and database manager links */
 a[href*="/web/database/manager"],
+a[href*="/web/database/selector"],
 a[href*="upgrade"],
-button[name="button_choose_version"] {
+button[name="button_choose_version"],
+.o_database_manager {
     display: none !important;
 }
 
-/* Hide payment acquirer onboarding */
+/* ============================================
+   SECTION 2: Hide Enterprise Upsells & Badges
+   ============================================ */
+
+/* Enterprise badges and ribbons */
+.badge.badge-enterprise,
+.o_enterprise_badge,
+.badge-pill.badge-enterprise,
+span.badge.badge-pill.badge-primary[title*="Enterprise"],
+.o_enterprise_label,
+.oe_kanban_colorpicker .o_enterprise_warning {
+    display: none !important;
+}
+
+/* Upgrade banners and alerts */
+.o_upgrade_banner,
+.o_settings_upgrade,
+.alert-info:has(a[href*="upgrade"]),
+.o_notification_upgrade,
+div[class*="upgrade"],
+.o_enterprise_popup {
+    display: none !important;
+}
+
+/* IAP and payment onboarding */
 .o_onboarding_payment_acquirer,
-.o_onboarding_payment_acquirer_item {
+.o_onboarding_payment_acquirer_item,
+.o_iap_buy_banner,
+.o_iap_badge,
+.o_iap_credit {
     display: none !important;
 }
 
-/* Hide upgrade banners in settings */
-.alert-info > a[href*="upgrade"] {
+/* Settings page enterprise features */
+.o_setting_box[data-key*="enterprise"],
+.o_setting_container .alert-info a[href*="odoo.com"] {
     display: none !important;
 }
 
-/* Hide parent alert if it only contains upgrade link */
-.alert-info:empty {
+/* ============================================
+   SECTION 3: Login Page Branding
+   ============================================ */
+
+/* Replace Odoo logo on login page */
+.oe_login_form .o_login_logo,
+.o_login_logo,
+img[src*="/web/static/img/logo"],
+img[src*="logo2.png"] {
+    content: url("/ipai_ce_cleaner/static/src/img/logo.svg") !important;
+    max-height: 50px !important;
+    width: auto !important;
+}
+
+/* Login page background */
+.o_web_client .o_login_page {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%) !important;
+}
+
+/* Login form styling */
+.oe_login_form {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Hide "Powered by Odoo" footer */
+.o_login_footer,
+.oe_login_footer,
+footer.o_footer a[href*="odoo.com"],
+.o_login_manage small,
+.o_login_auth small {
     display: none !important;
 }
 
-/* Hide database selector link in debug menu */
-.dropdown-item[href*="/web/database/manager"] {
+/* ============================================
+   SECTION 4: Header/Navbar Branding
+   ============================================ */
+
+/* Replace logo in navbar */
+.o_main_navbar .o_menu_brand img,
+.o_main_navbar img.o_menu_logo,
+header img[src*="logo"],
+nav img[src*="logo"] {
+    content: url("/ipai_ce_cleaner/static/src/img/logo_white.svg") !important;
+    height: 30px !important;
+    width: auto !important;
+}
+
+/* Remove Odoo text branding */
+.o_menu_brand_name:empty::after {
+    content: "InsightPulse" !important;
+}
+
+/* ============================================
+   SECTION 5: App Drawer & Menu Cleanup
+   ============================================ */
+
+/* Hide apps that link to odoo.com */
+.o_app[href*="odoo.com"],
+.o_menu_entry_lvl_1[href*="odoo.com"],
+a.o_app_icon[href*="upgrade"] {
     display: none !important;
+}
+
+/* Hide "Get more apps" and marketplace links */
+.o_apps a[href*="apps.odoo.com"],
+a[title*="Odoo Apps"],
+.o_apps_search a[href*="apps.odoo.com"] {
+    display: none !important;
+}
+
+/* ============================================
+   SECTION 6: Debug Menu Cleanup
+   ============================================ */
+
+/* Hide database manager from debug menu */
+.dropdown-item[href*="/web/database/manager"],
+.dropdown-item[href*="/web/database/selector"],
+.o_debug_manager a[href*="database"] {
+    display: none !important;
+}
+
+/* ============================================
+   SECTION 7: Settings Page Cleanup
+   ============================================ */
+
+/* Hide enterprise-only settings sections */
+.o_settings_container [data-key="upgrade"],
+.o_settings_container .o_setting_box:has(a[href*="enterprise"]),
+.o_settings_container .alert:has(a[href*="odoo.com"]) {
+    display: none !important;
+}
+
+/* Hide publisher warranty */
+.o_setting_box[data-key="publisher_warranty"],
+div[name="publisher_warranty_url"] {
+    display: none !important;
+}
+
+/* ============================================
+   SECTION 8: Discussion/Chatter Cleanup
+   ============================================ */
+
+/* Hide Odoo references in mail/chatter */
+.o_mail_systray_dropdown a[href*="odoo.com"],
+.o_discuss_sidebar a[href*="odoo.com"] {
+    display: none !important;
+}
+
+/* ============================================
+   SECTION 9: Print/Report Branding
+   ============================================ */
+
+/* Hide Odoo branding in print layouts */
+@media print {
+    .o_report_layout a[href*="odoo.com"],
+    .o_report_footer a[href*="odoo.com"],
+    footer a[href*="odoo.com"] {
+        display: none !important;
+    }
+}
+
+/* ============================================
+   SECTION 10: Custom Brand Colors
+   ============================================ */
+
+/* Primary brand color overrides */
+:root {
+    --ipai-primary: #7C3AED;
+    --ipai-primary-dark: #5B21B6;
+    --ipai-secondary: #2563EB;
+}
+
+/* Apply brand colors to key elements */
+.btn-primary {
+    background-color: var(--ipai-primary) !important;
+    border-color: var(--ipai-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--ipai-primary-dark) !important;
+    border-color: var(--ipai-primary-dark) !important;
 }
