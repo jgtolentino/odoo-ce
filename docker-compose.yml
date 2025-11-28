@@ -1,0 +1,71 @@
+# =============================================================================
+# InsightPulse ERP - Docker Compose (Canonical Stack)
+# =============================================================================
+# Smart Delta Philosophy: Config -> OCA -> Delta -> Custom
+#
+# Canonical 5-Module Architecture:
+#   1. ipai_dev_studio_base          - Foundation (disables IAP)
+#   2. ipai_workspace_core           - Notion-style workspace
+#   3. ipai_ce_branding              - CE/OCA compliance
+#   4. ipai_finance_ppm              - Accounting industry pack
+#   5. ipai_industry_marketing_agency - Marketing industry pack
+# =============================================================================
+
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: odoo18_ce_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ipai_prod}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - odoo18_ce_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-ipai_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - odoo18_net
+
+  odoo:
+    image: ghcr.io/jgtolentino/odoo-ce:18-oca-target
+    container_name: odoo18_ce_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-odoo}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      DB_NAME: ${POSTGRES_DB:-ipai_prod}
+    ports:
+      - "127.0.0.1:8069:8069"
+    volumes:
+      - odoo_filestore:/var/lib/odoo
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+      # Optional: override baked code with local dev copies
+      - ./ipai_addons:/odoo/ipai_addons:ro
+      - ./oca_addons:/odoo/oca_addons:ro
+    command: >
+      odoo
+        -c /etc/odoo/odoo.conf
+        -d ${POSTGRES_DB:-ipai_prod}
+        -i ipai_dev_studio_base,ipai_ce_branding,ipai_workspace_core
+        --without-demo=all
+        --load-language=en_US
+    networks:
+      - odoo18_net
+
+networks:
+  odoo18_net:
+
+volumes:
+  odoo18_ce_db_data:
+  odoo_filestore:
