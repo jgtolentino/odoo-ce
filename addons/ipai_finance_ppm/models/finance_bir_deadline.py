@@ -127,99 +127,175 @@ class FinanceBIRDeadline(models.Model):
     def action_schedule_activities(self):
         """Create scheduled activities for all responsible persons."""
         self.ensure_one()
-        activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
-        if not activity_type:
-            activity_type = self.env['mail.activity.type'].search([('name', 'ilike', 'To Do')], limit=1)
+        _logger.info(
+            '[BIR Deadline %s] action_schedule_activities called | '
+            'deadline_id=%d, name=%s, deadline_date=%s',
+            self.id, self.id, self.name, self.deadline_date
+        )
 
-        activities_created = 0
+        try:
+            activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+            if not activity_type:
+                activity_type = self.env['mail.activity.type'].search([('name', 'ilike', 'To Do')], limit=1)
+                _logger.debug('[BIR Deadline %s] Fallback activity_type search result: %s', self.id, activity_type)
 
-        # Schedule Preparation activity
-        if self.responsible_prep_id and self.responsible_prep_id.user_id and self.target_prep_date:
-            self._create_activity(
-                activity_type,
-                self.responsible_prep_id.user_id,
-                self.target_prep_date,
-                _('Prepare %s filing for %s') % (self.name, self.period_covered or 'this period')
+            if not activity_type:
+                _logger.error(
+                    '[BIR Deadline %s] FAILED: No activity type found | '
+                    'Checked: mail.mail_activity_data_todo and "To Do" search',
+                    self.id
+                )
+                raise UserError(_('No activity type found. Please configure mail activity types.'))
+
+            activities_created = 0
+
+            # Schedule Preparation activity
+            if self.responsible_prep_id and self.responsible_prep_id.user_id and self.target_prep_date:
+                _logger.debug(
+                    '[BIR Deadline %s] Scheduling prep activity for user_id=%d, date=%s',
+                    self.id, self.responsible_prep_id.user_id.id, self.target_prep_date
+                )
+                self._create_activity(
+                    activity_type,
+                    self.responsible_prep_id.user_id,
+                    self.target_prep_date,
+                    _('Prepare %s filing for %s') % (self.name, self.period_covered or 'this period')
+                )
+                activities_created += 1
+            else:
+                _logger.debug(
+                    '[BIR Deadline %s] Skipping prep activity | prep_id=%s, user_id=%s, target_date=%s',
+                    self.id, self.responsible_prep_id.id if self.responsible_prep_id else None,
+                    self.responsible_prep_id.user_id.id if self.responsible_prep_id and self.responsible_prep_id.user_id else None,
+                    self.target_prep_date
+                )
+
+            # Schedule Review activity
+            if self.responsible_review_id and self.responsible_review_id.user_id and self.target_report_approval_date:
+                _logger.debug(
+                    '[BIR Deadline %s] Scheduling review activity for user_id=%d, date=%s',
+                    self.id, self.responsible_review_id.user_id.id, self.target_report_approval_date
+                )
+                self._create_activity(
+                    activity_type,
+                    self.responsible_review_id.user_id,
+                    self.target_report_approval_date,
+                    _('Review %s for %s') % (self.name, self.period_covered or 'this period')
+                )
+                activities_created += 1
+
+            # Schedule Approval activity
+            if self.responsible_approval_id and self.responsible_approval_id.user_id and self.target_payment_approval_date:
+                _logger.debug(
+                    '[BIR Deadline %s] Scheduling approval activity for user_id=%d, date=%s',
+                    self.id, self.responsible_approval_id.user_id.id, self.target_payment_approval_date
+                )
+                self._create_activity(
+                    activity_type,
+                    self.responsible_approval_id.user_id,
+                    self.target_payment_approval_date,
+                    _('Approve %s payment for %s') % (self.name, self.period_covered or 'this period')
+                )
+                activities_created += 1
+
+            if activities_created:
+                _logger.info('[BIR Deadline %s] Successfully created %d activities', self.id, activities_created)
+                self.message_post(
+                    body=_('Scheduled %d reminder activities for this BIR deadline.') % activities_created,
+                    message_type='notification'
+                )
+            else:
+                _logger.warning(
+                    '[BIR Deadline %s] No activities created - check responsible persons have linked user accounts',
+                    self.id
+                )
+
+            return activities_created
+
+        except Exception as e:
+            _logger.exception(
+                '[BIR Deadline %s] EXCEPTION in action_schedule_activities | '
+                'error_type=%s, error_msg=%s',
+                self.id, type(e).__name__, str(e)
             )
-            activities_created += 1
-
-        # Schedule Review activity
-        if self.responsible_review_id and self.responsible_review_id.user_id and self.target_report_approval_date:
-            self._create_activity(
-                activity_type,
-                self.responsible_review_id.user_id,
-                self.target_report_approval_date,
-                _('Review %s for %s') % (self.name, self.period_covered or 'this period')
-            )
-            activities_created += 1
-
-        # Schedule Approval activity
-        if self.responsible_approval_id and self.responsible_approval_id.user_id and self.target_payment_approval_date:
-            self._create_activity(
-                activity_type,
-                self.responsible_approval_id.user_id,
-                self.target_payment_approval_date,
-                _('Approve %s payment for %s') % (self.name, self.period_covered or 'this period')
-            )
-            activities_created += 1
-
-        if activities_created:
-            self.message_post(
-                body=_('Scheduled %d reminder activities for this BIR deadline.') % activities_created,
-                message_type='notification'
-            )
-        return activities_created
+            raise
 
     def _create_activity(self, activity_type, user, date_deadline, summary):
         """Helper to create a mail activity."""
-        return self.env['mail.activity'].create({
-            'activity_type_id': activity_type.id,
-            'res_model_id': self.env['ir.model']._get_id(self._name),
-            'res_id': self.id,
-            'user_id': user.id,
-            'date_deadline': date_deadline,
-            'summary': summary,
-            'note': _('BIR Form: %s\nPeriod: %s\nFiling Deadline: %s') % (
-                self.name,
-                self.period_covered or 'N/A',
-                self.deadline_date.strftime('%Y-%m-%d') if self.deadline_date else 'N/A'
-            ),
-        })
+        try:
+            activity_vals = {
+                'activity_type_id': activity_type.id,
+                'res_model_id': self.env['ir.model']._get_id(self._name),
+                'res_id': self.id,
+                'user_id': user.id,
+                'date_deadline': date_deadline,
+                'summary': summary,
+                'note': _('BIR Form: %s\nPeriod: %s\nFiling Deadline: %s') % (
+                    self.name,
+                    self.period_covered or 'N/A',
+                    self.deadline_date.strftime('%Y-%m-%d') if self.deadline_date else 'N/A'
+                ),
+            }
+            activity = self.env['mail.activity'].create(activity_vals)
+            _logger.debug(
+                '[BIR Deadline %s] Created activity id=%d for user=%s (id=%d)',
+                self.id, activity.id, user.name, user.id
+            )
+            return activity
+        except Exception as e:
+            _logger.error(
+                '[BIR Deadline %s] FAILED to create activity | '
+                'user_id=%d, user_name=%s, date=%s, summary=%s, error=%s',
+                self.id, user.id, user.name, date_deadline, summary, str(e)
+            )
+            raise
 
     def action_send_reminder(self):
         """Send immediate reminder notification to all responsible persons."""
         self.ensure_one()
-        partners = []
-        message_lines = []
+        _logger.info(
+            '[BIR Deadline %s] action_send_reminder called | '
+            'name=%s, deadline_date=%s, state=%s',
+            self.id, self.name, self.deadline_date, self.state
+        )
 
-        if self.responsible_prep_id:
-            if self.responsible_prep_id.user_id and self.responsible_prep_id.user_id.partner_id:
-                partners.append(self.responsible_prep_id.user_id.partner_id.id)
-            message_lines.append(_('📋 Prep: %s (%s)') % (
-                self.responsible_prep_id.name,
-                self.responsible_prep_id.mobile or self.responsible_prep_id.email or 'No contact'
-            ))
+        try:
+            partners = []
+            message_lines = []
 
-        if self.responsible_review_id:
-            if self.responsible_review_id.user_id and self.responsible_review_id.user_id.partner_id:
-                partners.append(self.responsible_review_id.user_id.partner_id.id)
-            message_lines.append(_('🔍 Review: %s (%s)') % (
-                self.responsible_review_id.name,
-                self.responsible_review_id.mobile or self.responsible_review_id.email or 'No contact'
-            ))
+            if self.responsible_prep_id:
+                if self.responsible_prep_id.user_id and self.responsible_prep_id.user_id.partner_id:
+                    partners.append(self.responsible_prep_id.user_id.partner_id.id)
+                message_lines.append(_('Prep: %s (%s)') % (
+                    self.responsible_prep_id.name,
+                    self.responsible_prep_id.mobile or self.responsible_prep_id.email or 'No contact'
+                ))
 
-        if self.responsible_approval_id:
-            if self.responsible_approval_id.user_id and self.responsible_approval_id.user_id.partner_id:
-                partners.append(self.responsible_approval_id.user_id.partner_id.id)
-            message_lines.append(_('✅ Approve: %s (%s)') % (
-                self.responsible_approval_id.name,
-                self.responsible_approval_id.mobile or self.responsible_approval_id.email or 'No contact'
-            ))
+            if self.responsible_review_id:
+                if self.responsible_review_id.user_id and self.responsible_review_id.user_id.partner_id:
+                    partners.append(self.responsible_review_id.user_id.partner_id.id)
+                message_lines.append(_('Review: %s (%s)') % (
+                    self.responsible_review_id.name,
+                    self.responsible_review_id.mobile or self.responsible_review_id.email or 'No contact'
+                ))
 
-        days_remaining = (self.deadline_date - fields.Date.today()).days if self.deadline_date else 0
+            if self.responsible_approval_id:
+                if self.responsible_approval_id.user_id and self.responsible_approval_id.user_id.partner_id:
+                    partners.append(self.responsible_approval_id.user_id.partner_id.id)
+                message_lines.append(_('Approve: %s (%s)') % (
+                    self.responsible_approval_id.name,
+                    self.responsible_approval_id.mobile or self.responsible_approval_id.email or 'No contact'
+                ))
 
-        body = _('''
-<p><strong>🚨 BIR Deadline Reminder</strong></p>
+            _logger.debug(
+                '[BIR Deadline %s] Building reminder | partners=%s, team_count=%d',
+                self.id, partners, len(message_lines)
+            )
+
+            days_remaining = (self.deadline_date - fields.Date.today()).days if self.deadline_date else 0
+
+            body = _('''
+<p><strong>BIR Deadline Reminder</strong></p>
 <p><strong>Form:</strong> %(form)s<br/>
 <strong>Period:</strong> %(period)s<br/>
 <strong>Deadline:</strong> %(deadline)s<br/>
@@ -228,21 +304,34 @@ class FinanceBIRDeadline(models.Model):
 <p><strong>Responsible Team:</strong></p>
 <ul>%(team)s</ul>
 ''') % {
-            'form': self.name,
-            'period': self.period_covered or 'N/A',
-            'deadline': self.deadline_date.strftime('%Y-%m-%d') if self.deadline_date else 'N/A',
-            'days': days_remaining,
-            'status': dict(self._fields['state'].selection).get(self.state, self.state),
-            'team': ''.join(['<li>%s</li>' % line for line in message_lines]),
-        }
+                'form': self.name,
+                'period': self.period_covered or 'N/A',
+                'deadline': self.deadline_date.strftime('%Y-%m-%d') if self.deadline_date else 'N/A',
+                'days': days_remaining,
+                'status': dict(self._fields['state'].selection).get(self.state, self.state),
+                'team': ''.join(['<li>%s</li>' % line for line in message_lines]),
+            }
 
-        self.message_post(
-            body=body,
-            partner_ids=partners,
-            message_type='notification',
-            subtype_xmlid='mail.mt_comment',
-        )
-        return True
+            self.message_post(
+                body=body,
+                partner_ids=partners,
+                message_type='notification',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+            _logger.info(
+                '[BIR Deadline %s] Reminder sent successfully | partners_notified=%d',
+                self.id, len(partners)
+            )
+            return True
+
+        except Exception as e:
+            _logger.exception(
+                '[BIR Deadline %s] EXCEPTION in action_send_reminder | '
+                'error_type=%s, error_msg=%s',
+                self.id, type(e).__name__, str(e)
+            )
+            raise
 
     @api.model
     def cron_send_deadline_alerts(self):
@@ -255,7 +344,13 @@ class FinanceBIRDeadline(models.Model):
         - Overdue deadlines (escalation)
         """
         today = fields.Date.today()
+        _logger.info(
+            '[BIR Cron] cron_send_deadline_alerts started | today=%s',
+            today
+        )
+
         alerts_sent = 0
+        errors = []
 
         # Critical: Tomorrow
         tomorrow = today + timedelta(days=1)
@@ -263,9 +358,16 @@ class FinanceBIRDeadline(models.Model):
             ('deadline_date', '=', tomorrow),
             ('state', 'not in', ['filed']),
         ])
+        _logger.info('[BIR Cron] Found %d CRITICAL deadlines (tomorrow=%s)', len(critical_deadlines), tomorrow)
         for deadline in critical_deadlines:
-            deadline._send_alert_notification('critical', 1)
-            alerts_sent += 1
+            try:
+                deadline._send_alert_notification('critical', 1)
+                alerts_sent += 1
+                _logger.debug('[BIR Cron] Sent critical alert for deadline_id=%d, name=%s', deadline.id, deadline.name)
+            except Exception as e:
+                error_msg = f'deadline_id={deadline.id}, name={deadline.name}, error={str(e)}'
+                errors.append(error_msg)
+                _logger.error('[BIR Cron] FAILED critical alert | %s', error_msg)
 
         # Urgent: 3 days
         three_days = today + timedelta(days=3)
@@ -273,9 +375,16 @@ class FinanceBIRDeadline(models.Model):
             ('deadline_date', '=', three_days),
             ('state', 'not in', ['submitted', 'filed']),
         ])
+        _logger.info('[BIR Cron] Found %d URGENT deadlines (3-day=%s)', len(urgent_deadlines), three_days)
         for deadline in urgent_deadlines:
-            deadline._send_alert_notification('urgent', 3)
-            alerts_sent += 1
+            try:
+                deadline._send_alert_notification('urgent', 3)
+                alerts_sent += 1
+                _logger.debug('[BIR Cron] Sent urgent alert for deadline_id=%d, name=%s', deadline.id, deadline.name)
+            except Exception as e:
+                error_msg = f'deadline_id={deadline.id}, name={deadline.name}, error={str(e)}'
+                errors.append(error_msg)
+                _logger.error('[BIR Cron] FAILED urgent alert | %s', error_msg)
 
         # Warning: 7 days
         seven_days = today + timedelta(days=7)
@@ -283,26 +392,55 @@ class FinanceBIRDeadline(models.Model):
             ('deadline_date', '=', seven_days),
             ('state', '=', 'pending'),
         ])
+        _logger.info('[BIR Cron] Found %d WARNING deadlines (7-day=%s)', len(warning_deadlines), seven_days)
         for deadline in warning_deadlines:
-            deadline._send_alert_notification('warning', 7)
-            alerts_sent += 1
+            try:
+                deadline._send_alert_notification('warning', 7)
+                alerts_sent += 1
+                _logger.debug('[BIR Cron] Sent warning alert for deadline_id=%d, name=%s', deadline.id, deadline.name)
+            except Exception as e:
+                error_msg = f'deadline_id={deadline.id}, name={deadline.name}, error={str(e)}'
+                errors.append(error_msg)
+                _logger.error('[BIR Cron] FAILED warning alert | %s', error_msg)
 
         # Overdue: Past deadline not filed
         overdue_deadlines = self.search([
             ('deadline_date', '<', today),
             ('state', 'not in', ['filed']),
         ])
+        _logger.info('[BIR Cron] Found %d OVERDUE deadlines', len(overdue_deadlines))
         for deadline in overdue_deadlines:
-            days_overdue = (today - deadline.deadline_date).days
-            deadline._send_alert_notification('overdue', -days_overdue)
-            alerts_sent += 1
+            try:
+                days_overdue = (today - deadline.deadline_date).days
+                deadline._send_alert_notification('overdue', -days_overdue)
+                alerts_sent += 1
+                _logger.debug(
+                    '[BIR Cron] Sent overdue alert for deadline_id=%d, name=%s, days_overdue=%d',
+                    deadline.id, deadline.name, days_overdue
+                )
+            except Exception as e:
+                error_msg = f'deadline_id={deadline.id}, name={deadline.name}, error={str(e)}'
+                errors.append(error_msg)
+                _logger.error('[BIR Cron] FAILED overdue alert | %s', error_msg)
 
-        _logger.info('BIR deadline alert cron completed. Sent %d alerts.', alerts_sent)
+        # Summary logging
+        if errors:
+            _logger.warning(
+                '[BIR Cron] COMPLETED WITH ERRORS | alerts_sent=%d, errors=%d | error_details: %s',
+                alerts_sent, len(errors), '; '.join(errors)
+            )
+        else:
+            _logger.info('[BIR Cron] COMPLETED SUCCESSFULLY | alerts_sent=%d', alerts_sent)
+
         return alerts_sent
 
     def _send_alert_notification(self, alert_level, days_remaining):
         """Send alert notification based on urgency level."""
         self.ensure_one()
+        _logger.debug(
+            '[BIR Deadline %s] _send_alert_notification | level=%s, days_remaining=%d',
+            self.id, alert_level, days_remaining
+        )
 
         alert_icons = {
             'warning': '⚠️',
@@ -362,9 +500,34 @@ class FinanceBIRDeadline(models.Model):
             if person and person.user_id and person.user_id.partner_id:
                 partner_ids.append(person.user_id.partner_id.id)
 
-        self.message_post(
-            body=body,
-            partner_ids=partner_ids,
-            message_type='notification',
-            subtype_xmlid='mail.mt_comment',
-        )
+        if not partner_ids:
+            _logger.warning(
+                '[BIR Deadline %s] No partners found for @mention | '
+                'prep=%s (user=%s), review=%s (user=%s), approve=%s (user=%s)',
+                self.id,
+                self.responsible_prep_id.name if self.responsible_prep_id else None,
+                self.responsible_prep_id.user_id.id if self.responsible_prep_id and self.responsible_prep_id.user_id else None,
+                self.responsible_review_id.name if self.responsible_review_id else None,
+                self.responsible_review_id.user_id.id if self.responsible_review_id and self.responsible_review_id.user_id else None,
+                self.responsible_approval_id.name if self.responsible_approval_id else None,
+                self.responsible_approval_id.user_id.id if self.responsible_approval_id and self.responsible_approval_id.user_id else None,
+            )
+
+        try:
+            self.message_post(
+                body=body,
+                partner_ids=partner_ids,
+                message_type='notification',
+                subtype_xmlid='mail.mt_comment',
+            )
+            _logger.debug(
+                '[BIR Deadline %s] Alert notification sent | level=%s, partners=%s',
+                self.id, alert_level, partner_ids
+            )
+        except Exception as e:
+            _logger.error(
+                '[BIR Deadline %s] FAILED to send alert notification | '
+                'level=%s, partners=%s, error_type=%s, error_msg=%s',
+                self.id, alert_level, partner_ids, type(e).__name__, str(e)
+            )
+            raise
