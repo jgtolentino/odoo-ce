@@ -15,7 +15,7 @@
             <field name="code">RIM</field>
             <field name="name">Rey Meran</field>
             <field name="email">rey.meran@omc.com</field>
-            <field name="role">supervisor</field>
+            <field name="role">senior_supervisor</field>
         </record>
 
         <record id="person_las" model="ipai.finance.person">

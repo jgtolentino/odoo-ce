@@ -13,6 +13,7 @@ class FinancePerson(models.Model):
     role = fields.Selection([
         ('staff', 'Staff'),
         ('supervisor', 'Supervisor'),
+        ('senior_supervisor', 'Senior Supervisor'),
         ('manager', 'Manager'),
         ('director', 'Director')
     ], string='Role', default='staff', tracking=True)
