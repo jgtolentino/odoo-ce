@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'InsightPulse Clarity PPM Parity',
-    'version': '18.0.1.0.0',
+    'name': 'IPAI Workspace Core',
+    'version': '18.0.2.0.0',
     'category': 'Project Management',
-    'summary': 'Broadcom Clarity PPM feature parity for Odoo 18 CE with complete WBS hierarchy',
+    'summary': 'Notion-style Workspace Foundation with Clarity PPM Hierarchy',
     'description': """
-Clarity PPM Parity for Odoo
-============================
+IPAI Workspace Core - Notion-style Foundation
+=============================================
 
-Complete Broadcom Clarity PPM Work Breakdown Structure implementation:
+Provides the foundational workspace model (ipai.workspace) implementing
+Notion-style project organization with Broadcom Clarity PPM hierarchy.
+
+This is the CORE foundation module that industry packs extend via _inherit.
+
+Work Breakdown Structure:
+------------------------
 - Project (root container)
 - Phase (WBS grouping via parent tasks)
 - Milestone (zero-duration progress markers)
@@ -17,6 +23,7 @@ Complete Broadcom Clarity PPM Work Breakdown Structure implementation:
 
 Features:
 ---------
+* Workspace model for Notion parity
 * Clarity ID field for project tracking
 * Health status indicators (Green/Yellow/Red)
 * Baseline vs Actual variance tracking
@@ -25,20 +32,16 @@ Features:
 * Task dependencies (FS, SS, FF, SF)
 * To-Do items with assignees and due dates
 * Gantt chart visualization
-* Finance PPM integration for BIR tax filing
-* Mattermost notifications for phase gates
 
-Dependencies:
--------------
-* OCA project_key
-* OCA project_category
-* OCA project_wbs
-* OCA project_parent_task_filter
-* OCA project_milestone
-* OCA project_task_milestone
-* OCA project_task_dependency
-* OCA project_task_checklist
-* OCA project_timeline
+OCA Dependencies:
+-----------------
+* project_key, project_category, project_wbs
+* project_milestone, project_task_milestone
+* project_task_dependency, project_task_checklist
+* project_timeline, project_parent_task_filter
+
+Canonical Module: 2 of 5
+Part of InsightPulse ERP Target Image (Smart Delta Philosophy)
 
 Author: InsightPulse AI
 License: AGPL-3

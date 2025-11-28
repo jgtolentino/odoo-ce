@@ -1,8 +1,37 @@
 # -*- coding: utf-8 -*-
 {
     "name": "IPAI Finance PPM",
-    "summary": "Finance Project Portfolio Management (Notion Parity).",
-    "version": "18.0.1.0.0",
+    "summary": "Finance Project Portfolio Management - Accounting Industry Pack (Consolidated).",
+    "description": """
+Finance PPM - Accounting Industry Pack
+======================================
+
+Consolidated module combining:
+- ipai_finance_ppm (BIR deadline tracking, team directory)
+- ipai_finance_ppm_dashboard (ECharts dashboard)
+- ipai_finance_monthly_closing (Month-end structured closing)
+- ipai_ppm_monthly_close (Recurring close scheduler)
+
+Features:
+---------
+* BIR Tax Filing Calendar (22 deadlines for 2026)
+* Month-end Close Workflow (Owner → Reviewer → Approver)
+* Finance Team Directory with contact info
+* SOP Document Templates for BIR forms
+* Automated deadline alerts (7-day, 3-day, 1-day, overdue)
+* Activity scheduling and @mention notifications
+* ECharts dashboard visualization
+* Clarity PPM hierarchy (Phase → Task → To-Do → Milestone)
+
+CE Module Dependencies:
+----------------------
+* account - Core accounting
+* resource - Business day calculations
+
+Author: InsightPulse AI
+License: AGPL-3
+    """,
+    "version": "18.0.2.0.0",
     "category": "Accounting/Finance",
     "author": "InsightPulseAI",
     "website": "https://insightpulseai.net",
@@ -11,6 +40,8 @@
         "base",
         "mail",
         "project",
+        "resource",  # Business day calculations
+        "account",   # Core accounting CE
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -34,6 +65,10 @@
             "ipai_finance_ppm/static/src/js/semantic-search/api.js",
             "ipai_finance_ppm/static/src/js/semantic-search/MonthlyRevenueSearch.js",
             "ipai_finance_ppm/static/src/xml/monthly_revenue_search.xml",
+            # Dashboard ECharts assets
+            "ipai_finance_ppm/static/lib/echarts.min.js",
+            "ipai_finance_ppm/static/src/js/ppm_dashboard.js",
+            "ipai_finance_ppm/static/src/xml/ppm_dashboard_templates.xml",
         ],
     },
     "installable": True,
