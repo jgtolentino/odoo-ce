@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================
+             BIR Filing Calendar 2026
+             Source: Finance Framework Unified Workbook
+
+             Process Steps:
+             1. Prep & File Request: BIR Deadline - 4 days (BOM)
+             2. Report Approval: BIR Deadline - 2 days (RIM)
+             3. Payment Approval: BIR Deadline - 1 day (CKVC)
+             4. Filing & Payment: On BIR Deadline (CKVC)
+             ============================================ -->
+
+        <!-- ============================================
+             MONTHLY: 1601-C (Withholding Tax on Compensation)
+             ============================================ -->
+
+        <record id="bir_1601c_dec2025" model="finance.bir.deadline">
+            <field name="name">1601-C</field>
+            <field name="period_covered">Dec 2025</field>
+            <field name="deadline_date">2026-01-15</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <!-- 1601-C / 0619-E Monthly Combined -->
+        <record id="bir_1601c_0619e_jan2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Jan 2026</field>
+            <field name="deadline_date">2026-02-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_feb2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Feb 2026</field>
+            <field name="deadline_date">2026-03-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_mar2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Mar 2026</field>
+            <field name="deadline_date">2026-04-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_apr2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Apr 2026</field>
+            <field name="deadline_date">2026-05-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_may2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">May 2026</field>
+            <field name="deadline_date">2026-06-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_jun2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Jun 2026</field>
+            <field name="deadline_date">2026-07-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_jul2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Jul 2026</field>
+            <field name="deadline_date">2026-08-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_aug2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Aug 2026</field>
+            <field name="deadline_date">2026-09-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_sep2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Sep 2026</field>
+            <field name="deadline_date">2026-10-12</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax (Oct 10 is Sat)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_oct2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Oct 2026</field>
+            <field name="deadline_date">2026-11-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601c_0619e_nov2026" model="finance.bir.deadline">
+            <field name="name">1601-C / 0619-E</field>
+            <field name="period_covered">Nov 2026</field>
+            <field name="deadline_date">2026-12-10</field>
+            <field name="form_type">monthly</field>
+            <field name="description">Monthly Withholding Tax on Compensation + Expanded Withholding Tax</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <!-- ============================================
+             QUARTERLY: 1601-EQ (Quarterly EWT Remittance)
+             ============================================ -->
+
+        <record id="bir_1601eq_q4_2025" model="finance.bir.deadline">
+            <field name="name">1601-EQ</field>
+            <field name="period_covered">Q4 2025</field>
+            <field name="deadline_date">2026-01-30</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Remittance Return of Creditable Income Taxes Withheld (Expanded)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601eq_q1_2026" model="finance.bir.deadline">
+            <field name="name">1601-EQ</field>
+            <field name="period_covered">Q1 2026</field>
+            <field name="deadline_date">2026-04-30</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Remittance Return of Creditable Income Taxes Withheld (Expanded)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601eq_q2_2026" model="finance.bir.deadline">
+            <field name="name">1601-EQ</field>
+            <field name="period_covered">Q2 2026</field>
+            <field name="deadline_date">2026-07-31</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Remittance Return of Creditable Income Taxes Withheld (Expanded)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1601eq_q3_2026" model="finance.bir.deadline">
+            <field name="name">1601-EQ</field>
+            <field name="period_covered">Q3 2026</field>
+            <field name="deadline_date">2026-10-30</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Remittance Return of Creditable Income Taxes Withheld (Expanded)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <!-- ============================================
+             QUARTERLY: 2550Q (Quarterly VAT)
+             ============================================ -->
+
+        <record id="bir_2550q_q1_2026" model="finance.bir.deadline">
+            <field name="name">2550Q</field>
+            <field name="period_covered">Q1 2026</field>
+            <field name="deadline_date">2026-04-27</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Value-Added Tax Return (Apr 25 is Sat)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_2550q_q2_2026" model="finance.bir.deadline">
+            <field name="name">2550Q</field>
+            <field name="period_covered">Q2 2026</field>
+            <field name="deadline_date">2026-07-27</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Value-Added Tax Return (Jul 25 is Sat)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_2550q_q3_2026" model="finance.bir.deadline">
+            <field name="name">2550Q</field>
+            <field name="period_covered">Q3 2026</field>
+            <field name="deadline_date">2026-10-26</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Value-Added Tax Return (Oct 25 is Sun)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <!-- ============================================
+             QUARTERLY: 1702Q (Quarterly Income Tax)
+             ============================================ -->
+
+        <record id="bir_1702q_q2_2026" model="finance.bir.deadline">
+            <field name="name">1702Q</field>
+            <field name="period_covered">Q2 2026</field>
+            <field name="deadline_date">2026-05-30</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Income Tax Return for Corporations</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <record id="bir_1702q_q3_2026" model="finance.bir.deadline">
+            <field name="name">1702Q</field>
+            <field name="period_covered">Q3 2026</field>
+            <field name="deadline_date">2026-08-29</field>
+            <field name="form_type">quarterly</field>
+            <field name="description">Quarterly Income Tax Return for Corporations</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+        <!-- ============================================
+             ANNUAL: 1702-RT/EX (Annual Income Tax)
+             ============================================ -->
+
+        <record id="bir_1702rt_annual_2025" model="finance.bir.deadline">
+            <field name="name">1702-RT/EX</field>
+            <field name="period_covered">Annual 2025</field>
+            <field name="deadline_date">2026-04-15</field>
+            <field name="form_type">annual</field>
+            <field name="description">Annual Income Tax Return for Corporations (Regular/Exempt)</field>
+            <field name="responsible_prep_id" ref="person_bom"/>
+            <field name="responsible_review_id" ref="person_rim"/>
+            <field name="responsible_approval_id" ref="person_ckvc"/>
+        </record>
+
+    </data>
+</odoo>
