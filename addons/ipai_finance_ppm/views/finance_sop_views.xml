@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- SOP Tree View -->
+    <record id="view_finance_bir_sop_tree" model="ir.ui.view">
+        <field name="name">finance.bir.sop.tree</field>
+        <field name="model">finance.bir.sop</field>
+        <field name="arch" type="xml">
+            <list string="BIR SOPs" decoration-success="state == 'approved'" decoration-muted="state == 'obsolete'">
+                <field name="sequence" widget="handle"/>
+                <field name="form_code"/>
+                <field name="name"/>
+                <field name="form_type" optional="show"/>
+                <field name="category"/>
+                <field name="version"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'review'" decoration-success="state == 'approved'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- SOP Form View -->
+    <record id="view_finance_bir_sop_form" model="ir.ui.view">
+        <field name="name">finance.bir.sop.form</field>
+        <field name="model">finance.bir.sop</field>
+        <field name="arch" type="xml">
+            <form string="BIR SOP Document">
+                <header>
+                    <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="state != 'review'"/>
+                    <button name="action_set_draft" type="object" string="Set to Draft" invisible="state not in ['review', 'approved']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_attachments" icon="fa-paperclip">
+                            <field name="attachments_count" widget="statinfo" string="Attachments"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="form_code"/>
+                        <h1>
+                            <field name="form_code" placeholder="e.g., 1601-C"/>
+                        </h1>
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" placeholder="SOP Title"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="form_type"/>
+                            <field name="category"/>
+                            <field name="bir_link" widget="url"/>
+                        </group>
+                        <group string="Timeline Guidance">
+                            <field name="prep_days"/>
+                            <field name="review_days"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Version Control">
+                            <field name="version"/>
+                            <field name="last_review_date"/>
+                            <field name="next_review_date"/>
+                        </group>
+                        <group string="Approval">
+                            <field name="approved_by_id"/>
+                            <field name="approved_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Purpose" name="purpose">
+                            <field name="purpose" placeholder="Describe the purpose of this BIR form..."/>
+                        </page>
+                        <page string="Filing Procedure" name="procedure">
+                            <field name="procedure_html" placeholder="Step-by-step filing instructions..."/>
+                        </page>
+                        <page string="Requirements" name="requirements">
+                            <field name="requirements" placeholder="Documents and data required for filing..."/>
+                        </page>
+                        <page string="Checklist" name="checklist">
+                            <field name="checklist_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="responsible_role"/>
+                                    <field name="is_mandatory"/>
+                                    <field name="description"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Additional notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SOP Search View -->
+    <record id="view_finance_bir_sop_search" model="ir.ui.view">
+        <field name="name">finance.bir.sop.search</field>
+        <field name="model">finance.bir.sop</field>
+        <field name="arch" type="xml">
+            <search string="Search SOPs">
+                <field name="form_code"/>
+                <field name="name"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Monthly Forms" name="monthly" domain="[('form_type', '=', 'monthly')]"/>
+                <filter string="Quarterly Forms" name="quarterly" domain="[('form_type', '=', 'quarterly')]"/>
+                <filter string="Annual Forms" name="annual" domain="[('form_type', '=', 'annual')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Form Type" name="group_form_type" context="{'group_by': 'form_type'}"/>
+                    <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- SOP Kanban View -->
+    <record id="view_finance_bir_sop_kanban" model="ir.ui.view">
+        <field name="name">finance.bir.sop.kanban</field>
+        <field name="model">finance.bir.sop</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="category" class="o_kanban_small_column">
+                <field name="form_code"/>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="form_type"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <strong><field name="form_code"/></strong>
+                            <div><field name="name"/></div>
+                            <div class="text-muted small mt-1">
+                                <field name="form_type"/>
+                            </div>
+                            <div class="mt-2">
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'review': 'warning', 'approved': 'success', 'obsolete': 'secondary'}}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- SOP Action -->
+    <record id="action_finance_bir_sop" model="ir.actions.act_window">
+        <field name="name">BIR SOPs</field>
+        <field name="res_model">finance.bir.sop</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_approved': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first BIR SOP
+            </p>
+            <p>
+                Standard Operating Procedures document the step-by-step process
+                for filing each BIR form. Include checklists and requirements.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_finance_bir_sop"
+              name="BIR SOPs"
+              parent="menu_finance_ppm_root"
+              action="action_finance_bir_sop"
+              sequence="35"/>
+</odoo>

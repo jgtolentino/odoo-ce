@@ -38,6 +38,8 @@
         <field name="arch" type="xml">
             <form string="BIR Deadline">
                 <header>
+                    <button name="action_send_reminder" type="object" string="📢 Send Reminder" class="btn-warning" help="Send immediate @mention notification to responsible team"/>
+                    <button name="action_schedule_activities" type="object" string="📅 Schedule Activities" help="Create scheduled activities for all responsible persons"/>
                     <button name="action_mark_in_progress" type="object" string="Start Processing" class="oe_highlight" invisible="state != 'pending'"/>
                     <button name="action_mark_submitted" type="object" string="Mark Submitted" class="oe_highlight" invisible="state != 'in_progress'"/>
                     <button name="action_mark_filed" type="object" string="Mark Filed" class="oe_highlight" invisible="state != 'submitted'"/>
@@ -54,6 +56,7 @@
                             <field name="period_covered" placeholder="e.g. October 2025"/>
                             <field name="form_type"/>
                             <field name="deadline_date"/>
+                            <field name="sop_document_id" options="{'no_create': True}"/>
                         </group>
                         <group string="Computed Target Dates">
                             <field name="target_prep_date"/>
@@ -62,7 +65,7 @@
                         </group>
                     </group>
                     <group>
-                        <group string="Responsibility">
+                        <group string="Responsibility &amp; Contact">
                             <field name="responsible_prep_id"/>
                             <field name="responsible_review_id"/>
                             <field name="responsible_approval_id"/>
