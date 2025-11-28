@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Finance SSC Team Directory -->
+        <!-- Source: Finance Framework Unified Workbook -->
+
+        <record id="person_ckvc" model="ipai.finance.person">
+            <field name="code">CKVC</field>
+            <field name="name">Khalil Veracruz</field>
+            <field name="email">khalil.veracruz@omc.com</field>
+            <field name="role">director</field>
+        </record>
+
+        <record id="person_rim" model="ipai.finance.person">
+            <field name="code">RIM</field>
+            <field name="name">Rey Meran</field>
+            <field name="email">rey.meran@omc.com</field>
+            <field name="role">supervisor</field>
+        </record>
+
+        <record id="person_las" model="ipai.finance.person">
+            <field name="code">LAS</field>
+            <field name="name">Amor Lasaga</field>
+            <field name="email">amor.lasaga@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_bom" model="ipai.finance.person">
+            <field name="code">BOM</field>
+            <field name="name">Beng Manalo</field>
+            <field name="email">beng.manalo@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_jpal" model="ipai.finance.person">
+            <field name="code">JPAL</field>
+            <field name="name">Jinky Paladin</field>
+            <field name="email">jinky.paladin@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_jpl" model="ipai.finance.person">
+            <field name="code">JPL</field>
+            <field name="name">Jerald Loterte</field>
+            <field name="email">jerald.loterte@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_ji" model="ipai.finance.person">
+            <field name="code">JI</field>
+            <field name="name">Jasmin Ignacio</field>
+            <field name="email">jasmin.ignacio@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_jo" model="ipai.finance.person">
+            <field name="code">JO</field>
+            <field name="name">Jhoee Oliva</field>
+            <field name="email">jhoee.oliva@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_jm" model="ipai.finance.person">
+            <field name="code">JM</field>
+            <field name="name">Joana Maravillas</field>
+            <field name="email">joana.maravillas@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_rmqb" model="ipai.finance.person">
+            <field name="code">RMQB</field>
+            <field name="name">Sally Brillantes</field>
+            <field name="email">sally.brillantes@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_cjd" model="ipai.finance.person">
+            <field name="code">CJD</field>
+            <field name="name">Cliff Dejecacion</field>
+            <field name="email">cliff.dejecacion@omc.com</field>
+            <field name="role">staff</field>
+        </record>
+
+        <record id="person_jt" model="ipai.finance.person">
+            <field name="code">JT</field>
+            <field name="name">Jake Tolentino</field>
+            <field name="email">jgtolentino.rn@gmail.com</field>
+            <field name="role">manager</field>
+        </record>
+    </data>
+</odoo>

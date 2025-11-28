@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================
+             IM1: Month-End Closing Activities
+             Source: Finance Framework Logframe
+             ============================================ -->
+
+        <!-- Reconciliation Tasks -->
+        <record id="task_reconcile_bank" model="ipai.finance.task.template">
+            <field name="name">Reconcile bank accounts and cash positions</field>
+            <field name="category">close</field>
+            <field name="description">Match GL balances to bank statements. Investigate and resolve any discrepancies.</field>
+            <field name="employee_code_id" ref="person_bom"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">25</field>
+            <field name="prep_duration">1.0</field>
+            <field name="review_duration">0.5</field>
+        </record>
+
+        <record id="task_reconcile_ar" model="ipai.finance.task.template">
+            <field name="name">Reconcile Accounts Receivable aging</field>
+            <field name="category">close</field>
+            <field name="description">Review AR aging report, confirm balances with subsidiaries, flag overdue items.</field>
+            <field name="employee_code_id" ref="person_jo"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">26</field>
+        </record>
+
+        <record id="task_reconcile_ap" model="ipai.finance.task.template">
+            <field name="name">Reconcile Accounts Payable and vendor statements</field>
+            <field name="category">close</field>
+            <field name="description">Match AP ledger to vendor statements. Ensure all invoices are captured.</field>
+            <field name="employee_code_id" ref="person_jm"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">26</field>
+        </record>
+
+        <!-- Accruals Tasks -->
+        <record id="task_post_accruals" model="ipai.finance.task.template">
+            <field name="name">Post month-end accruals and adjustments</field>
+            <field name="category">accrual</field>
+            <field name="description">Book accrued expenses, prepaid amortization, and other month-end adjustments.</field>
+            <field name="employee_code_id" ref="person_las"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">27</field>
+        </record>
+
+        <record id="task_depreciation" model="ipai.finance.task.template">
+            <field name="name">Run and post depreciation entries</field>
+            <field name="category">accrual</field>
+            <field name="description">Calculate monthly depreciation for all fixed assets and post to GL.</field>
+            <field name="employee_code_id" ref="person_ji"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">27</field>
+        </record>
+
+        <!-- WIP and Trial Balance -->
+        <record id="task_wip_reconciliation" model="ipai.finance.task.template">
+            <field name="name">Prepare WIP/OOP reconciliation</field>
+            <field name="category">wip</field>
+            <field name="description">Reconcile Work-in-Progress and Out-of-Pocket expenses against project budgets.</field>
+            <field name="employee_code_id" ref="person_jpal"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">28</field>
+        </record>
+
+        <record id="task_trial_balance" model="ipai.finance.task.template">
+            <field name="name">Prepare and review Trial Balance</field>
+            <field name="category">close</field>
+            <field name="description">Generate TB, verify all accounts balance, prepare variance analysis.</field>
+            <field name="employee_code_id" ref="person_rim"/>
+            <field name="reviewed_by_id" ref="person_ckvc"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">28</field>
+        </record>
+
+        <record id="task_finalize_close" model="ipai.finance.task.template">
+            <field name="name">Finalize month-end close and lock period</field>
+            <field name="category">close</field>
+            <field name="description">Final review of all entries, set accounting lock date for the period.</field>
+            <field name="employee_code_id" ref="person_ckvc"/>
+            <field name="reviewed_by_id" ref="person_jt"/>
+            <field name="approved_by_id" ref="person_jt"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">1</field>
+        </record>
+
+        <!-- ============================================
+             IM2: Tax Filing Compliance Activities
+             Source: Finance Framework Logframe
+             ============================================ -->
+
+        <!-- VAT Tasks -->
+        <record id="task_vat_compilation" model="ipai.finance.task.template">
+            <field name="name">Compile VAT input/output data for 2550M</field>
+            <field name="category">vat</field>
+            <field name="description">Gather all VAT invoices, compute input/output VAT, prepare SLSP report.</field>
+            <field name="employee_code_id" ref="person_jpl"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">15</field>
+        </record>
+
+        <!-- Payroll Tax Tasks (BIR 1601-C) -->
+        <record id="task_prepare_1601c" model="ipai.finance.task.template">
+            <field name="name">Prepare BIR 1601-C (Withholding Tax on Compensation)</field>
+            <field name="category">payroll</field>
+            <field name="description">Compute withholding taxes on employee compensation, prepare 1601-C form.</field>
+            <field name="employee_code_id" ref="person_rmqb"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">8</field>
+        </record>
+
+        <!-- Expanded Withholding Tax (BIR 0619-E) -->
+        <record id="task_prepare_0619e" model="ipai.finance.task.template">
+            <field name="name">Prepare BIR 0619-E (Expanded Withholding Tax)</field>
+            <field name="category">tax</field>
+            <field name="description">Compute EWT on vendor payments, prepare 0619-E form and BIR 2307 certificates.</field>
+            <field name="employee_code_id" ref="person_cjd"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">8</field>
+        </record>
+
+        <!-- Approval Routing -->
+        <record id="task_tax_approval_routing" model="ipai.finance.task.template">
+            <field name="name">Route tax forms for management approval</field>
+            <field name="category">compliance</field>
+            <field name="description">Circulate prepared tax forms to reviewers and approvers. Collect signatures.</field>
+            <field name="employee_code_id" ref="person_rim"/>
+            <field name="reviewed_by_id" ref="person_ckvc"/>
+            <field name="approved_by_id" ref="person_jt"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">9</field>
+        </record>
+
+        <!-- Filing Tasks -->
+        <record id="task_file_bir_returns" model="ipai.finance.task.template">
+            <field name="name">File BIR returns via eFPS/eBIR</field>
+            <field name="category">compliance</field>
+            <field name="description">Upload approved tax returns to BIR eFPS portal. Generate confirmation receipts.</field>
+            <field name="employee_code_id" ref="person_jpl"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">10</field>
+        </record>
+
+        <record id="task_upload_proof" model="ipai.finance.task.template">
+            <field name="name">Upload BIR filing confirmations to document repository</field>
+            <field name="category">compliance</field>
+            <field name="description">Save BIR confirmation receipts to shared drive. Update compliance tracker.</field>
+            <field name="employee_code_id" ref="person_jo"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">10</field>
+        </record>
+
+        <!-- ============================================
+             Regional Reporting Tasks
+             ============================================ -->
+
+        <record id="task_regional_report" model="ipai.finance.task.template">
+            <field name="name">Prepare regional financial report package</field>
+            <field name="category">reporting</field>
+            <field name="description">Compile P&amp;L, Balance Sheet, and management reports for regional submission.</field>
+            <field name="employee_code_id" ref="person_rim"/>
+            <field name="reviewed_by_id" ref="person_ckvc"/>
+            <field name="approved_by_id" ref="person_jt"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">5</field>
+        </record>
+
+        <!-- ============================================
+             CA Liquidation Tasks
+             ============================================ -->
+
+        <record id="task_ca_liquidation" model="ipai.finance.task.template">
+            <field name="name">Process Cash Advance liquidations</field>
+            <field name="category">liquidation</field>
+            <field name="description">Review and process pending CA liquidations. Post cleared advances to GL.</field>
+            <field name="employee_code_id" ref="person_bom"/>
+            <field name="reviewed_by_id" ref="person_rim"/>
+            <field name="approved_by_id" ref="person_ckvc"/>
+            <field name="trigger_type">fixed_date</field>
+            <field name="day_of_month">20</field>
+        </record>
+    </data>
+</odoo>
