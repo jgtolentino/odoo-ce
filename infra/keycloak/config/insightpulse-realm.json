@@ -1,0 +1,157 @@
+{
+  "realm": "insightpulse",
+  "displayName": "InsightPulse AI",
+  "displayNameHtml": "<strong>InsightPulse AI</strong>",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+
+  "clients": [
+    {
+      "clientId": "odoo-erp",
+      "name": "Odoo ERP",
+      "description": "Odoo CE 18.0 Enterprise Resource Planning",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "redirectUris": [
+        "https://erp.insightpulseai.net/*",
+        "http://localhost:8069/*"
+      ],
+      "webOrigins": [
+        "https://erp.insightpulseai.net",
+        "http://localhost:8069"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    },
+    {
+      "clientId": "superset-analytics",
+      "name": "Apache Superset",
+      "description": "Business Intelligence Dashboards",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "redirectUris": [
+        "https://superset.insightpulseai.net/*",
+        "http://localhost:8088/*"
+      ],
+      "webOrigins": [
+        "https://superset.insightpulseai.net",
+        "http://localhost:8088"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    },
+    {
+      "clientId": "n8n-automation",
+      "name": "n8n Workflows",
+      "description": "Workflow Automation Platform",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "redirectUris": [
+        "https://ipa.insightpulseai.net/*",
+        "https://n8n.insightpulseai.net/*"
+      ],
+      "webOrigins": [
+        "https://ipa.insightpulseai.net",
+        "https://n8n.insightpulseai.net"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    },
+    {
+      "clientId": "mattermost-chat",
+      "name": "Mattermost",
+      "description": "Team Collaboration Platform",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "redirectUris": [
+        "https://mattermost.insightpulseai.net/*"
+      ],
+      "webOrigins": [
+        "https://mattermost.insightpulseai.net"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    }
+  ],
+
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Administrator - Full system access"
+      },
+      {
+        "name": "finance_director",
+        "description": "Finance Director - Finance SSC oversight"
+      },
+      {
+        "name": "finance_manager",
+        "description": "Finance Manager - Finance operations"
+      },
+      {
+        "name": "finance_supervisor",
+        "description": "Finance Supervisor - Task execution"
+      },
+      {
+        "name": "user",
+        "description": "Standard User - Basic access"
+      }
+    ]
+  },
+
+  "users": [
+    {
+      "username": "admin",
+      "email": "admin@insightpulseai.net",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "System",
+      "lastName": "Administrator",
+      "realmRoles": ["admin"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "CHANGE_ME_ON_FIRST_LOGIN",
+          "temporary": true
+        }
+      ]
+    }
+  ],
+
+  "internationalizationEnabled": true,
+  "supportedLocales": ["en", "es", "fr"],
+  "defaultLocale": "en",
+
+  "smtpServer": {},
+
+  "eventsEnabled": true,
+  "eventsListeners": ["jboss-logging"],
+  "enabledEventTypes": [
+    "LOGIN",
+    "LOGIN_ERROR",
+    "LOGOUT",
+    "REGISTER",
+    "UPDATE_PASSWORD"
+  ],
+
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true
+}

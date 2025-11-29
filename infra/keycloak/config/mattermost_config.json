@@ -1,0 +1,40 @@
+{
+  "_comment": "Mattermost - Keycloak OIDC Configuration",
+  "_instructions": "Add to System Console > Authentication > OpenID Connect",
+
+  "ServiceSettings": {
+    "EnableOAuthServiceProvider": true
+  },
+
+  "GitLabSettings": {
+    "Enable": false
+  },
+
+  "GoogleSettings": {
+    "Enable": false
+  },
+
+  "Office365Settings": {
+    "Enable": false
+  },
+
+  "OpenIdSettings": {
+    "Enable": true,
+    "Id": "mattermost-chat",
+    "Secret": "YOUR_CLIENT_SECRET_HERE",
+    "Scope": "openid profile email",
+    "AuthEndpoint": "https://sso.insightpulseai.net/realms/insightpulse/protocol/openid-connect/auth",
+    "TokenEndpoint": "https://sso.insightpulseai.net/realms/insightpulse/protocol/openid-connect/token",
+    "UserApiEndpoint": "https://sso.insightpulseai.net/realms/insightpulse/protocol/openid-connect/userinfo",
+    "DiscoveryEndpoint": "https://sso.insightpulseai.net/realms/insightpulse/.well-known/openid-configuration",
+    "ButtonText": "Sign in with Keycloak",
+    "ButtonColor": "#0066CC"
+  },
+
+  "_role_mapping": {
+    "admin": "system_admin",
+    "finance_director": "team_admin",
+    "finance_manager": "channel_admin",
+    "user": "member"
+  }
+}

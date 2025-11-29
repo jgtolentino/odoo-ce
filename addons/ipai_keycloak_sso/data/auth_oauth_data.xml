@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Keycloak OAuth Provider -->
+    <record id="provider_keycloak" model="auth.oauth.provider">
+        <field name="name">Keycloak SSO</field>
+        <field name="auth_endpoint">https://sso.insightpulseai.net/realms/insightpulse/protocol/openid-connect/auth</field>
+        <field name="token_endpoint">https://sso.insightpulseai.net/realms/insightpulse/protocol/openid-connect/token</field>
+        <field name="validation_endpoint">https://sso.insightpulseai.net/realms/insightpulse/protocol/openid-connect/userinfo</field>
+        <field name="scope">openid profile email</field>
+        <field name="enabled" eval="True"/>
+        <field name="css_class">fa fa-shield</field>
+        <field name="body">Sign in with Keycloak</field>
+
+        <!-- Client Credentials (to be filled after Keycloak setup) -->
+        <!--
+        <field name="client_id">odoo-erp</field>
+        <field name="client_secret">YOUR_CLIENT_SECRET_HERE</field>
+        -->
+    </record>
+</odoo>

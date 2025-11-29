@@ -1,0 +1,82 @@
+# Keycloak SSO - DigitalOcean App Platform Deployment
+name: keycloak-sso
+region: sgp
+
+# PostgreSQL Database
+databases:
+  - name: keycloak-db
+    engine: PG
+    version: "15"
+    production: true
+    cluster_name: keycloak-db-cluster
+
+# Keycloak Service
+services:
+  - name: keycloak
+    dockerfile_path: Dockerfile
+    source_dir: /
+    github:
+      repo: jgtolentino/odoo-ce
+      branch: main
+      deploy_on_push: true
+
+    # Environment Variables
+    envs:
+      # Database Connection
+      - key: KC_DB
+        value: postgres
+      - key: KC_DB_URL_HOST
+        value: ${keycloak-db.HOSTNAME}
+      - key: KC_DB_URL_DATABASE
+        value: ${keycloak-db.DATABASE}
+      - key: KC_DB_USERNAME
+        value: ${keycloak-db.USERNAME}
+      - key: KC_DB_PASSWORD
+        value: ${keycloak-db.PASSWORD}
+        type: SECRET
+
+      # Keycloak Configuration
+      - key: KC_HOSTNAME
+        value: sso.insightpulseai.net
+      - key: KC_HTTP_ENABLED
+        value: "true"
+      - key: KC_PROXY
+        value: edge
+      - key: KC_HEALTH_ENABLED
+        value: "true"
+
+      # Admin Credentials
+      - key: KEYCLOAK_ADMIN
+        value: admin
+      - key: KEYCLOAK_ADMIN_PASSWORD
+        type: SECRET
+        value: ${KEYCLOAK_ADMIN_PASSWORD}
+
+      # Production Mode
+      - key: KC_LOG_LEVEL
+        value: INFO
+
+    # Health Check
+    health_check:
+      http_path: /health/ready
+      initial_delay_seconds: 180
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+
+    # Resources
+    instance_count: 1
+    instance_size_slug: professional-xs
+
+    # HTTP Configuration
+    http_port: 8080
+
+    # Domain
+    routes:
+      - path: /
+
+# Domain Configuration
+domains:
+  - domain: sso.insightpulseai.net
+    type: PRIMARY

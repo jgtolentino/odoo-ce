@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Main Superset Welcome/Home Page -->
+    <record id="action_superset_home" model="ir.actions.act_url">
+        <field name="name">Superset Home</field>
+        <field name="url">https://superset.insightpulseai.net/superset/welcome/</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Finance Dashboards -->
+    <record id="action_superset_finance" model="ir.actions.act_url">
+        <field name="name">Finance Dashboards</field>
+        <field name="url">https://superset.insightpulseai.net/superset/welcome/</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- PPM Dashboards -->
+    <record id="action_superset_ppm" model="ir.actions.act_url">
+        <field name="name">PPM Dashboards</field>
+        <field name="url">https://superset.insightpulseai.net/superset/welcome/</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Expense Analytics -->
+    <record id="action_superset_expenses" model="ir.actions.act_url">
+        <field name="name">Expense Analytics</field>
+        <field name="url">https://superset.insightpulseai.net/superset/welcome/</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

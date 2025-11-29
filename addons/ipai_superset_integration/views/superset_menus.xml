@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Root Analytics Menu -->
+    <menuitem
+        id="menu_superset_root"
+        name="Analytics"
+        sequence="5"
+        web_icon="ipai_superset_integration,static/description/icon.png"
+    />
+
+    <!-- Superset Home -->
+    <menuitem
+        id="menu_superset_home"
+        name="Superset Home"
+        parent="menu_superset_root"
+        action="action_superset_home"
+        sequence="10"
+    />
+
+    <!-- Finance Dashboards -->
+    <menuitem
+        id="menu_superset_finance"
+        name="Finance Dashboards"
+        parent="menu_superset_root"
+        action="action_superset_finance"
+        sequence="20"
+    />
+
+    <!-- PPM Dashboards -->
+    <menuitem
+        id="menu_superset_ppm"
+        name="PPM Dashboards"
+        parent="menu_superset_root"
+        action="action_superset_ppm"
+        sequence="30"
+    />
+
+    <!-- Expense Analytics -->
+    <menuitem
+        id="menu_superset_expenses"
+        name="Expense Analytics"
+        parent="menu_superset_root"
+        action="action_superset_expenses"
+        sequence="40"
+    />
+</odoo>
