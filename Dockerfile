@@ -2,7 +2,7 @@
 FROM python:3.11-slim AS build
 
 # Build arguments for versioning and metadata
-ARG ODOO_VERSION=19.0
+ARG ODOO_VERSION=18.0
 ARG INCLUDE_OCA_MODULES=true
 ARG BUILD_DATE
 ARG VCS_REF
@@ -54,14 +54,14 @@ RUN pip wheel --wheel-dir /wheels \
     pydantic==2.5.3 \
     python-dotenv==1.0.0
 
-# Clone OCA modules if enabled
+# Clone OCA modules if enabled (Odoo 18.0 branches)
 RUN if [ "$INCLUDE_OCA_MODULES" = "true" ]; then \
         mkdir -p /oca-modules && \
         cd /oca-modules && \
-        git clone -b ${ODOO_VERSION} --depth 1 https://github.com/OCA/server-auth.git oca-server-auth && \
-        git clone -b ${ODOO_VERSION} --depth 1 https://github.com/OCA/server-tools.git oca-server-tools && \
-        git clone -b ${ODOO_VERSION} --depth 1 https://github.com/OCA/account-financial-reporting.git oca-account-financial && \
-        git clone -b ${ODOO_VERSION} --depth 1 https://github.com/OCA/account-financial-tools.git oca-account-tools && \
+        git clone -b 18.0 --depth 1 https://github.com/OCA/server-auth.git oca-server-auth && \
+        git clone -b 18.0 --depth 1 https://github.com/OCA/server-tools.git oca-server-tools && \
+        git clone -b 18.0 --depth 1 https://github.com/OCA/account-financial-reporting.git oca-account-financial && \
+        git clone -b 18.0 --depth 1 https://github.com/OCA/account-financial-tools.git oca-account-tools && \
         git clone -b 16.0 --depth 1 https://github.com/OCA/rest-framework.git oca-rest-framework; \
     fi
 
@@ -72,16 +72,16 @@ COPY . /src
 FROM python:3.11-slim AS runtime
 
 # Metadata labels
-LABEL org.opencontainers.image.title="InsightPulse AI - Odoo 19 CE + OCA"
-LABEL org.opencontainers.image.description="Production Odoo 19 with OCA modules, PaddleOCR, and Finance SSC automation"
+LABEL org.opencontainers.image.title="InsightPulse AI - Odoo 18 CE + OCA"
+LABEL org.opencontainers.image.description="Production Odoo 18 CE with OCA modules, PaddleOCR, and Finance SSC automation"
 LABEL org.opencontainers.image.vendor="InsightPulse AI"
 LABEL org.opencontainers.image.authors="InsightPulse Team"
-LABEL org.opencontainers.image.source="https://github.com/jgtolentino/insightpulse-odoo"
+LABEL org.opencontainers.image.source="https://github.com/jgtolentino/odoo-ce"
 LABEL org.opencontainers.image.version="${ODOO_VERSION}"
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 LABEL org.opencontainers.image.revision="${VCS_REF}"
 
-ARG ODOO_VERSION=19.0
+ARG ODOO_VERSION=18.0
 ARG INCLUDE_OCA_MODULES=true
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -110,32 +110,32 @@ RUN useradd -m -d /var/lib/odoo -U -r -s /usr/sbin/nologin odoo && \
 COPY --from=build /wheels /wheels
 RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 
-# Install Odoo from source (19.0 branch - not yet on PyPI)
+# Install Odoo from source (18.0 stable branch)
 # Installing after our wheels ensures psycopg2-binary is already present
 RUN apt-get update && apt-get install -y --no-install-recommends git && \
-    git clone --depth 1 --branch 19.0 https://github.com/odoo/odoo.git /opt/odoo-src && \
+    git clone --depth 1 --branch 18.0 https://github.com/odoo/odoo.git /opt/odoo-src && \
     cd /opt/odoo-src && \
     pip install --no-cache-dir -e . && \
     rm -rf /var/lib/apt/lists/*
 
-# Clone OCA modules (production-ready versions)
+# Clone OCA modules (18.0 production-ready versions)
 RUN mkdir -p /mnt/extra-addons/oca && \
     cd /mnt/extra-addons/oca && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/server-auth.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/server-tools.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/server-backend.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/account-financial-reporting.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/account-financial-tools.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/account-invoicing.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/account-payment.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/account-reconcile.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/bank-payment.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/purchase-workflow.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/partner-contact.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/hr.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/queue.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/reporting-engine.git && \
-    git clone -b 19.0 --depth 1 https://github.com/OCA/web.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/server-auth.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/server-tools.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/server-backend.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/account-financial-reporting.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/account-financial-tools.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/account-invoicing.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/account-payment.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/account-reconcile.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/bank-payment.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/purchase-workflow.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/partner-contact.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/hr.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/queue.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/reporting-engine.git && \
+    git clone -b 18.0 --depth 1 https://github.com/OCA/web.git && \
     git clone -b 16.0 --depth 1 https://github.com/OCA/rest-framework.git && \
     chown -R odoo:odoo /mnt/extra-addons/oca
 
