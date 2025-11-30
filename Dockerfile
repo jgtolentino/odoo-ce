@@ -137,6 +137,9 @@ RUN chmod +x /entrypoint.sh && \
     mkdir -p /etc/odoo /var/lib/odoo /var/log/odoo && \
     chown -R odoo:odoo /etc/odoo /var/lib/odoo /var/log/odoo
 
+# Copy Odoo configuration file
+COPY --from=build /src/config/odoo.conf /etc/odoo/odoo.conf
+
 # Healthcheck endpoint (Odoo supports /web/health from 16+)
 HEALTHCHECK --interval=30s --timeout=5s --retries=10 \
   CMD curl -fsS http://localhost:8069/web/health || exit 1
