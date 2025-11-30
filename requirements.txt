@@ -15,6 +15,7 @@ openupgradelib>=3.3.0  # OCA migration support library
 openpyxl>=3.1.0  # XLSX reporting and Excel file handling
 python-ldap>=3.4.0  # LDAP authentication support
 xlsxwriter>=3.1.0  # Advanced XLSX export for financial reports
+lxml_html_clean>=0.1.0  # Required by Odoo 18 lxml.html.clean module (split from lxml)
 
 # Optional dependencies for development
 # Uncomment if needed for development/testing
