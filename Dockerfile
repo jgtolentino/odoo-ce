@@ -85,10 +85,14 @@ RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 
 # Install Odoo from source (18.0 stable branch)
 # Installing after our wheels ensures psycopg2-binary is already present
-RUN apt-get update && apt-get install -y --no-install-recommends git && \
+# Temporarily install build-essential for compiling native extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git build-essential gcc && \
     git clone --depth 1 --branch 18.0 https://github.com/odoo/odoo.git /opt/odoo-src && \
     cd /opt/odoo-src && \
     pip install --no-cache-dir -e . && \
+    apt-get purge -y build-essential gcc && \
+    apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Clone OCA modules (18.0 production-ready versions)
@@ -116,9 +120,6 @@ RUN mkdir -p /mnt/extra-addons/oca && \
 WORKDIR /opt/odoo
 COPY --chown=odoo:odoo --from=build /src/addons /mnt/extra-addons
 COPY --chown=odoo:odoo --from=build /src/scripts /opt/odoo/scripts
-
-# Copy OCA modules if they were built
-COPY --chown=odoo:odoo --from=build /oca-modules/ /mnt/oca-addons/ || true
 
 # Copy and setup entrypoint (must be before USER odoo)
 COPY --from=build /src/scripts/entrypoint-oca.sh /entrypoint.sh
