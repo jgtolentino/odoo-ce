@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2024 InsightPulseAI
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
+-->
+<odoo>
+    <!-- Project Briefs root menu under Project -->
+    <menuitem
+        id="menu_project_brief_root"
+        name="Project Briefs"
+        parent="project.menu_main_pm"
+        sequence="60"
+    />
+
+    <!-- Briefs list menu item -->
+    <menuitem
+        id="menu_project_brief"
+        name="Briefs"
+        parent="menu_project_brief_root"
+        action="action_project_brief"
+        sequence="10"
+    />
+</odoo>

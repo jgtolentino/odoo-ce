@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2024 InsightPulseAI
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
+-->
+<odoo noupdate="1">
+    <!-- Demo Project Brief 1 -->
+    <record id="project_brief_demo_1" model="project.brief">
+        <field name="name">Launch Campaign - Tindahan 2.0</field>
+        <field name="project_id" ref="project.project_project_data"/>
+        <field name="client_id" ref="base.res_partner_1"/>
+        <field name="brand_name">Tindahan 2.0</field>
+        <field name="objective">
+Raise awareness of sari-sari store upgrade program among urban millennials.
+Drive consideration and trial of new store features.
+        </field>
+        <field name="target_audience">
+Urban millennials, primary household decision makers, age 25-35.
+Tech-savvy, convenience-oriented, price-conscious.
+        </field>
+        <field name="key_message">
+Tindahan 2.0: from tindahan to neighborhood command center.
+        </field>
+        <field name="deliverables">
+- TVC (30s, 15s cutdowns)
+- Digital film (60s hero)
+- OOH (billboards, transit)
+- Social content package
+- In-store POS materials
+        </field>
+        <field name="budget">500000</field>
+        <field name="deadline" eval="(datetime.date.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="status">draft</field>
+    </record>
+
+    <!-- Demo Project Brief 2 -->
+    <record id="project_brief_demo_2" model="project.brief">
+        <field name="name">Brand Refresh - InsightPulse</field>
+        <field name="project_id" ref="project.project_project_data"/>
+        <field name="client_id" ref="base.res_partner_2"/>
+        <field name="brand_name">InsightPulse AI</field>
+        <field name="objective">
+Refresh brand identity to better reflect AI capabilities and enterprise focus.
+Increase brand recall among B2B decision makers.
+        </field>
+        <field name="target_audience">
+C-level executives, IT directors, and operations managers
+in mid-to-large enterprises across APAC region.
+        </field>
+        <field name="key_message">
+InsightPulse: Intelligence that works.
+        </field>
+        <field name="deliverables">
+- Brand guidelines v2.0
+- Logo refresh
+- Corporate deck template
+- Website redesign specs
+- Email signature templates
+        </field>
+        <field name="budget">250000</field>
+        <field name="deadline" eval="(datetime.date.today() + relativedelta(months=2)).strftime('%Y-%m-%d')"/>
+        <field name="status">in_review</field>
+    </record>
+</odoo>

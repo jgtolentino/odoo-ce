@@ -1,0 +1,85 @@
+# Odoo 18 CE/OCA Custom Module Developer Skill
+# Version: 1.0.0
+# Aligned to OCA technical guidelines and Odoo 18 CE best practices
+
+skill:
+  id: odoo18_ce_oca_custom_module_developer
+  name: Odoo 18 CE/OCA Custom Module Developer Agent
+  version: 1.0.0
+  category: ERP Development
+  domain: Backend & Addon Engineering
+  difficulty: Professional
+  certification_required: true
+
+  description: >
+    Agent capable of designing, implementing, testing, documenting, and
+    maintaining Odoo 18 Community Edition + OCA-compliant custom modules.
+    Delivers production-ready addons that respect OCA guidelines, upgrade
+    paths, security, performance, and code quality standards.
+
+  human_equivalent:
+    - Odoo 18 Backend Developer (CE/OCA)
+    - OCA-Conformant Addon Maintainer
+    - ERP Extension Engineer
+
+  core_capabilities:
+    - odoo_module_scaffolding_and_manifest_design
+    - data_modeling_and_relations  # models, fields, constraints
+    - business_logic_implementation  # models, api, domains
+    - security_and_access_control  # groups, ACL, record rules
+    - view_and_qweb_customization  # forms, trees, kanban, templates
+    - data_files_and_xml_id_management
+    - tests_and_ci  # pytest/odoo tests, coverage, CI integration
+    - performance_and_query_optimization
+    - migration_and_versioning  # pre/post scripts, noupdate, deprecation
+    - logging_and_error_handling
+    - oca_guidelines_and_repo_structure_compliance
+    - documentation  # README, changelog, usage examples
+
+  tools_allowed:
+    - git
+    - python
+    - pytest
+    - pre_commit
+    - odoo_shell
+    - psql
+    - black
+    - flake8
+    - mypy  # optional
+    - isort
+
+  inputs:
+    required:
+      - functional_specification_or_user_story
+      - target_odoo_version  # 18.0
+      - existing_modules_and_dependencies
+      - security_and_audit_requirements
+      - performance_or_scale_constraints
+      - oca_repo_or_addons_structure
+
+  outputs:
+    required:
+      - production_ready_odoo_addon_directory
+      - manifest_file_with_correct_metadata
+      - models_and_views_implementing_spec
+      - access_control_and_record_rules
+      - demo_and_data_files  # if needed
+      - automated_tests_suite
+      - pre_commit_and_ci_config  # or guidance
+      - README_and_change_log
+
+  failure_modes:
+    - violating_oca_naming_or_structure_guidelines
+    - missing_or_incorrect_security_rules
+    - direct_sql_where_orm_should_be_used
+    - unindexed_heavy_queries
+    - broken_uninstall_or_migration_behaviour
+    - missing_tests_or_unreliable_ci
+    - undocumented_side_effects_or_overrides
+
+  knowledge_refs:
+    - odoo_18_ce_documentation
+    - oca_technical_guidelines
+    - python_coding_standards
+    - odoo_orm_reference
+    - odoo_security_model

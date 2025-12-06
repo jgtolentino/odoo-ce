@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2024 InsightPulseAI
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
+-->
+<odoo>
+    <!-- Tree View -->
+    <record id="view_project_brief_tree" model="ir.ui.view">
+        <field name="name">project.brief.tree</field>
+        <field name="model">project.brief</field>
+        <field name="arch" type="xml">
+            <tree string="Project Briefs" decoration-muted="status == 'cancelled'" decoration-info="status == 'draft'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="client_id"/>
+                <field name="brand_name" optional="show"/>
+                <field name="status" widget="badge" decoration-success="status == 'approved'" decoration-warning="status == 'in_review'" decoration-danger="status == 'cancelled'"/>
+                <field name="deadline"/>
+                <field name="budget" sum="Total Budget"/>
+                <field name="is_locked" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_project_brief_form" model="ir.ui.view">
+        <field name="name">project.brief.form</field>
+        <field name="model">project.brief</field>
+        <field name="arch" type="xml">
+            <form string="Project Brief">
+                <header>
+                    <button name="action_mark_in_review"
+                            type="object"
+                            string="Send for Review"
+                            invisible="status not in ('draft', 'on_hold')"
+                            class="btn-primary"/>
+                    <button name="action_approve"
+                            type="object"
+                            string="Approve"
+                            invisible="status not in ('in_review', 'on_hold')"
+                            class="btn-primary"/>
+                    <button name="action_hold"
+                            type="object"
+                            string="On Hold"
+                            invisible="status in ('on_hold', 'cancelled')"
+                            class="btn-secondary"/>
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            invisible="status in ('approved', 'cancelled')"
+                            class="btn-secondary"/>
+                    <button name="action_unlock"
+                            type="object"
+                            string="Unlock"
+                            invisible="not is_locked"
+                            groups="base.group_system"
+                            class="btn-warning"/>
+                    <button name="action_reset_to_draft"
+                            type="object"
+                            string="Reset to Draft"
+                            invisible="status not in ('cancelled', 'on_hold')"
+                            class="btn-secondary"/>
+                    <field name="status"
+                           widget="statusbar"
+                           statusbar_visible="draft,in_review,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                                type="object"
+                                name="action_view_project"
+                                icon="fa-tasks"
+                                invisible="not project_id">
+                            <field name="project_id" widget="statinfo" string="Project"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon"
+                            title="Locked"
+                            bg_color="text-bg-danger"
+                            invisible="not is_locked"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="Brief Title..."
+                                   readonly="is_locked"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" readonly="is_locked"/>
+                            <field name="client_id" readonly="is_locked"/>
+                            <field name="brand_name" readonly="is_locked"/>
+                        </group>
+                        <group>
+                            <field name="budget" readonly="is_locked"/>
+                            <field name="deadline" readonly="is_locked"/>
+                            <field name="days_until_deadline"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"
+                                   readonly="is_locked"/>
+                            <field name="is_locked" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Objective" name="objective">
+                            <group>
+                                <field name="objective"
+                                       placeholder="Business/communication objective..."
+                                       readonly="is_locked"/>
+                                <field name="key_message"
+                                       placeholder="Core message to convey..."
+                                       readonly="is_locked"/>
+                            </group>
+                        </page>
+                        <page string="Audience &amp; Deliverables" name="audience_deliverables">
+                            <group>
+                                <field name="target_audience"
+                                       placeholder="Who is this for?"
+                                       readonly="is_locked"/>
+                                <field name="deliverables"
+                                       placeholder="What will be produced?"
+                                       readonly="is_locked"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_project_brief_search" model="ir.ui.view">
+        <field name="name">project.brief.search</field>
+        <field name="model">project.brief</field>
+        <field name="arch" type="xml">
+            <search string="Project Briefs">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="client_id"/>
+                <field name="brand_name"/>
+                <separator/>
+                <filter string="Draft" name="filter_draft" domain="[('status','=','draft')]"/>
+                <filter string="In Review" name="filter_in_review" domain="[('status','=','in_review')]"/>
+                <filter string="Approved" name="filter_approved" domain="[('status','=','approved')]"/>
+                <filter string="On Hold" name="filter_on_hold" domain="[('status','=','on_hold')]"/>
+                <filter string="Cancelled" name="filter_cancelled" domain="[('status','=','cancelled')]"/>
+                <separator/>
+                <filter string="Locked" name="filter_locked" domain="[('is_locked','=',True)]"/>
+                <filter string="Unlocked" name="filter_unlocked" domain="[('is_locked','=',False)]"/>
+                <separator/>
+                <filter string="Overdue" name="filter_overdue" domain="[('deadline','&lt;', context_today().strftime('%Y-%m-%d')), ('status','not in',('approved','cancelled'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Deadline Month" name="group_deadline" context="{'group_by': 'deadline:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_project_brief_kanban" model="ir.ui.view">
+        <field name="name">project.brief.kanban</field>
+        <field name="model">project.brief</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="client_id"/>
+                <field name="status"/>
+                <field name="is_locked"/>
+                <field name="deadline"/>
+                <field name="budget"/>
+                <field name="company_currency_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <t t-if="record.is_locked.raw_value">
+                                            <i class="fa fa-lock text-danger" title="Locked"/>
+                                        </t>
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="client_id"/>
+                                <br/>
+                                <field name="project_id"/>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="budget" widget="monetary"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="deadline"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_project_brief" model="ir.actions.act_window">
+        <field name="name">Project Briefs</field>
+        <field name="res_model">project.brief</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_project_brief_search"/>
+        <field name="context">{'search_default_filter_draft': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first project brief
+            </p>
+            <p>
+                Use project briefs to capture structured inputs for creative and
+                strategic work before production begins.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,114 @@
+# Odoo 18 CE/OCA Custom Module Developer Certification
+# Version: 1.0.0
+# Project-based certification with rubric-driven evaluation
+
+certification:
+  id: odoo18_ce_oca_custom_dev_cert
+  name: Odoo 18 CE/OCA Custom Module Developer
+  level: Professional
+  validity_period_days: 365
+  renewal_required: true
+
+  prerequisite_skills:
+    - basic_python
+    - basic_odoo_framework_knowledge
+    - odoo18_ce_oca_functional_consultant
+
+  certification_domains:
+    - odoo_backend_development
+    - security
+    - testing_and_ci
+    - performance
+    - maintainability
+
+certification_exam:
+  format: project_based_with_rubric
+  duration_limit_minutes: 240
+  attempts_allowed: 3
+  passing_score_percent: 92
+
+  stages:
+    - stage: environment_and_scaffolding
+      label: Dev Environment & Module Skeleton
+      pass_conditions:
+        - Addon scaffolding follows OCA naming and folder conventions
+        - __manifest__.py includes correct version, depends, license, and data keys
+        - Module installs cleanly on a fresh Odoo 18 CE database
+
+    - stage: reference_module_review
+      label: Reference Module Quality Review (ipai_project_brief)
+      reference_module_path: addons/ipai_project_brief
+      pass_conditions:
+        - Reference module directory contains expected structure:
+            "__init__.py", "__manifest__.py", "models/", "views/", "security/", "tests/", "data/" (where applicable)
+        - __manifest__.py is coherent with the module's purpose
+            (category, depends, version, data files) and uses a permissive license
+        - Models, views, security, and tests in the reference module align with OCA-style patterns
+        - Tests pass successfully in the target Odoo 18 CE environment
+        - No obvious security, performance, or upgrade red flags in the reference module
+
+    - stage: data_model_and_business_logic
+      label: Data Model & Logic
+      pass_conditions:
+        - Models and fields correctly implement the provided functional spec
+        - Constraints and onchanges avoid inconsistent data
+        - ORM usage is idiomatic; no unsafe direct SQL without strong justification
+        - Code passes black/flake8 (or equivalent) and basic type checks where used
+
+    - stage: security_and_access_control
+      label: Security & Access Control
+      pass_conditions:
+        - Groups, ACLs, and record rules are defined and coherent
+        - No privilege escalation or obvious injection vectors
+        - Demo scenarios show correct read/write restrictions per role
+
+    - stage: views_and_ui
+      label: Views & UI Integration
+      pass_conditions:
+        - Views (form, tree, search, kanban, QWeb where applicable) are well-structured
+        - No overriding of core views without good reason and proper inheritance
+        - UX follows Odoo conventions; fields are logically grouped and labeled
+
+    - stage: tests_and_ci_integration
+      label: Tests & CI
+      pass_conditions:
+        - Unit/integration tests exist and cover main flows (create/update/delete, edge cases)
+        - Tests run via standard Odoo/pytest mechanisms
+        - Pre-commit or CI pipeline config is provided or described
+        - Known bugs and limitations are captured in tests or documented
+
+    - stage: performance_and_migration
+      label: Performance & Migration
+      pass_conditions:
+        - No obviously N+1-heavy loops over large recordsets without batching/compute
+        - Migrations from previous version (if applicable) are considered/documented
+        - noupdate data is used appropriately
+        - Uninstall does not leave the database in a broken state
+
+    - stage: documentation_and_compliance
+      label: Documentation & OCA Compliance
+      pass_conditions:
+        - README describes purpose, usage, dependencies, and limitations
+        - Module follows OCA guidelines for metadata, license, repo structure (as applicable)
+        - Changelog or version notes exist for future maintenance
+        - Any deviations from OCA patterns are justified
+
+  scoring_model:
+    environment_and_scaffolding: 10
+    reference_module_review: 15
+    data_model_and_business_logic: 25
+    security_and_access_control: 20
+    views_and_ui: 10
+    tests_and_ci_integration: 10
+    performance_and_migration: 5
+    documentation_and_compliance: 5
+
+  passing_rule:
+    minimum_total_score: 92
+    no_critical_failures_allowed: true
+
+  critical_failures:
+    - Security vulnerability (injection, privilege escalation)
+    - Module fails to install or uninstall cleanly
+    - No tests provided at all
+    - License incompatible with OCA/LGPL-3 or AGPL-3
