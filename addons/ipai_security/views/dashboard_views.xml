@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Framework Views -->
+    <record id="view_security_framework_tree" model="ir.ui.view">
+        <field name="name">security.framework.tree</field>
+        <field name="model">security.framework</field>
+        <field name="arch" type="xml">
+            <tree string="Compliance Frameworks">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category" widget="badge"/>
+                <field name="version"/>
+                <field name="in_scope" widget="boolean"/>
+                <field name="control_count"/>
+                <field name="coverage_percentage" widget="progressbar"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_security_framework_form" model="ir.ui.view">
+        <field name="name">security.framework.form</field>
+        <field name="model">security.framework</field>
+        <field name="arch" type="xml">
+            <form string="Compliance Framework">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="version"/>
+                            <field name="issuing_body"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="in_scope"/>
+                            <field name="control_count"/>
+                            <field name="coverage_percentage" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Controls">
+                            <field name="control_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_security_framework" model="ir.actions.act_window">
+        <field name="name">Frameworks</field>
+        <field name="res_model">security.framework</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Data Category Views -->
+    <record id="view_security_data_category_tree" model="ir.ui.view">
+        <field name="name">security.data.category.tree</field>
+        <field name="model">security.data.category</field>
+        <field name="arch" type="xml">
+            <tree string="Data Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="complete_name"/>
+                <field name="dpa_classification" widget="badge"/>
+                <field name="sensitivity_level" widget="badge"/>
+                <field name="requires_consent" widget="boolean"/>
+                <field name="retention_period"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_security_data_category_form" model="ir.ui.view">
+        <field name="name">security.data.category.form</field>
+        <field name="model">security.data.category</field>
+        <field name="arch" type="xml">
+            <form string="Data Category">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                            <field name="dpa_classification"/>
+                            <field name="sensitivity_level"/>
+                        </group>
+                        <group>
+                            <field name="requires_consent"/>
+                            <field name="retention_period"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                            <field name="examples" placeholder="Examples of data in this category..."/>
+                        </page>
+                        <page string="Subcategories">
+                            <field name="child_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="dpa_classification"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_security_data_category" model="ir.actions.act_window">
+        <field name="name">Data Categories</field>
+        <field name="res_model">security.data.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Lawful Basis Views -->
+    <record id="view_security_lawful_basis_tree" model="ir.ui.view">
+        <field name="name">security.lawful.basis.tree</field>
+        <field name="model">security.lawful.basis</field>
+        <field name="arch" type="xml">
+            <tree string="Lawful Bases">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="dpa_reference"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_security_lawful_basis_form" model="ir.ui.view">
+        <field name="name">security.lawful.basis.form</field>
+        <field name="model">security.lawful.basis</field>
+        <field name="arch" type="xml">
+            <form string="Lawful Basis">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="dpa_reference"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <field name="description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_security_lawful_basis" model="ir.actions.act_window">
+        <field name="name">Lawful Bases</field>
+        <field name="res_model">security.lawful.basis</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Security KPI Views -->
+    <record id="view_security_kpi_tree" model="ir.ui.view">
+        <field name="name">security.kpi.tree</field>
+        <field name="model">security.kpi</field>
+        <field name="arch" type="xml">
+            <tree string="KPI Snapshots">
+                <field name="snapshot_date"/>
+                <field name="health_score" widget="progressbar"/>
+                <field name="open_risks"/>
+                <field name="critical_risks"/>
+                <field name="incidents_30d"/>
+                <field name="implemented_controls"/>
+                <field name="dpa_coverage" widget="progressbar"/>
+                <field name="iso_27001_coverage" widget="progressbar"/>
+                <field name="soc2_coverage" widget="progressbar"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_security_kpi_form" model="ir.ui.view">
+        <field name="name">security.kpi.form</field>
+        <field name="model">security.kpi</field>
+        <field name="arch" type="xml">
+            <form string="KPI Snapshot">
+                <sheet>
+                    <group>
+                        <field name="snapshot_date"/>
+                        <field name="health_score" widget="progressbar"/>
+                    </group>
+                    <notebook>
+                        <page string="Risks">
+                            <group>
+                                <field name="total_risks"/>
+                                <field name="open_risks"/>
+                                <field name="critical_risks"/>
+                                <field name="high_risks"/>
+                                <field name="mitigated_risks"/>
+                            </group>
+                        </page>
+                        <page string="Incidents">
+                            <group>
+                                <field name="total_incidents"/>
+                                <field name="incidents_30d"/>
+                                <field name="open_incidents"/>
+                                <field name="critical_incidents"/>
+                            </group>
+                        </page>
+                        <page string="Assets &amp; Controls">
+                            <group>
+                                <field name="total_assets"/>
+                                <field name="assets_in_scope"/>
+                                <field name="assets_with_pii"/>
+                            </group>
+                            <group>
+                                <field name="total_controls"/>
+                                <field name="implemented_controls"/>
+                                <field name="tested_controls"/>
+                            </group>
+                        </page>
+                        <page string="Framework Coverage">
+                            <group>
+                                <field name="dpa_coverage" widget="progressbar"/>
+                                <field name="iso_27001_coverage" widget="progressbar"/>
+                                <field name="soc2_coverage" widget="progressbar"/>
+                                <field name="ai_gov_coverage" widget="progressbar"/>
+                            </group>
+                        </page>
+                        <page string="AI Systems">
+                            <group>
+                                <field name="total_ai_systems"/>
+                                <field name="evaluated_ai_systems"/>
+                                <field name="high_risk_ai_systems"/>
+                            </group>
+                        </page>
+                        <page string="Data Flows &amp; Audits">
+                            <group>
+                                <field name="total_data_flows"/>
+                                <field name="compliant_data_flows"/>
+                                <field name="data_flows_with_gaps"/>
+                            </group>
+                            <group>
+                                <field name="completed_audits"/>
+                                <field name="pending_findings"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_security_kpi" model="ir.actions.act_window">
+        <field name="name">KPI History</field>
+        <field name="res_model">security.kpi</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Security Dashboard Action -->
+    <record id="action_security_dashboard" model="ir.actions.act_window">
+        <field name="name">Security Overview</field>
+        <field name="res_model">security.kpi</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Security &amp; Compliance Dashboard
+            </p>
+            <p>
+                View KPI snapshots and track security posture over time.
+                Use the "Capture Snapshot" action to record current metrics.
+            </p>
+        </field>
+    </record>
+</odoo>

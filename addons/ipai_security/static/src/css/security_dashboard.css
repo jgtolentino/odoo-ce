@@ -1,0 +1,264 @@
+/**
+ * Security & Compliance Workbench - Dashboard Styles
+ * ==================================================
+ */
+
+/* Dashboard KPI Cards */
+.o_security_dashboard .o_kpi_card {
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.o_security_dashboard .o_kpi_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.o_security_dashboard .o_kpi_value {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.o_security_dashboard .o_kpi_label {
+    font-size: 0.875rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Health Score Display */
+.o_health_score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.o_health_score.score-excellent {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.o_health_score.score-good {
+    background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+    color: white;
+}
+
+.o_health_score.score-fair {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+    color: white;
+}
+
+.o_health_score.score-poor {
+    background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%);
+    color: white;
+}
+
+.o_health_score.score-critical {
+    background: linear-gradient(135deg, #dc3545 0%, #6f42c1 100%);
+    color: white;
+}
+
+/* Risk Level Badges */
+.o_risk_badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.o_risk_badge.risk-critical {
+    background-color: #dc3545;
+    color: white;
+}
+
+.o_risk_badge.risk-high {
+    background-color: #fd7e14;
+    color: white;
+}
+
+.o_risk_badge.risk-medium {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.o_risk_badge.risk-low {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Framework Coverage Bars */
+.o_framework_coverage {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.o_framework_coverage .o_framework_name {
+    flex: 0 0 120px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.o_framework_coverage .o_coverage_bar {
+    flex: 1;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 1rem;
+}
+
+.o_framework_coverage .o_coverage_fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.o_framework_coverage .o_coverage_fill.coverage-high {
+    background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+}
+
+.o_framework_coverage .o_coverage_fill.coverage-medium {
+    background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+}
+
+.o_framework_coverage .o_coverage_fill.coverage-low {
+    background: linear-gradient(90deg, #dc3545 0%, #fd7e14 100%);
+}
+
+.o_framework_coverage .o_coverage_value {
+    flex: 0 0 50px;
+    text-align: right;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* Incident Timeline */
+.o_incident_timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.o_incident_timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #dee2e6;
+}
+
+.o_incident_timeline .o_timeline_item {
+    position: relative;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.o_incident_timeline .o_timeline_item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #6c757d;
+}
+
+.o_incident_timeline .o_timeline_item.severity-critical::before {
+    background-color: #dc3545;
+}
+
+.o_incident_timeline .o_timeline_item.severity-high::before {
+    background-color: #fd7e14;
+}
+
+.o_incident_timeline .o_timeline_item.severity-medium::before {
+    background-color: #ffc107;
+}
+
+/* AI System Cards */
+.o_ai_system_card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    transition: border-color 0.2s ease;
+}
+
+.o_ai_system_card:hover {
+    border-color: #007bff;
+}
+
+.o_ai_system_card .o_ai_system_name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.o_ai_system_card .o_ai_system_provider {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+/* Compliance Gap Warning */
+.o_compliance_gap_warning {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.o_compliance_gap_warning .o_gap_icon {
+    flex: 0 0 24px;
+    color: #856404;
+}
+
+.o_compliance_gap_warning .o_gap_message {
+    flex: 1;
+    font-size: 0.875rem;
+    color: #856404;
+}
+
+/* Data Flow Visualization Placeholder */
+.o_data_flow_graph {
+    min-height: 300px;
+    background-color: #f8f9fa;
+    border: 1px dashed #dee2e6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .o_security_dashboard .o_kpi_value {
+        font-size: 1.75rem;
+    }
+
+    .o_health_score {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+
+    .o_framework_coverage .o_framework_name {
+        flex: 0 0 80px;
+        font-size: 0.75rem;
+    }
+}

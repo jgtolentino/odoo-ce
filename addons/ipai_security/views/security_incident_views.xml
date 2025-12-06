@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Incident Tree View -->
+    <record id="view_security_incident_tree" model="ir.ui.view">
+        <field name="name">security.incident.tree</field>
+        <field name="model">security.incident</field>
+        <field name="arch" type="xml">
+            <tree string="Security Incidents"
+                  decoration-danger="severity == '4_critical'"
+                  decoration-warning="severity == '3_high'"
+                  decoration-muted="status == 'closed'">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="incident_type" widget="badge"/>
+                <field name="severity" widget="badge"
+                       decoration-danger="severity == '4_critical'"
+                       decoration-warning="severity == '3_high'"/>
+                <field name="priority" widget="badge"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'closed'"
+                       decoration-info="status == 'recovering'"/>
+                <field name="detected_date"/>
+                <field name="pii_involved" widget="boolean"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Security Incident Form View -->
+    <record id="view_security_incident_form" model="ir.ui.view">
+        <field name="name">security.incident.form</field>
+        <field name="model">security.incident</field>
+        <field name="arch" type="xml">
+            <form string="Security Incident">
+                <header>
+                    <button name="action_investigate" type="object"
+                            string="Investigate" class="oe_highlight"
+                            invisible="status != 'detected'"/>
+                    <button name="action_contain" type="object"
+                            string="Contain"
+                            invisible="status not in ('detected', 'investigating')"/>
+                    <button name="action_eradicate" type="object"
+                            string="Eradicate"
+                            invisible="status != 'contained'"/>
+                    <button name="action_recover" type="object"
+                            string="Recover"
+                            invisible="status != 'eradicated'"/>
+                    <button name="action_close" type="object"
+                            string="Close Incident" class="oe_highlight"
+                            invisible="status in ('closed', 'detected')"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="detected,investigating,contained,eradicated,recovering,closed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Critical"
+                            invisible="severity != '4_critical'"
+                            bg_color="text-bg-danger"/>
+                    <widget name="web_ribbon" title="PII Involved"
+                            invisible="not pii_involved"
+                            bg_color="text-bg-warning"/>
+                    <div class="oe_title">
+                        <label for="reference"/>
+                        <h3><field name="reference" readonly="1"/></h3>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Incident Title"/></h1>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="incident_type"/>
+                            <field name="severity"/>
+                            <field name="priority"/>
+                            <field name="is_ai_related"/>
+                        </group>
+                        <group string="Timeline">
+                            <field name="detected_date"/>
+                            <field name="reported_date"/>
+                            <field name="contained_date"/>
+                            <field name="resolved_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Impact">
+                            <field name="pii_involved"/>
+                            <field name="records_affected"/>
+                            <field name="data_categories_impacted" widget="many2many_tags"/>
+                        </group>
+                        <group string="Ownership">
+                            <field name="reporter_id"/>
+                            <field name="owner_id"/>
+                            <field name="responder_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Incident description..."/>
+                        </page>
+                        <page string="Response" name="response">
+                            <group string="Immediate Response">
+                                <field name="response_actions" placeholder="Response actions..."/>
+                            </group>
+                            <group string="Containment">
+                                <field name="containment_actions" placeholder="Containment actions..."/>
+                            </group>
+                            <group string="Eradication">
+                                <field name="eradication_actions" placeholder="Eradication actions..."/>
+                            </group>
+                            <group string="Recovery">
+                                <field name="recovery_actions" placeholder="Recovery actions..."/>
+                            </group>
+                        </page>
+                        <page string="Root Cause &amp; Lessons" name="rootcause">
+                            <group>
+                                <field name="root_cause" placeholder="Root cause analysis..."/>
+                            </group>
+                            <group>
+                                <field name="lessons_learned" placeholder="Lessons learned..."/>
+                            </group>
+                            <group>
+                                <field name="preventive_measures" placeholder="Preventive measures..."/>
+                            </group>
+                        </page>
+                        <page string="Notifications" name="notifications">
+                            <group>
+                                <field name="requires_notification"/>
+                                <field name="notification_deadline"/>
+                            </group>
+                            <group>
+                                <field name="npc_notified"/>
+                                <field name="npc_notification_date"/>
+                                <field name="affected_parties_notified"/>
+                            </group>
+                        </page>
+                        <page string="Related" name="related">
+                            <group string="Affected Assets">
+                                <field name="asset_ids" widget="many2many_tags"/>
+                            </group>
+                            <group string="AI Systems Involved" invisible="not is_ai_related">
+                                <field name="ai_system_ids" widget="many2many_tags"/>
+                            </group>
+                            <group string="Related Risks">
+                                <field name="related_risk_ids" widget="many2many_tags"/>
+                            </group>
+                            <group string="Failed Controls">
+                                <field name="failed_control_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Incident Search View -->
+    <record id="view_security_incident_search" model="ir.ui.view">
+        <field name="name">security.incident.search</field>
+        <field name="model">security.incident</field>
+        <field name="arch" type="xml">
+            <search string="Search Incidents">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="owner_id"/>
+                <filter string="Open" name="open" domain="[('status', '!=', 'closed')]"/>
+                <filter string="Critical" name="critical" domain="[('severity', '=', '4_critical')]"/>
+                <filter string="High" name="high" domain="[('severity', '=', '3_high')]"/>
+                <filter string="PII Involved" name="pii" domain="[('pii_involved', '=', True)]"/>
+                <filter string="AI-Related" name="ai" domain="[('is_ai_related', '=', True)]"/>
+                <separator/>
+                <filter string="Last 30 Days" name="last_30"
+                        domain="[('detected_date', '>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Severity" name="group_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'incident_type'}"/>
+                    <filter string="Owner" name="group_owner" context="{'group_by': 'owner_id'}"/>
+                    <filter string="Detected Date" name="group_date" context="{'group_by': 'detected_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Incident Kanban View -->
+    <record id="view_security_incident_kanban" model="ir.ui.view">
+        <field name="name">security.incident.kanban</field>
+        <field name="model">security.incident</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="severity"/>
+                <field name="owner_id"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_title">
+                                    <strong><field name="reference"/></strong>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <span class="badge" t-attf-class="badge #{record.severity.raw_value == '4_critical' ? 'text-bg-danger' : record.severity.raw_value == '3_high' ? 'text-bg-warning' : 'text-bg-info'}">
+                                        <field name="severity"/>
+                                    </span>
+                                    <field name="owner_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Security Incident Action -->
+    <record id="action_security_incident" model="ir.actions.act_window">
+        <field name="name">Incidents</field>
+        <field name="res_model">security.incident</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_security_incident_search"/>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No incidents recorded
+            </p>
+            <p>
+                Track and manage security incidents with proper
+                response workflow and notification tracking.
+            </p>
+        </field>
+    </record>
+</odoo>

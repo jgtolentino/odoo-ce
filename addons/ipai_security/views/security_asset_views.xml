@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Asset Tree View -->
+    <record id="view_security_asset_tree" model="ir.ui.view">
+        <field name="name">security.asset.tree</field>
+        <field name="model">security.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Security Assets" decoration-danger="risk_level == 'critical'" decoration-warning="risk_level == 'high'">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="asset_type"/>
+                <field name="environment" widget="badge"/>
+                <field name="status" widget="badge"/>
+                <field name="risk_level" widget="badge"
+                       decoration-danger="risk_level == 'critical'"
+                       decoration-warning="risk_level == 'high'"
+                       decoration-success="risk_level == 'low'"/>
+                <field name="handles_pii" widget="boolean"/>
+                <field name="in_scope" widget="boolean"/>
+                <field name="risk_count"/>
+                <field name="control_count"/>
+                <field name="owner_user_id" widget="many2one_avatar_user"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Security Asset Form View -->
+    <record id="view_security_asset_form" model="ir.ui.view">
+        <field name="name">security.asset.form</field>
+        <field name="model">security.asset</field>
+        <field name="arch" type="xml">
+            <form string="Security Asset">
+                <header>
+                    <button name="action_view_risks" type="object"
+                            string="View Risks" class="oe_highlight"
+                            invisible="risk_count == 0"/>
+                    <button name="action_view_controls" type="object"
+                            string="View Controls"
+                            invisible="control_count == 0"/>
+                    <button name="action_schedule_audit" type="object"
+                            string="Schedule Audit"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="active,inactive,pending_review,decommissioned"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_risks" type="object"
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="risk_count == 0">
+                            <field name="risk_count" widget="statinfo" string="Risks"/>
+                        </button>
+                        <button name="action_view_controls" type="object"
+                                class="oe_stat_button" icon="fa-shield"
+                                invisible="control_count == 0">
+                            <field name="control_count" widget="statinfo" string="Controls"/>
+                        </button>
+                        <button name="action_view_incidents" type="object"
+                                class="oe_stat_button" icon="fa-bolt"
+                                invisible="incident_count == 0">
+                            <field name="incident_count" widget="statinfo" string="Incidents"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Asset Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="code"/>
+                            <field name="asset_type"/>
+                            <field name="environment"/>
+                            <field name="in_scope"/>
+                        </group>
+                        <group string="Risk Assessment">
+                            <field name="risk_level"/>
+                            <field name="risk_score" widget="progressbar"/>
+                            <field name="handles_pii"/>
+                            <field name="handles_sensitive"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Ownership">
+                            <field name="owner_user_id"/>
+                            <field name="owner_role"/>
+                            <field name="team"/>
+                        </group>
+                        <group string="External IDs">
+                            <field name="url" widget="url"/>
+                            <field name="do_droplet_id"/>
+                            <field name="supabase_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Detailed description..."/>
+                        </page>
+                        <page string="Data Categories" name="data">
+                            <field name="data_category_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Technical Details" name="technical">
+                            <group>
+                                <field name="tech_stack"/>
+                                <field name="version"/>
+                            </group>
+                            <field name="dependencies" placeholder="Dependencies and integrations..."/>
+                        </page>
+                        <page string="Audit History" name="audit">
+                            <group>
+                                <field name="last_audit_date"/>
+                                <field name="next_audit_date"/>
+                            </group>
+                        </page>
+                        <page string="Related" name="related">
+                            <group>
+                                <group string="Controls">
+                                    <field name="control_ids" widget="many2many_tags"/>
+                                </group>
+                                <group string="AI Systems">
+                                    <field name="ai_system_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Asset Search View -->
+    <record id="view_security_asset_search" model="ir.ui.view">
+        <field name="name">security.asset.search</field>
+        <field name="model">security.asset</field>
+        <field name="arch" type="xml">
+            <search string="Search Assets">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="owner_user_id"/>
+                <filter string="In Scope" name="in_scope" domain="[('in_scope', '=', True)]"/>
+                <filter string="Handles PII" name="handles_pii" domain="[('handles_pii', '=', True)]"/>
+                <filter string="Critical Risk" name="critical" domain="[('risk_level', '=', 'critical')]"/>
+                <filter string="High Risk" name="high_risk" domain="[('risk_level', '=', 'high')]"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('status', '=', 'active')]"/>
+                <filter string="Pending Review" name="pending" domain="[('status', '=', 'pending_review')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Type" name="group_type" context="{'group_by': 'asset_type'}"/>
+                    <filter string="Environment" name="group_env" context="{'group_by': 'environment'}"/>
+                    <filter string="Risk Level" name="group_risk" context="{'group_by': 'risk_level'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Owner" name="group_owner" context="{'group_by': 'owner_user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Asset Kanban View -->
+    <record id="view_security_asset_kanban" model="ir.ui.view">
+        <field name="name">security.asset.kanban</field>
+        <field name="model">security.asset</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="asset_type" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="asset_type"/>
+                <field name="risk_level"/>
+                <field name="handles_pii"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_title">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="asset_type"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <span class="badge" t-attf-class="badge #{record.risk_level.raw_value == 'critical' ? 'text-bg-danger' : record.risk_level.raw_value == 'high' ? 'text-bg-warning' : 'text-bg-success'}">
+                                        <field name="risk_level"/>
+                                    </span>
+                                    <span t-if="record.handles_pii.raw_value" class="badge text-bg-info">PII</span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Security Asset Action -->
+    <record id="action_security_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">security.asset</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_security_asset_search"/>
+        <field name="context">{'search_default_in_scope': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register your first security asset
+            </p>
+            <p>
+                Track all production assets including applications, agents,
+                droplets, databases, and storage buckets.
+            </p>
+        </field>
+    </record>
+</odoo>

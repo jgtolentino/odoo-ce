@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI System Tree View -->
+    <record id="view_ai_system_tree" model="ir.ui.view">
+        <field name="name">ai.system.tree</field>
+        <field name="model">ai.system</field>
+        <field name="arch" type="xml">
+            <tree string="AI Systems"
+                  decoration-danger="risk_level in ('high', 'unacceptable')"
+                  decoration-warning="eval_status == 'not_evaluated'">
+                <field name="name"/>
+                <field name="system_type" widget="badge"/>
+                <field name="provider"/>
+                <field name="models_used"/>
+                <field name="risk_level" widget="badge"
+                       decoration-danger="risk_level in ('high', 'unacceptable')"
+                       decoration-warning="risk_level == 'moderate'"
+                       decoration-success="risk_level in ('minimal', 'low')"/>
+                <field name="eval_status" widget="badge"
+                       decoration-success="eval_status == 'completed'"
+                       decoration-warning="eval_status in ('not_evaluated', 'needs_reevaluation')"/>
+                <field name="handles_pii" widget="boolean"/>
+                <field name="status" widget="badge"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- AI System Form View -->
+    <record id="view_ai_system_form" model="ir.ui.view">
+        <field name="name">ai.system.form</field>
+        <field name="model">ai.system</field>
+        <field name="arch" type="xml">
+            <form string="AI System">
+                <header>
+                    <button name="action_start_evaluation" type="object"
+                            string="Start Evaluation" class="oe_highlight"
+                            invisible="eval_status not in ('not_evaluated', 'needs_reevaluation')"/>
+                    <button name="action_complete_evaluation" type="object"
+                            string="Complete Evaluation"
+                            invisible="eval_status != 'in_progress'"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="development,testing,staging,production,deprecated"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_risks" type="object"
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="risk_count == 0">
+                            <field name="risk_count" widget="statinfo" string="Risks"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="High Risk"
+                            invisible="risk_level not in ('high', 'unacceptable')"
+                            bg_color="text-bg-danger"/>
+                    <widget name="web_ribbon" title="Not Evaluated"
+                            invisible="eval_status != 'not_evaluated'"
+                            bg_color="text-bg-warning"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="AI System Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="code"/>
+                            <field name="system_type"/>
+                            <field name="ai_category"/>
+                            <field name="deployment_context"/>
+                        </group>
+                        <group string="Model Details">
+                            <field name="provider"/>
+                            <field name="models_used"/>
+                            <field name="model_version"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Risk Assessment">
+                            <field name="risk_level"/>
+                            <field name="impact_category"/>
+                            <field name="eval_status"/>
+                            <field name="last_eval_date"/>
+                        </group>
+                        <group string="Ownership">
+                            <field name="owner_id"/>
+                            <field name="ai_lead_id"/>
+                            <field name="responsible_team"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Intended Use" name="use">
+                            <group>
+                                <field name="intended_use" placeholder="Primary intended use..."/>
+                            </group>
+                            <group>
+                                <field name="prohibited_uses" placeholder="Prohibited uses..."/>
+                            </group>
+                            <group>
+                                <field name="user_types"/>
+                            </group>
+                        </page>
+                        <page string="Data Handling" name="data">
+                            <group>
+                                <field name="data_category_ids" widget="many2many_tags"/>
+                                <field name="handles_pii"/>
+                                <field name="input_data_types"/>
+                                <field name="output_data_types"/>
+                            </group>
+                        </page>
+                        <page string="Risk Profile" name="risks">
+                            <group col="4">
+                                <field name="has_bias_risk"/>
+                                <field name="has_transparency_risk"/>
+                                <field name="has_privacy_risk"/>
+                                <field name="has_security_risk"/>
+                                <field name="has_safety_risk"/>
+                                <field name="has_accountability_risk"/>
+                            </group>
+                            <separator string="Associated Risks"/>
+                            <field name="risk_ids">
+                                <tree>
+                                    <field name="reference"/>
+                                    <field name="name"/>
+                                    <field name="risk_level"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Mitigations" name="mitigations">
+                            <group>
+                                <field name="has_human_oversight"/>
+                                <field name="has_kill_switch"/>
+                            </group>
+                            <field name="oversight_description" placeholder="Human oversight mechanisms..."/>
+                            <field name="mitigation_measures" placeholder="Mitigation measures..."/>
+                        </page>
+                        <page string="Monitoring" name="monitoring">
+                            <group>
+                                <field name="eval_frequency"/>
+                                <field name="next_eval_date"/>
+                            </group>
+                            <field name="performance_metrics" placeholder="KPIs..."/>
+                            <field name="monitoring_approach" placeholder="Monitoring approach..."/>
+                        </page>
+                        <page string="Assets &amp; Documentation" name="assets">
+                            <group>
+                                <field name="primary_asset_id"/>
+                                <field name="asset_ids" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="documentation_url" widget="url"/>
+                                <field name="model_card_url" widget="url"/>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="description" placeholder="Description..."/>
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI System Search View -->
+    <record id="view_ai_system_search" model="ir.ui.view">
+        <field name="name">ai.system.search</field>
+        <field name="model">ai.system</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Systems">
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="owner_id"/>
+                <filter string="Production" name="production" domain="[('status', '=', 'production')]"/>
+                <filter string="High Risk" name="high_risk" domain="[('risk_level', 'in', ('high', 'unacceptable'))]"/>
+                <filter string="Not Evaluated" name="not_evaluated" domain="[('eval_status', '=', 'not_evaluated')]"/>
+                <filter string="Handles PII" name="handles_pii" domain="[('handles_pii', '=', True)]"/>
+                <separator/>
+                <filter string="Anthropic" name="anthropic" domain="[('provider', '=', 'anthropic')]"/>
+                <filter string="OpenAI" name="openai" domain="[('provider', '=', 'openai')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Provider" name="group_provider" context="{'group_by': 'provider'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'system_type'}"/>
+                    <filter string="Risk Level" name="group_risk" context="{'group_by': 'risk_level'}"/>
+                    <filter string="Eval Status" name="group_eval" context="{'group_by': 'eval_status'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- AI System Kanban View -->
+    <record id="view_ai_system_kanban" model="ir.ui.view">
+        <field name="name">ai.system.kanban</field>
+        <field name="model">ai.system</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="provider" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="risk_level"/>
+                <field name="eval_status"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_title">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="models_used"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <span class="badge" t-attf-class="badge #{record.risk_level.raw_value in ('high', 'unacceptable') ? 'text-bg-danger' : record.risk_level.raw_value == 'moderate' ? 'text-bg-warning' : 'text-bg-success'}">
+                                        <field name="risk_level"/>
+                                    </span>
+                                    <span class="badge" t-attf-class="badge #{record.eval_status.raw_value == 'completed' ? 'text-bg-success' : 'text-bg-warning'}">
+                                        <field name="eval_status"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- AI System Action -->
+    <record id="action_ai_system" model="ir.actions.act_window">
+        <field name="name">AI Systems</field>
+        <field name="res_model">ai.system</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_ai_system_search"/>
+        <field name="context">{'search_default_production': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register your first AI system
+            </p>
+            <p>
+                Track AI systems for governance under NIST AI RMF and ISO 42001,
+                including risk assessment and evaluation status.
+            </p>
+        </field>
+    </record>
+</odoo>

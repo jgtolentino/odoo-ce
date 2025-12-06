@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Audit Tree View -->
+    <record id="view_security_audit_tree" model="ir.ui.view">
+        <field name="name">security.audit.tree</field>
+        <field name="model">security.audit</field>
+        <field name="arch" type="xml">
+            <tree string="Security Audits"
+                  decoration-success="overall_rating == 'satisfactory'"
+                  decoration-warning="overall_rating == 'needs_improvement'"
+                  decoration-danger="overall_rating == 'unsatisfactory'"
+                  decoration-muted="status == 'cancelled'">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="audit_type" widget="badge"/>
+                <field name="framework_ids" widget="many2many_tags"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="status" widget="badge"/>
+                <field name="overall_rating" widget="badge"
+                       decoration-success="overall_rating == 'satisfactory'"
+                       decoration-warning="overall_rating == 'needs_improvement'"
+                       decoration-danger="overall_rating == 'unsatisfactory'"/>
+                <field name="pass_rate" widget="progressbar"/>
+                <field name="finding_count"/>
+                <field name="critical_findings"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Security Audit Form View -->
+    <record id="view_security_audit_form" model="ir.ui.view">
+        <field name="name">security.audit.form</field>
+        <field name="model">security.audit</field>
+        <field name="arch" type="xml">
+            <form string="Security Audit">
+                <header>
+                    <button name="action_start_audit" type="object"
+                            string="Start Audit" class="oe_highlight"
+                            invisible="status != 'planned'"/>
+                    <button name="action_complete_fieldwork" type="object"
+                            string="Complete Fieldwork"
+                            invisible="status != 'in_progress'"/>
+                    <button name="action_draft_report" type="object"
+                            string="Draft Report"
+                            invisible="status != 'fieldwork_complete'"/>
+                    <button name="action_complete_audit" type="object"
+                            string="Complete Audit" class="oe_highlight"
+                            invisible="status != 'report_draft'"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="planned,in_progress,fieldwork_complete,report_draft,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-list-alt">
+                            <field name="finding_count" widget="statinfo" string="Findings"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-server">
+                            <field name="asset_count" widget="statinfo" string="Assets"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-shield">
+                            <field name="control_count" widget="statinfo" string="Controls"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="reference"/>
+                        <h3><field name="reference" readonly="1"/></h3>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Audit Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Audit Details">
+                            <field name="audit_type"/>
+                            <field name="framework_ids" widget="many2many_tags"/>
+                            <field name="auditor_type"/>
+                            <field name="auditor_name"/>
+                            <field name="lead_auditor"/>
+                        </group>
+                        <group string="Schedule">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="report_date"/>
+                            <field name="owner_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Results">
+                            <field name="overall_rating"/>
+                            <field name="pass_rate" widget="progressbar"/>
+                        </group>
+                        <group string="Control Testing">
+                            <field name="controls_tested"/>
+                            <field name="controls_passed"/>
+                            <field name="controls_failed"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Scope" name="scope">
+                            <group string="Scope Description">
+                                <field name="scope_description" placeholder="Audit scope..."/>
+                            </group>
+                            <group string="Assets in Scope">
+                                <field name="asset_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="asset_type"/>
+                                        <field name="environment"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Controls Assessed">
+                                <field name="control_ids">
+                                    <tree>
+                                        <field name="code"/>
+                                        <field name="name"/>
+                                        <field name="framework_id"/>
+                                        <field name="status"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Findings" name="findings">
+                            <field name="finding_ids">
+                                <tree editable="bottom">
+                                    <field name="reference"/>
+                                    <field name="name"/>
+                                    <field name="finding_type"/>
+                                    <field name="severity"/>
+                                    <field name="status"/>
+                                    <field name="owner_id"/>
+                                    <field name="target_date"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="finding_type"/>
+                                            <field name="severity"/>
+                                            <field name="control_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="status"/>
+                                            <field name="owner_id"/>
+                                            <field name="target_date"/>
+                                            <field name="actual_date"/>
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                        <page string="Details">
+                                            <field name="description"/>
+                                            <field name="root_cause"/>
+                                        </page>
+                                        <page string="Remediation">
+                                            <field name="recommendation"/>
+                                            <field name="management_response"/>
+                                            <field name="remediation_plan"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Documentation" name="documentation">
+                            <group>
+                                <field name="report_url" widget="url"/>
+                                <field name="evidence_url" widget="url"/>
+                            </group>
+                            <field name="description" placeholder="Description..."/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Audit Search View -->
+    <record id="view_security_audit_search" model="ir.ui.view">
+        <field name="name">security.audit.search</field>
+        <field name="model">security.audit</field>
+        <field name="arch" type="xml">
+            <search string="Search Audits">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="framework_ids"/>
+                <filter string="Planned" name="planned" domain="[('status', '=', 'planned')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('status', 'in', ('in_progress', 'fieldwork_complete', 'report_draft'))]"/>
+                <filter string="Completed" name="completed" domain="[('status', '=', 'completed')]"/>
+                <separator/>
+                <filter string="Satisfactory" name="satisfactory" domain="[('overall_rating', '=', 'satisfactory')]"/>
+                <filter string="Needs Improvement" name="needs_improvement" domain="[('overall_rating', '=', 'needs_improvement')]"/>
+                <filter string="Unsatisfactory" name="unsatisfactory" domain="[('overall_rating', '=', 'unsatisfactory')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Rating" name="group_rating" context="{'group_by': 'overall_rating'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'audit_type'}"/>
+                    <filter string="Start Date" name="group_start" context="{'group_by': 'start_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Audit Action -->
+    <record id="action_security_audit" model="ir.actions.act_window">
+        <field name="name">Audits</field>
+        <field name="res_model">security.audit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_security_audit_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Plan your first security audit
+            </p>
+            <p>
+                Manage internal and external audits with finding tracking
+                and remediation workflow.
+            </p>
+        </field>
+    </record>
+
+    <!-- Audit Finding Tree View -->
+    <record id="view_security_audit_finding_tree" model="ir.ui.view">
+        <field name="name">security.audit.finding.tree</field>
+        <field name="model">security.audit.finding</field>
+        <field name="arch" type="xml">
+            <tree string="Audit Findings"
+                  decoration-danger="severity == 'critical'"
+                  decoration-warning="severity == 'high'"
+                  decoration-success="status in ('closed', 'verified')">
+                <field name="reference"/>
+                <field name="audit_id"/>
+                <field name="name"/>
+                <field name="finding_type" widget="badge"/>
+                <field name="severity" widget="badge"
+                       decoration-danger="severity == 'critical'"
+                       decoration-warning="severity == 'high'"/>
+                <field name="status" widget="badge"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+                <field name="target_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Audit Finding Action -->
+    <record id="action_security_audit_finding" model="ir.actions.act_window">
+        <field name="name">Audit Findings</field>
+        <field name="res_model">security.audit.finding</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+</odoo>

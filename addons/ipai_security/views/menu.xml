@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem
+        id="menu_security_root"
+        name="Security"
+        web_icon="ipai_security,static/description/icon.png"
+        sequence="100"/>
+
+    <!-- Overview / Dashboard -->
+    <menuitem
+        id="menu_security_overview"
+        name="Overview"
+        parent="menu_security_root"
+        action="action_security_dashboard"
+        sequence="1"/>
+
+    <!-- Asset Management -->
+    <menuitem
+        id="menu_security_assets"
+        name="Assets"
+        parent="menu_security_root"
+        action="action_security_asset"
+        sequence="10"/>
+
+    <!-- Risk Management -->
+    <menuitem
+        id="menu_security_risks"
+        name="Risks"
+        parent="menu_security_root"
+        action="action_security_risk"
+        sequence="20"/>
+
+    <!-- Controls -->
+    <menuitem
+        id="menu_security_controls"
+        name="Controls"
+        parent="menu_security_root"
+        action="action_security_control"
+        sequence="30"/>
+
+    <!-- Data Flows / DPA -->
+    <menuitem
+        id="menu_security_data_flows"
+        name="Data Flows"
+        parent="menu_security_root"
+        action="action_security_data_flow"
+        sequence="40"/>
+
+    <!-- AI Systems -->
+    <menuitem
+        id="menu_security_ai_systems"
+        name="AI Systems"
+        parent="menu_security_root"
+        action="action_ai_system"
+        sequence="50"/>
+
+    <!-- Incidents -->
+    <menuitem
+        id="menu_security_incidents"
+        name="Incidents"
+        parent="menu_security_root"
+        action="action_security_incident"
+        sequence="60"/>
+
+    <!-- Audits -->
+    <menuitem
+        id="menu_security_audits"
+        name="Audits"
+        parent="menu_security_root"
+        action="action_security_audit"
+        sequence="70"/>
+
+    <!-- Configuration Menu -->
+    <menuitem
+        id="menu_security_config"
+        name="Configuration"
+        parent="menu_security_root"
+        sequence="100"
+        groups="group_security_officer"/>
+
+    <menuitem
+        id="menu_security_frameworks"
+        name="Frameworks"
+        parent="menu_security_config"
+        action="action_security_framework"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_security_data_categories"
+        name="Data Categories"
+        parent="menu_security_config"
+        action="action_security_data_category"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_security_lawful_basis"
+        name="Lawful Bases"
+        parent="menu_security_config"
+        action="action_security_lawful_basis"
+        sequence="30"/>
+
+    <menuitem
+        id="menu_security_kpis"
+        name="KPI History"
+        parent="menu_security_config"
+        action="action_security_kpi"
+        sequence="40"/>
+</odoo>

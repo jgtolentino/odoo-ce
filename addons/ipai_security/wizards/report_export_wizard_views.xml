@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Export Wizard Form View -->
+    <record id="view_report_export_wizard_form" model="ir.ui.view">
+        <field name="name">security.report.export.wizard.form</field>
+        <field name="model">security.report.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Security Report">
+                <group invisible="state != 'draft'">
+                    <group string="Report Configuration">
+                        <field name="report_type"/>
+                        <field name="format"/>
+                    </group>
+                    <group string="Filters">
+                        <field name="include_frameworks" widget="many2many_tags"/>
+                    </group>
+                    <group string="Include Sections" invisible="report_type != 'posture'">
+                        <field name="include_risks"/>
+                        <field name="include_controls"/>
+                        <field name="include_ai_systems"/>
+                    </group>
+                </group>
+                <group invisible="state != 'done'">
+                    <div class="alert alert-success" role="alert">
+                        <strong>Report Generated!</strong>
+                        Click Download to save the file.
+                    </div>
+                    <field name="file_data" filename="file_name" readonly="1"/>
+                    <field name="file_name" invisible="1"/>
+                </group>
+                <field name="state" invisible="1"/>
+                <footer>
+                    <button name="action_generate" type="object" string="Generate"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Report Export Wizard Action -->
+    <record id="action_report_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Report</field>
+        <field name="res_model">security.report.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

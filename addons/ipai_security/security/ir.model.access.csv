@@ -1,0 +1,52 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+# Security Framework
+access_security_framework_auditor,security.framework auditor,model_security_framework,group_security_auditor,1,0,0,0
+access_security_framework_officer,security.framework officer,model_security_framework,group_security_officer,1,1,1,0
+access_security_framework_owner,security.framework owner,model_security_framework,group_security_owner,1,1,1,1
+# Lawful Basis
+access_security_lawful_basis_auditor,security.lawful.basis auditor,model_security_lawful_basis,group_security_auditor,1,0,0,0
+access_security_lawful_basis_officer,security.lawful.basis officer,model_security_lawful_basis,group_security_officer,1,1,1,0
+access_security_lawful_basis_owner,security.lawful.basis owner,model_security_lawful_basis,group_security_owner,1,1,1,1
+# Data Category
+access_security_data_category_auditor,security.data.category auditor,model_security_data_category,group_security_auditor,1,0,0,0
+access_security_data_category_officer,security.data.category officer,model_security_data_category,group_security_officer,1,1,1,0
+access_security_data_category_owner,security.data.category owner,model_security_data_category,group_security_owner,1,1,1,1
+# Security Asset
+access_security_asset_auditor,security.asset auditor,model_security_asset,group_security_auditor,1,0,0,0
+access_security_asset_engineer,security.asset engineer,model_security_asset,group_security_engineer,1,1,1,0
+access_security_asset_officer,security.asset officer,model_security_asset,group_security_officer,1,1,1,0
+access_security_asset_owner,security.asset owner,model_security_asset,group_security_owner,1,1,1,1
+# Security Risk
+access_security_risk_auditor,security.risk auditor,model_security_risk,group_security_auditor,1,0,0,0
+access_security_risk_officer,security.risk officer,model_security_risk,group_security_officer,1,1,1,0
+access_security_risk_owner,security.risk owner,model_security_risk,group_security_owner,1,1,1,1
+# Security Control
+access_security_control_auditor,security.control auditor,model_security_control,group_security_auditor,1,0,0,0
+access_security_control_officer,security.control officer,model_security_control,group_security_officer,1,1,1,0
+access_security_control_owner,security.control owner,model_security_control,group_security_owner,1,1,1,1
+# Security Data Flow
+access_security_data_flow_auditor,security.data.flow auditor,model_security_data_flow,group_security_auditor,1,0,0,0
+access_security_data_flow_officer,security.data.flow officer,model_security_data_flow,group_security_officer,1,1,1,0
+access_security_data_flow_owner,security.data.flow owner,model_security_data_flow,group_security_owner,1,1,1,1
+# AI System
+access_ai_system_auditor,ai.system auditor,model_ai_system,group_security_auditor,1,0,0,0
+access_ai_system_ai_lead,ai.system ai_lead,model_ai_system,group_security_ai_lead,1,1,1,0
+access_ai_system_officer,ai.system officer,model_ai_system,group_security_officer,1,1,1,0
+access_ai_system_owner,ai.system owner,model_ai_system,group_security_owner,1,1,1,1
+# Security Incident
+access_security_incident_auditor,security.incident auditor,model_security_incident,group_security_auditor,1,0,0,0
+access_security_incident_engineer,security.incident engineer,model_security_incident,group_security_engineer,1,1,1,0
+access_security_incident_officer,security.incident officer,model_security_incident,group_security_officer,1,1,1,0
+access_security_incident_owner,security.incident owner,model_security_incident,group_security_owner,1,1,1,1
+# Security Audit
+access_security_audit_auditor,security.audit auditor,model_security_audit,group_security_auditor,1,0,0,0
+access_security_audit_officer,security.audit officer,model_security_audit,group_security_officer,1,1,1,0
+access_security_audit_owner,security.audit owner,model_security_audit,group_security_owner,1,1,1,1
+# Audit Finding
+access_security_audit_finding_auditor,security.audit.finding auditor,model_security_audit_finding,group_security_auditor,1,0,0,0
+access_security_audit_finding_officer,security.audit.finding officer,model_security_audit_finding,group_security_officer,1,1,1,0
+access_security_audit_finding_owner,security.audit.finding owner,model_security_audit_finding,group_security_owner,1,1,1,1
+# Security KPI
+access_security_kpi_auditor,security.kpi auditor,model_security_kpi,group_security_auditor,1,0,0,0
+access_security_kpi_officer,security.kpi officer,model_security_kpi,group_security_officer,1,1,1,0
+access_security_kpi_owner,security.kpi owner,model_security_kpi,group_security_owner,1,1,1,1

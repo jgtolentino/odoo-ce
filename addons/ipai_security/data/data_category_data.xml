@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Data Categories for PH DPA Compliance -->
+
+    <!-- Non-Personal Data -->
+    <record id="category_non_personal" model="security.data.category">
+        <field name="name">Non-Personal Data</field>
+        <field name="code">NPD</field>
+        <field name="description">Data that does not relate to an identified or identifiable natural person.</field>
+        <field name="dpa_classification">non_personal</field>
+        <field name="sensitivity_level">public</field>
+        <field name="requires_consent" eval="False"/>
+        <field name="sequence">1</field>
+        <field name="examples">Aggregated statistics, anonymized data, public company information</field>
+    </record>
+
+    <!-- Personal Information -->
+    <record id="category_personal" model="security.data.category">
+        <field name="name">Personal Information</field>
+        <field name="code">PI</field>
+        <field name="description">Any information from which the identity of an individual is apparent or can be reasonably and directly ascertained.</field>
+        <field name="dpa_classification">personal</field>
+        <field name="sensitivity_level">confidential</field>
+        <field name="requires_consent" eval="False"/>
+        <field name="sequence">10</field>
+        <field name="examples">Name, address, email, phone number, employee ID</field>
+    </record>
+
+    <!-- Personal Information Subcategories -->
+    <record id="category_pi_contact" model="security.data.category">
+        <field name="name">Contact Information</field>
+        <field name="code">PI-CONTACT</field>
+        <field name="parent_id" ref="category_personal"/>
+        <field name="description">Information used to contact an individual.</field>
+        <field name="dpa_classification">personal</field>
+        <field name="sensitivity_level">confidential</field>
+        <field name="sequence">11</field>
+        <field name="examples">Email address, phone number, mailing address</field>
+    </record>
+
+    <record id="category_pi_identity" model="security.data.category">
+        <field name="name">Identity Information</field>
+        <field name="code">PI-IDENTITY</field>
+        <field name="parent_id" ref="category_personal"/>
+        <field name="description">Information that identifies a person.</field>
+        <field name="dpa_classification">personal</field>
+        <field name="sensitivity_level">confidential</field>
+        <field name="sequence">12</field>
+        <field name="examples">Full name, date of birth, government ID numbers</field>
+    </record>
+
+    <record id="category_pi_employment" model="security.data.category">
+        <field name="name">Employment Information</field>
+        <field name="code">PI-EMPLOY</field>
+        <field name="parent_id" ref="category_personal"/>
+        <field name="description">Information related to employment.</field>
+        <field name="dpa_classification">personal</field>
+        <field name="sensitivity_level">confidential</field>
+        <field name="sequence">13</field>
+        <field name="examples">Job title, department, salary, performance reviews</field>
+    </record>
+
+    <!-- Sensitive Personal Information -->
+    <record id="category_sensitive" model="security.data.category">
+        <field name="name">Sensitive Personal Information</field>
+        <field name="code">SPI</field>
+        <field name="description">Personal information about an individual's race, ethnic origin, marital status, age, color, and religious, philosophical or political affiliations; health, education, genetic or sexual life; and any proceeding for any offense.</field>
+        <field name="dpa_classification">sensitive_personal</field>
+        <field name="sensitivity_level">restricted</field>
+        <field name="requires_consent" eval="True"/>
+        <field name="sequence">20</field>
+        <field name="examples">Medical records, biometric data, political opinions</field>
+    </record>
+
+    <!-- Sensitive Personal Information Subcategories -->
+    <record id="category_spi_health" model="security.data.category">
+        <field name="name">Health Information</field>
+        <field name="code">SPI-HEALTH</field>
+        <field name="parent_id" ref="category_sensitive"/>
+        <field name="description">Information about physical or mental health.</field>
+        <field name="dpa_classification">sensitive_personal</field>
+        <field name="sensitivity_level">restricted</field>
+        <field name="requires_consent" eval="True"/>
+        <field name="sequence">21</field>
+        <field name="examples">Medical history, diagnoses, treatments, prescriptions</field>
+    </record>
+
+    <record id="category_spi_biometric" model="security.data.category">
+        <field name="name">Biometric Data</field>
+        <field name="code">SPI-BIO</field>
+        <field name="parent_id" ref="category_sensitive"/>
+        <field name="description">Unique physical or behavioral characteristics.</field>
+        <field name="dpa_classification">sensitive_personal</field>
+        <field name="sensitivity_level">restricted</field>
+        <field name="requires_consent" eval="True"/>
+        <field name="sequence">22</field>
+        <field name="examples">Fingerprints, facial recognition data, voice patterns</field>
+    </record>
+
+    <record id="category_spi_financial" model="security.data.category">
+        <field name="name">Financial Information</field>
+        <field name="code">SPI-FIN</field>
+        <field name="parent_id" ref="category_sensitive"/>
+        <field name="description">Detailed financial records and accounts.</field>
+        <field name="dpa_classification">sensitive_personal</field>
+        <field name="sensitivity_level">restricted</field>
+        <field name="requires_consent" eval="True"/>
+        <field name="sequence">23</field>
+        <field name="examples">Bank account numbers, credit card details, tax records</field>
+    </record>
+
+    <!-- Privileged Information -->
+    <record id="category_privileged" model="security.data.category">
+        <field name="name">Privileged Information</field>
+        <field name="code">PRIV</field>
+        <field name="description">Information that is privileged under the Rules of Court or other pertinent laws.</field>
+        <field name="dpa_classification">privileged</field>
+        <field name="sensitivity_level">restricted</field>
+        <field name="requires_consent" eval="True"/>
+        <field name="sequence">30</field>
+        <field name="examples">Attorney-client communications, journalist sources</field>
+    </record>
+
+    <!-- System and Technical Data -->
+    <record id="category_technical" model="security.data.category">
+        <field name="name">Technical/System Data</field>
+        <field name="code">TECH</field>
+        <field name="description">Data generated by systems and applications.</field>
+        <field name="dpa_classification">non_personal</field>
+        <field name="sensitivity_level">internal</field>
+        <field name="sequence">40</field>
+        <field name="examples">Logs, metrics, configuration data, API keys</field>
+    </record>
+
+    <record id="category_tech_logs" model="security.data.category">
+        <field name="name">System Logs</field>
+        <field name="code">TECH-LOG</field>
+        <field name="parent_id" ref="category_technical"/>
+        <field name="description">Application and system log files.</field>
+        <field name="dpa_classification">non_personal</field>
+        <field name="sensitivity_level">internal</field>
+        <field name="retention_period">90</field>
+        <field name="sequence">41</field>
+        <field name="examples">Access logs, error logs, audit logs</field>
+    </record>
+
+    <record id="category_tech_credentials" model="security.data.category">
+        <field name="name">Credentials/Secrets</field>
+        <field name="code">TECH-CRED</field>
+        <field name="parent_id" ref="category_technical"/>
+        <field name="description">Authentication credentials and secrets.</field>
+        <field name="dpa_classification">non_personal</field>
+        <field name="sensitivity_level">restricted</field>
+        <field name="sequence">42</field>
+        <field name="examples">API keys, passwords, encryption keys, tokens</field>
+    </record>
+</odoo>

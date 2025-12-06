@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Module Category -->
+    <record id="module_category_security" model="ir.module.category">
+        <field name="name">Security &amp; Compliance</field>
+        <field name="description">Security governance and compliance management</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- Security Groups -->
+
+    <!-- Auditor: Read-only access for external reviewers -->
+    <record id="group_security_auditor" model="res.groups">
+        <field name="name">Auditor</field>
+        <field name="category_id" ref="module_category_security"/>
+        <field name="comment">Read-only access to security data for audit purposes.
+Cannot modify any records. Some sensitive fields may be redacted.</field>
+    </record>
+
+    <!-- Engineer: Technical access to assets and incidents -->
+    <record id="group_security_engineer" model="res.groups">
+        <field name="name">Engineer</field>
+        <field name="category_id" ref="module_category_security"/>
+        <field name="implied_ids" eval="[(4, ref('group_security_auditor'))]"/>
+        <field name="comment">Technical access to manage assets, incidents, and attach evidence.
+Cannot manage risks, controls, or compliance mappings.</field>
+    </record>
+
+    <!-- AI Lead: AI governance responsibilities -->
+    <record id="group_security_ai_lead" model="res.groups">
+        <field name="name">AI Lead</field>
+        <field name="category_id" ref="module_category_security"/>
+        <field name="implied_ids" eval="[(4, ref('group_security_engineer'))]"/>
+        <field name="comment">AI governance lead with access to manage AI systems,
+evaluations, and AI-specific risks.</field>
+    </record>
+
+    <!-- Security Officer: DPO / ISO lead / SOC2 lead -->
+    <record id="group_security_officer" model="res.groups">
+        <field name="name">Security Officer</field>
+        <field name="category_id" ref="module_category_security"/>
+        <field name="implied_ids" eval="[(4, ref('group_security_ai_lead'))]"/>
+        <field name="comment">Security officer with full access to manage assets, risks,
+controls, data flows, incidents, and audits. Can approve compliance mappings.</field>
+    </record>
+
+    <!-- Owner: Full administrative access -->
+    <record id="group_security_owner" model="res.groups">
+        <field name="name">Owner</field>
+        <field name="category_id" ref="module_category_security"/>
+        <field name="implied_ids" eval="[(4, ref('group_security_officer'))]"/>
+        <field name="comment">Platform owner with full administrative access.
+Can manage frameworks, roles, and perform hard deletes.</field>
+    </record>
+
+    <!-- IR Sequences for reference numbers -->
+    <record id="seq_security_risk" model="ir.sequence">
+        <field name="name">Security Risk</field>
+        <field name="code">security.risk</field>
+        <field name="prefix">RISK-</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_security_incident" model="ir.sequence">
+        <field name="name">Security Incident</field>
+        <field name="code">security.incident</field>
+        <field name="prefix">INC-</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_security_audit" model="ir.sequence">
+        <field name="name">Security Audit</field>
+        <field name="code">security.audit</field>
+        <field name="prefix">AUD-</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_security_audit_finding" model="ir.sequence">
+        <field name="name">Audit Finding</field>
+        <field name="code">security.audit.finding</field>
+        <field name="prefix">FND-</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_security_data_flow" model="ir.sequence">
+        <field name="name">Data Flow</field>
+        <field name="code">security.data.flow</field>
+        <field name="prefix">DF-</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>

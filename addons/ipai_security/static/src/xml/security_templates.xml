@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Health Score Widget Template -->
+    <t t-name="ipai_security.HealthScore">
+        <div class="o_health_score" t-attf-class="o_health_score #{scoreClass}">
+            <div class="text-center">
+                <div class="score-value" t-esc="props.score"/>
+                <div class="score-label" t-esc="scoreLabel"/>
+            </div>
+        </div>
+    </t>
+
+    <!-- Framework Coverage Widget Template -->
+    <t t-name="ipai_security.FrameworkCoverage">
+        <div class="o_framework_coverage">
+            <span class="o_framework_name" t-esc="props.name"/>
+            <div class="o_coverage_bar">
+                <div class="o_coverage_fill"
+                     t-attf-class="o_coverage_fill #{coverageClass}"
+                     t-attf-style="width: #{props.coverage}%"/>
+            </div>
+            <span class="o_coverage_value">
+                <t t-esc="Math.round(props.coverage)"/>%
+            </span>
+        </div>
+    </t>
+
+    <!-- Risk Summary Widget Template -->
+    <t t-name="ipai_security.RiskSummary">
+        <div class="o_risk_summary">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold">Open Risks</span>
+                <span class="badge bg-secondary" t-esc="total"/>
+            </div>
+            <div class="risk-breakdown">
+                <div class="d-flex justify-content-between mb-1" t-if="props.critical > 0">
+                    <span class="o_risk_badge risk-critical">Critical</span>
+                    <span t-esc="props.critical"/>
+                </div>
+                <div class="d-flex justify-content-between mb-1" t-if="props.high > 0">
+                    <span class="o_risk_badge risk-high">High</span>
+                    <span t-esc="props.high"/>
+                </div>
+                <div class="d-flex justify-content-between mb-1" t-if="props.medium > 0">
+                    <span class="o_risk_badge risk-medium">Medium</span>
+                    <span t-esc="props.medium"/>
+                </div>
+                <div class="d-flex justify-content-between mb-1" t-if="props.low > 0">
+                    <span class="o_risk_badge risk-low">Low</span>
+                    <span t-esc="props.low"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Main Dashboard Template -->
+    <t t-name="ipai_security.Dashboard">
+        <div class="o_security_dashboard o_action">
+            <div class="container-fluid py-4">
+                <!-- Header -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1 class="h3 mb-0">Security &amp; Compliance Overview</h1>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary" t-on-click="refreshKPIs">
+                                    <i class="fa fa-refresh"/> Refresh
+                                </button>
+                                <button class="btn btn-outline-secondary" t-on-click="captureSnapshot">
+                                    <i class="fa fa-camera"/> Snapshot
+                                </button>
+                                <button class="btn btn-primary" t-on-click="exportReport">
+                                    <i class="fa fa-download"/> Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <t t-if="loading">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Loading security metrics...</p>
+                    </div>
+                </t>
+
+                <!-- Dashboard Content -->
+                <t t-else="">
+                    <!-- KPI Cards Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card o_kpi_card h-100" t-on-click="openRisks" style="cursor: pointer;">
+                                <div class="card-body text-center">
+                                    <div class="o_kpi_value text-danger" t-esc="kpis.risks_open || 0"/>
+                                    <div class="o_kpi_label">Open Risks</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card o_kpi_card h-100" t-on-click="openIncidents" style="cursor: pointer;">
+                                <div class="card-body text-center">
+                                    <div class="o_kpi_value text-warning" t-esc="kpis.incidents_30d || 0"/>
+                                    <div class="o_kpi_label">Incidents (30d)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card o_kpi_card h-100" t-on-click="openAssets" style="cursor: pointer;">
+                                <div class="card-body text-center">
+                                    <div class="o_kpi_value text-primary" t-esc="kpis.assets_total || 0"/>
+                                    <div class="o_kpi_label">Assets in Scope</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card o_kpi_card h-100" t-on-click="openAISystems" style="cursor: pointer;">
+                                <div class="card-body text-center">
+                                    <div class="o_kpi_value text-info" t-esc="kpis.ai_systems_production || 0"/>
+                                    <div class="o_kpi_label">AI Systems</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content Row -->
+                    <div class="row">
+                        <!-- Left Column: Health Score and Risks -->
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Health Score</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <SecurityHealthScore score="kpis.health_score || 0"/>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Risk Summary</h5>
+                                </div>
+                                <div class="card-body">
+                                    <RiskSummary
+                                        critical="kpis.risks_critical || 0"
+                                        high="kpis.risks_high || 0"
+                                        medium="kpis.risks_medium || 0"
+                                        low="kpis.risks_low || 0"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Center Column: Framework Coverage -->
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Framework Coverage</h5>
+                                </div>
+                                <div class="card-body">
+                                    <t t-if="kpis.framework_coverage">
+                                        <t t-foreach="Object.entries(kpis.framework_coverage)" t-as="entry" t-key="entry[0]">
+                                            <FrameworkCoverage
+                                                name="entry[0]"
+                                                code="entry[0]"
+                                                coverage="entry[1]"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <p class="text-muted text-center">No framework data available</p>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Quick Stats -->
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Control Implementation</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Implemented</span>
+                                            <span t-esc="kpis.controls_implemented || 0"/>
+                                            <span>/</span>
+                                            <span t-esc="kpis.controls_total || 0"/>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success"
+                                                 role="progressbar"
+                                                 t-attf-style="width: #{kpis.controls_total ? (kpis.controls_implemented / kpis.controls_total * 100) : 0}%"/>
+                                        </div>
+                                    </div>
+
+                                    <hr/>
+
+                                    <div class="mb-2">
+                                        <strong>Data Flow Compliance</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Flows with Gaps</span>
+                                        <span class="text-danger" t-esc="kpis.data_flow_gaps || 0"/>
+                                    </div>
+
+                                    <hr/>
+
+                                    <div class="mb-2">
+                                        <strong>AI Governance</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>High Risk Systems</span>
+                                        <span class="text-warning" t-esc="kpis.ai_systems_high_risk || 0"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timestamp -->
+                    <div class="row mt-4">
+                        <div class="col-12 text-end text-muted">
+                            <small>Last updated: <t t-esc="kpis.timestamp"/></small>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

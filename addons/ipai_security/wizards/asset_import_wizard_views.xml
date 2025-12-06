@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Asset Import Wizard Form View -->
+    <record id="view_asset_import_wizard_form" model="ir.ui.view">
+        <field name="name">security.asset.import.wizard.form</field>
+        <field name="model">security.asset.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Assets">
+                <group invisible="state != 'draft'">
+                    <group string="Source">
+                        <field name="import_type"/>
+                        <field name="file_data" filename="file_name"
+                               invisible="import_type != 'csv'"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <group string="Options">
+                        <field name="default_environment"/>
+                        <field name="mark_in_scope"/>
+                    </group>
+                </group>
+                <group invisible="state != 'preview'">
+                    <p class="text-muted">
+                        Review the data below and click Import to create the assets.
+                    </p>
+                    <field name="preview_line_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="asset_type"/>
+                            <field name="environment"/>
+                            <field name="url"/>
+                        </tree>
+                    </field>
+                </group>
+                <group invisible="state != 'done'">
+                    <div class="alert alert-success" role="alert" invisible="error_count > 0">
+                        <strong>Import Complete!</strong>
+                        <field name="imported_count"/> assets imported successfully.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="error_count == 0">
+                        <strong>Import Complete with Errors</strong>
+                        <field name="imported_count"/> assets imported.
+                        <field name="error_count"/> errors occurred.
+                    </div>
+                    <field name="error_messages" invisible="error_count == 0"/>
+                </group>
+                <field name="state" invisible="1"/>
+                <footer>
+                    <button name="action_preview" type="object" string="Preview"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_import" type="object" string="Import"
+                            class="btn-primary" invisible="state != 'preview'"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Import Wizard Action -->
+    <record id="action_asset_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Assets</field>
+        <field name="res_model">security.asset.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

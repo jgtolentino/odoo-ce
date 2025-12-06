@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Data Flow Tree View -->
+    <record id="view_security_data_flow_tree" model="ir.ui.view">
+        <field name="name">security.data.flow.tree</field>
+        <field name="model">security.data.flow</field>
+        <field name="arch" type="xml">
+            <tree string="Data Flows"
+                  decoration-danger="compliance_gap"
+                  decoration-warning="status == 'pending_review'"
+                  decoration-muted="status == 'inactive'">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="source_asset_id"/>
+                <field name="target_asset_id"/>
+                <field name="lawful_basis_id"/>
+                <field name="contains_pii" widget="boolean"/>
+                <field name="is_encrypted" widget="boolean"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-warning="status == 'pending_review'"
+                       decoration-danger="status == 'non_compliant'"/>
+                <field name="compliance_gap" widget="boolean"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Security Data Flow Form View -->
+    <record id="view_security_data_flow_form" model="ir.ui.view">
+        <field name="name">security.data.flow.form</field>
+        <field name="model">security.data.flow</field>
+        <field name="arch" type="xml">
+            <form string="Data Flow">
+                <header>
+                    <button name="action_mark_compliant" type="object"
+                            string="Mark Compliant" class="oe_highlight"
+                            invisible="status == 'active'"/>
+                    <button name="action_flag_non_compliant" type="object"
+                            string="Flag Non-Compliant"
+                            invisible="status == 'non_compliant'"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="pending_review,active,non_compliant"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Compliance Gap"
+                            invisible="not compliance_gap"
+                            bg_color="text-bg-danger"/>
+                    <div class="oe_title">
+                        <label for="reference"/>
+                        <h3><field name="reference" readonly="1"/></h3>
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Flow Path">
+                            <field name="source_asset_id"/>
+                            <field name="target_asset_id"/>
+                            <field name="transfer_method"/>
+                        </group>
+                        <group string="Data Classification">
+                            <field name="data_category_ids" widget="many2many_tags"/>
+                            <field name="contains_pii"/>
+                            <field name="contains_sensitive"/>
+                            <field name="data_subject_types"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="PH DPA Compliance">
+                            <field name="lawful_basis_id"/>
+                            <field name="is_purpose_documented"/>
+                            <field name="retention_period"/>
+                        </group>
+                        <group string="Security">
+                            <field name="is_encrypted"/>
+                            <field name="encryption_method"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Purpose &amp; Retention" name="purpose">
+                            <group>
+                                <field name="purpose" placeholder="Processing purpose..."/>
+                            </group>
+                            <group>
+                                <field name="retention_policy" placeholder="Retention policy..."/>
+                            </group>
+                            <group>
+                                <field name="estimated_volume"/>
+                            </group>
+                        </page>
+                        <page string="Cross-Border Transfer" name="crossborder"
+                              invisible="not is_cross_border">
+                            <group>
+                                <field name="is_cross_border"/>
+                                <field name="destination_country"/>
+                                <field name="transfer_mechanism"/>
+                            </group>
+                        </page>
+                        <page string="Third Party" name="thirdparty"
+                              invisible="not involves_third_party">
+                            <group>
+                                <field name="involves_third_party"/>
+                                <field name="third_party_name"/>
+                                <field name="dpa_contract_in_place"/>
+                            </group>
+                        </page>
+                        <page string="Review" name="review">
+                            <group>
+                                <field name="last_review_date"/>
+                                <field name="next_review_date"/>
+                                <field name="owner_id"/>
+                            </group>
+                            <field name="compliance_notes" placeholder="Compliance notes..."/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="description" placeholder="Description..."/>
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Data Flow Search View -->
+    <record id="view_security_data_flow_search" model="ir.ui.view">
+        <field name="name">security.data.flow.search</field>
+        <field name="model">security.data.flow</field>
+        <field name="arch" type="xml">
+            <search string="Search Data Flows">
+                <field name="name"/>
+                <field name="source_asset_id"/>
+                <field name="target_asset_id"/>
+                <field name="lawful_basis_id"/>
+                <filter string="Contains PII" name="pii" domain="[('contains_pii', '=', True)]"/>
+                <filter string="Contains Sensitive" name="sensitive" domain="[('contains_sensitive', '=', True)]"/>
+                <filter string="Compliance Gaps" name="gaps" domain="[('compliance_gap', '=', True)]"/>
+                <filter string="No Lawful Basis" name="no_basis" domain="[('lawful_basis_id', '=', False), ('contains_pii', '=', True)]"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('status', '=', 'active')]"/>
+                <filter string="Pending Review" name="pending" domain="[('status', '=', 'pending_review')]"/>
+                <filter string="Non-Compliant" name="non_compliant" domain="[('status', '=', 'non_compliant')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Lawful Basis" name="group_basis" context="{'group_by': 'lawful_basis_id'}"/>
+                    <filter string="Source Asset" name="group_source" context="{'group_by': 'source_asset_id'}"/>
+                    <filter string="Target Asset" name="group_target" context="{'group_by': 'target_asset_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Data Flow Action -->
+    <record id="action_security_data_flow" model="ir.actions.act_window">
+        <field name="name">Data Flows</field>
+        <field name="res_model">security.data.flow</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_security_data_flow_search"/>
+        <field name="context">{'search_default_pii': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Map your first data flow
+            </p>
+            <p>
+                Document data flows between assets for PH DPA compliance,
+                including lawful basis and retention policies.
+            </p>
+        </field>
+    </record>
+</odoo>

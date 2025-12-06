@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Risk Tree View -->
+    <record id="view_security_risk_tree" model="ir.ui.view">
+        <field name="name">security.risk.tree</field>
+        <field name="model">security.risk</field>
+        <field name="arch" type="xml">
+            <tree string="Security Risks"
+                  decoration-danger="risk_level == 'critical'"
+                  decoration-warning="risk_level == 'high'"
+                  decoration-muted="status in ('closed', 'accepted')">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="risk_category" widget="badge"/>
+                <field name="severity"/>
+                <field name="likelihood"/>
+                <field name="inherent_risk_score"/>
+                <field name="residual_risk_score"/>
+                <field name="risk_level" widget="badge"
+                       decoration-danger="risk_level == 'critical'"
+                       decoration-warning="risk_level == 'high'"
+                       decoration-info="risk_level == 'medium'"
+                       decoration-success="risk_level == 'low'"/>
+                <field name="status" widget="badge"/>
+                <field name="control_effectiveness" widget="progressbar"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+                <field name="target_resolution_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Security Risk Form View -->
+    <record id="view_security_risk_form" model="ir.ui.view">
+        <field name="name">security.risk.form</field>
+        <field name="model">security.risk</field>
+        <field name="arch" type="xml">
+            <form string="Security Risk">
+                <header>
+                    <button name="action_close_risk" type="object"
+                            string="Close Risk" class="oe_highlight"
+                            invisible="status in ('closed', 'accepted')"/>
+                    <button name="action_accept_risk" type="object"
+                            string="Accept Risk"
+                            invisible="status in ('closed', 'accepted')"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="open,in_progress,mitigated,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assets" type="object"
+                                class="oe_stat_button" icon="fa-server"
+                                invisible="asset_count == 0">
+                            <field name="asset_count" widget="statinfo" string="Assets"/>
+                        </button>
+                        <button name="action_view_controls" type="object"
+                                class="oe_stat_button" icon="fa-shield"
+                                invisible="control_count == 0">
+                            <field name="control_count" widget="statinfo" string="Controls"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Critical"
+                            invisible="risk_level != 'critical'"
+                            bg_color="text-bg-danger"/>
+                    <widget name="web_ribbon" title="High Risk"
+                            invisible="risk_level != 'high'"
+                            bg_color="text-bg-warning"/>
+                    <div class="oe_title">
+                        <label for="reference"/>
+                        <h3><field name="reference" readonly="1"/></h3>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Risk Title"/></h1>
+                    </div>
+                    <group>
+                        <group string="Risk Assessment">
+                            <field name="risk_category"/>
+                            <field name="severity"/>
+                            <field name="likelihood"/>
+                            <field name="inherent_risk_score"/>
+                            <field name="residual_risk_score"/>
+                            <field name="risk_level"/>
+                        </group>
+                        <group string="Treatment">
+                            <field name="treatment_strategy"/>
+                            <field name="control_effectiveness" widget="progressbar"/>
+                            <field name="owner_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Dates">
+                            <field name="identified_date"/>
+                            <field name="target_resolution_date"/>
+                            <field name="actual_resolution_date"/>
+                        </group>
+                        <group string="Review">
+                            <field name="last_review_date"/>
+                            <field name="next_review_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Detailed risk description..."/>
+                        </page>
+                        <page string="Treatment Plan" name="treatment">
+                            <field name="treatment_plan" placeholder="Treatment plan details..."/>
+                        </page>
+                        <page string="Affected Assets" name="assets">
+                            <field name="asset_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="asset_type"/>
+                                    <field name="risk_level"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Mitigating Controls" name="controls">
+                            <field name="control_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Frameworks" name="frameworks">
+                            <field name="framework_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="AI Risk" name="ai_risk" invisible="not is_ai_related">
+                            <group>
+                                <field name="is_ai_related"/>
+                                <field name="ai_risk_type"/>
+                            </group>
+                            <field name="ai_system_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="provider"/>
+                                    <field name="risk_level"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Risk Search View -->
+    <record id="view_security_risk_search" model="ir.ui.view">
+        <field name="name">security.risk.search</field>
+        <field name="model">security.risk</field>
+        <field name="arch" type="xml">
+            <search string="Search Risks">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="owner_id"/>
+                <filter string="Open" name="open" domain="[('status', '=', 'open')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('status', '=', 'in_progress')]"/>
+                <filter string="Critical" name="critical" domain="[('risk_level', '=', 'critical')]"/>
+                <filter string="High" name="high" domain="[('risk_level', '=', 'high')]"/>
+                <filter string="AI-Related" name="ai_related" domain="[('is_ai_related', '=', True)]"/>
+                <separator/>
+                <filter string="Overdue" name="overdue"
+                        domain="[('target_resolution_date', '&lt;', context_today().strftime('%Y-%m-%d')), ('status', 'not in', ('closed', 'accepted'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Risk Level" name="group_level" context="{'group_by': 'risk_level'}"/>
+                    <filter string="Category" name="group_category" context="{'group_by': 'risk_category'}"/>
+                    <filter string="Owner" name="group_owner" context="{'group_by': 'owner_id'}"/>
+                    <filter string="Severity" name="group_severity" context="{'group_by': 'severity'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Risk Kanban View -->
+    <record id="view_security_risk_kanban" model="ir.ui.view">
+        <field name="name">security.risk.kanban</field>
+        <field name="model">security.risk</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="risk_level"/>
+                <field name="owner_id"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_title">
+                                    <strong><field name="reference"/></strong>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <span class="badge" t-attf-class="badge #{record.risk_level.raw_value == 'critical' ? 'text-bg-danger' : record.risk_level.raw_value == 'high' ? 'text-bg-warning' : 'text-bg-info'}">
+                                        <field name="risk_level"/>
+                                    </span>
+                                    <field name="owner_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Security Risk Pivot View -->
+    <record id="view_security_risk_pivot" model="ir.ui.view">
+        <field name="name">security.risk.pivot</field>
+        <field name="model">security.risk</field>
+        <field name="arch" type="xml">
+            <pivot string="Risk Analysis">
+                <field name="risk_category" type="row"/>
+                <field name="risk_level" type="col"/>
+                <field name="inherent_risk_score" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Security Risk Action -->
+    <record id="action_security_risk" model="ir.actions.act_window">
+        <field name="name">Risks</field>
+        <field name="res_model">security.risk</field>
+        <field name="view_mode">tree,kanban,form,pivot</field>
+        <field name="search_view_id" ref="view_security_risk_search"/>
+        <field name="context">{'search_default_open': 1, 'search_default_in_progress': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register your first security risk
+            </p>
+            <p>
+                Track and manage security risks with severity assessment,
+                control linkage, and treatment planning.
+            </p>
+        </field>
+    </record>
+</odoo>

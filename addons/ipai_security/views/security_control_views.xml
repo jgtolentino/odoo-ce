@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Control Tree View -->
+    <record id="view_security_control_tree" model="ir.ui.view">
+        <field name="name">security.control.tree</field>
+        <field name="model">security.control</field>
+        <field name="arch" type="xml">
+            <tree string="Security Controls"
+                  decoration-success="status == 'tested'"
+                  decoration-info="status == 'implemented'"
+                  decoration-warning="status == 'partially_implemented'"
+                  decoration-danger="status == 'not_implemented'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="framework_id"/>
+                <field name="control_type" widget="badge"/>
+                <field name="control_nature"/>
+                <field name="status" widget="badge"
+                       decoration-success="status in ('implemented', 'tested')"
+                       decoration-warning="status == 'partially_implemented'"
+                       decoration-danger="status == 'not_implemented'"/>
+                <field name="test_result" widget="badge"/>
+                <field name="last_test_date"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Security Control Form View -->
+    <record id="view_security_control_form" model="ir.ui.view">
+        <field name="name">security.control.form</field>
+        <field name="model">security.control</field>
+        <field name="arch" type="xml">
+            <form string="Security Control">
+                <header>
+                    <button name="action_mark_implemented" type="object"
+                            string="Mark Implemented" class="oe_highlight"
+                            invisible="status in ('implemented', 'tested', 'not_applicable')"/>
+                    <button name="action_mark_tested" type="object"
+                            string="Mark Tested"
+                            invisible="status in ('tested', 'not_applicable')"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="not_implemented,partially_implemented,implemented,tested"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assets" type="object"
+                                class="oe_stat_button" icon="fa-server"
+                                invisible="asset_count == 0">
+                            <field name="asset_count" widget="statinfo" string="Assets"/>
+                        </button>
+                        <button name="action_view_risks" type="object"
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="risk_count == 0">
+                            <field name="risk_count" widget="statinfo" string="Risks"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h3><field name="code" placeholder="A.5.1.1"/></h3>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Control Title"/></h1>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="framework_id"/>
+                            <field name="soc2_category"/>
+                            <field name="control_type"/>
+                            <field name="control_nature"/>
+                            <field name="automation_level"/>
+                            <field name="priority"/>
+                        </group>
+                        <group string="Implementation">
+                            <field name="implementation_date"/>
+                            <field name="owner_id"/>
+                            <field name="owner_role"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Testing">
+                            <field name="test_frequency"/>
+                            <field name="last_test_date"/>
+                            <field name="next_test_date"/>
+                            <field name="test_result"/>
+                        </group>
+                        <group string="Evidence">
+                            <field name="evidence_url" widget="url"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Control description..."/>
+                        </page>
+                        <page string="Implementation Guidance" name="guidance">
+                            <field name="implementation_guidance" placeholder="Guidance..."/>
+                        </page>
+                        <page string="Evidence" name="evidence">
+                            <field name="evidence_description" placeholder="Evidence details..."/>
+                        </page>
+                        <page string="Applied To Assets" name="assets">
+                            <field name="asset_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="asset_type"/>
+                                    <field name="environment"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Mitigated Risks" name="risks">
+                            <field name="risk_ids">
+                                <tree>
+                                    <field name="reference"/>
+                                    <field name="name"/>
+                                    <field name="risk_level"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Control Search View -->
+    <record id="view_security_control_search" model="ir.ui.view">
+        <field name="name">security.control.search</field>
+        <field name="model">security.control</field>
+        <field name="arch" type="xml">
+            <search string="Search Controls">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="framework_id"/>
+                <field name="owner_id"/>
+                <filter string="Implemented" name="implemented" domain="[('status', 'in', ('implemented', 'tested'))]"/>
+                <filter string="Not Implemented" name="not_implemented" domain="[('status', '=', 'not_implemented')]"/>
+                <filter string="Tests Passed" name="passed" domain="[('test_result', '=', 'passed')]"/>
+                <filter string="Tests Failed" name="failed" domain="[('test_result', '=', 'failed')]"/>
+                <separator/>
+                <filter string="ISO 27001" name="iso27001" domain="[('framework_id.code', '=', 'ISO27001')]"/>
+                <filter string="SOC 2" name="soc2" domain="[('framework_id.code', '=', 'SOC2')]"/>
+                <filter string="PH DPA" name="dpa" domain="[('framework_id.code', '=', 'DPA')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Framework" name="group_framework" context="{'group_by': 'framework_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Control Type" name="group_type" context="{'group_by': 'control_type'}"/>
+                    <filter string="SOC 2 Category" name="group_soc2" context="{'group_by': 'soc2_category'}"/>
+                    <filter string="Owner" name="group_owner" context="{'group_by': 'owner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Control Pivot View -->
+    <record id="view_security_control_pivot" model="ir.ui.view">
+        <field name="name">security.control.pivot</field>
+        <field name="model">security.control</field>
+        <field name="arch" type="xml">
+            <pivot string="Control Matrix">
+                <field name="framework_id" type="row"/>
+                <field name="status" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Security Control Action -->
+    <record id="action_security_control" model="ir.actions.act_window">
+        <field name="name">Controls</field>
+        <field name="res_model">security.control</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="search_view_id" ref="view_security_control_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define your first security control
+            </p>
+            <p>
+                Map controls to compliance frameworks (ISO 27001, SOC 2, DPA)
+                and track implementation status.
+            </p>
+        </field>
+    </record>
+</odoo>

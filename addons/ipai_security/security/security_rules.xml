@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Record Rules for Row-Level Security -->
+
+    <!-- Security Asset Rules -->
+    <record id="rule_security_asset_company" model="ir.rule">
+        <field name="name">Security Asset: Company Rule</field>
+        <field name="model_id" ref="model_security_asset"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <!-- Security Risk Rules -->
+    <record id="rule_security_risk_company" model="ir.rule">
+        <field name="name">Security Risk: Company Rule</field>
+        <field name="model_id" ref="model_security_risk"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <!-- Engineer can only edit risks they own -->
+    <record id="rule_security_risk_engineer_own" model="ir.rule">
+        <field name="name">Security Risk: Engineer Own Records</field>
+        <field name="model_id" ref="model_security_risk"/>
+        <field name="domain_force">[
+            '|',
+            ('owner_id', '=', user.id),
+            ('owner_id', '=', False)
+        ]</field>
+        <field name="groups" eval="[(4, ref('group_security_engineer'))]"/>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">False</field>
+    </record>
+
+    <!-- Security Officer can access all risks -->
+    <record id="rule_security_risk_officer_all" model="ir.rule">
+        <field name="name">Security Risk: Officer All Records</field>
+        <field name="model_id" ref="model_security_risk"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_security_officer'))]"/>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">False</field>
+    </record>
+
+    <!-- Security Control Rules -->
+    <record id="rule_security_control_company" model="ir.rule">
+        <field name="name">Security Control: Company Rule</field>
+        <field name="model_id" ref="model_security_control"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <!-- Security Data Flow Rules -->
+    <record id="rule_security_data_flow_company" model="ir.rule">
+        <field name="name">Security Data Flow: Company Rule</field>
+        <field name="model_id" ref="model_security_data_flow"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <!-- AI System Rules -->
+    <record id="rule_ai_system_company" model="ir.rule">
+        <field name="name">AI System: Company Rule</field>
+        <field name="model_id" ref="model_ai_system"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <!-- Security Incident Rules -->
+    <record id="rule_security_incident_company" model="ir.rule">
+        <field name="name">Security Incident: Company Rule</field>
+        <field name="model_id" ref="model_security_incident"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <!-- Security Audit Rules -->
+    <record id="rule_security_audit_company" model="ir.rule">
+        <field name="name">Security Audit: Company Rule</field>
+        <field name="model_id" ref="model_security_audit"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+
+    <!-- Security KPI Rules -->
+    <record id="rule_security_kpi_company" model="ir.rule">
+        <field name="name">Security KPI: Company Rule</field>
+        <field name="model_id" ref="model_security_kpi"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">True</field>
+        <field name="perm_create">True</field>
+        <field name="perm_unlink">True</field>
+    </record>
+</odoo>
